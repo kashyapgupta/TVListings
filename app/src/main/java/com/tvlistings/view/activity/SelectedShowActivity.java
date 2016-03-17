@@ -25,10 +25,12 @@ import com.tvlistings.R;
 import com.tvlistings.controller.network.TVListingNetworkClient;
 import com.tvlistings.model.PerticularShowContents;
 import com.tvlistings.model.SeasonContent;
+import com.tvlistings.model.Show;
 import com.tvlistings.model.episodes.EpisodeContent;
 import com.tvlistings.model.people.People;
 import com.tvlistings.view.adapter.EpisodesRecyclerViewAdapter;
 import com.tvlistings.view.adapter.PeopleRecyclerViewAdapter;
+import com.tvlistings.view.adapter.PopularRecyclerViewAdapter;
 import com.tvlistings.view.adapter.SeasonsRecyclerViewAdapter;
 import com.tvlistings.view.callback.DisplayEpisodes;
 
@@ -70,6 +72,7 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
     private SeasonsRecyclerViewAdapter mSeasonsAdapter;
     private PeopleRecyclerViewAdapter mPeopleAdapter;
     private EpisodesRecyclerViewAdapter mEpisodesAdapter;
+    private PopularRecyclerViewAdapter mRelatedAdapter;
     @Bind(R.id.activity_selected_show_seasons_recycler_view)
     RecyclerView mSeasonsRecyclerView;
     @Bind(R.id.activity_selected_show_people_recycler_view)
@@ -79,7 +82,11 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
     String mSlug;
     ArrayList<SeasonContent> mSeasons;
     ArrayList<EpisodeContent> mEpisodes;
+    private ArrayList<Show> mRelated;
+    @Bind(R.id.activity_selected_show_related_recycler_view)
+    RecyclerView mRelatedRecyclerView;
     ImageLoader mImageLoader;
+    private RecyclerView.LayoutManager mRelatedLayoutManager;
     private RecyclerView.LayoutManager mSeasonsLayoutManager;
     private RecyclerView.LayoutManager mPeopleLayoutManager;
     private RecyclerView.LayoutManager mEpisodesLayoutManager;
@@ -97,9 +104,12 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
         mImageLoader = TVListingNetworkClient.getInstance().getImageLoader();
         mQueue = TVListingNetworkClient.getInstance().getRequestQueue();
         mSeasonsRecyclerView.setHasFixedSize(true);
+        mRelatedRecyclerView.setHasFixedSize(true);
         mPeoplesRecyclerView.setHasFixedSize(true);
+        mRelatedLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mSeasonsLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mPeopleLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mRelatedRecyclerView.setLayoutManager(mRelatedLayoutManager);
         mSeasonsRecyclerView.setLayoutManager(mSeasonsLayoutManager);
         mPeoplesRecyclerView.setLayoutManager(mPeopleLayoutManager);
         mSeasons = new ArrayList<>();
@@ -250,5 +260,32 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
             }
         };
         mQueue.add(req1);
+        String URLrelated = "https://api-v2launch.trakt.tv/shows/%s/related?extended=full,images";
+        String url3 = String.format(URLrelated, mSlug);
+        JsonArrayRequest request = new JsonArrayRequest(url3, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+                String reader = jsonArray.toString();
+                Type listType = new TypeToken<ArrayList<Show>>(){}.getType();
+                mRelated = new GsonBuilder().create().fromJson(reader, listType);
+                mRelatedAdapter = new PopularRecyclerViewAdapter(mRelated, mQueue, mContext);
+                mRelatedRecyclerView.setAdapter(mRelatedAdapter);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String,String> headers = new HashMap<>();
+                headers.put("Content-Type","application/json");
+                headers.put("trakt-api-key","4f6cce7cd051fec2bed645fcd529b923320d91119785a187b3773f3083ff9e32");
+                headers.put("trakt-api-version","2");
+                return headers;
+            }
+        };
+        mQueue.add(request);
     }
 }
