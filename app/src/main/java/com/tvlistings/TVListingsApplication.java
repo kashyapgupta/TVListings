@@ -5,7 +5,7 @@ import android.app.Application;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.tvlistings.controller.network.TVListingNetworkClient;
-import com.tvlistings.util.RandomString;
+import com.tvlistings.controller.util.RandomString;
 
 /**
  * Created by rohitgarg on 3/9/16.

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/game_of_thrones"
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        android:id="@+id/activity_home_trending_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#BFFFFFFF"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:text="Trending"
+        android:textSize="21sp"/>
+
+    <LinearLayout
+        android:id="@+id/activity_home_trending_r_v_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:layout_below="@id/activity_home_trending_text_view">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/activity_home_trending_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="horizontal"
+            android:layout_below="@id/activity_home_trending_text_view">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/activity_home_popular_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#BFFFFFFF"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@id/activity_home_trending_r_v_linear_layout"
+        android:text="Popular"
+        android:textSize="21sp"/>
+
+    <LinearLayout
+        android:id="@+id/activity_home_popular_r_v_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:layout_below="@id/activity_home_popular_text_view">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/activity_home_popular_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="horizontal"
+            android:layout_below="@id/activity_home_popular_text_view">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+
+</RelativeLayout>

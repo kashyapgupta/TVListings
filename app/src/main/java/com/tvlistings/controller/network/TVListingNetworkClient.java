@@ -16,8 +16,7 @@ import com.tvlistings.TVListingsApplication;
 import com.tvlistings.controller.cache.LruBitmapCache;
 import com.tvlistings.controller.network.response.JSONGetCallback;
 import com.tvlistings.controller.network.response.ResponseError;
-import com.tvlistings.util.network.VolleyErrorParser;
-
+import com.tvlistings.controller.util.network.VolleyErrorParser;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

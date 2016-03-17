@@ -14,7 +14,7 @@ import butterknife.ButterKnife;
  */
 public class ABCActivity extends Activity {
     @Bind(R.id.activity_abc_title_text_view)
-    private TextView mTextView;
+    TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
