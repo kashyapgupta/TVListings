@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="300dp"
+    android:layout_width="280dp"
     android:padding="5dp"
-    android:layout_height="180dp">
+    android:layout_height="210dp">
 
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/adapter_popular_recycler_view_poster_networkimageview"
@@ -20,8 +20,8 @@
     <TextView
         android:id="@+id/adapter_popular_recycler_view_title_text_view"
         android:layout_marginTop="5dp"
-        android:textSize="18sp"
-        android:layout_width="150dp"
+        android:textSize="16sp"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:textColor="#BFFFFFFF"
         android:layout_marginLeft="10dp"
@@ -32,7 +32,7 @@
 
     <TextView
         android:id="@+id/adapter_popular_recycler_view_year_text_view"
-        android:textSize="13dp"
+        android:textSize="11dp"
         android:layout_marginLeft="5dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="8dp"
@@ -56,7 +56,7 @@
         android:id="@+id/adapter_popular_recycler_view_rating_text_view"
         android:layout_toRightOf="@id/adapter_popular_recycler_view_heart_image_view"
         android:layout_width="wrap_content"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:layout_alignTop="@id/adapter_popular_recycler_view_heart_image_view"
         android:layout_marginLeft="7dp"
         android:textColor="#BFFFFFFF"

@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.activity.SelectedShowActivity"/>
-        <activity android:name=".view.activity.DisplaySeasonsActivity"/>
+        <activity android:name=".view.activity.ShowPersonDetailsActivity"/>
 
     </application>
 

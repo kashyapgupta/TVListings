@@ -1,5 +1,6 @@
 package com.tvlistings.view.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.tvlistings.R;
 import com.tvlistings.controller.network.TVListingNetworkClient;
 import com.tvlistings.model.people.People;
+import com.tvlistings.view.callback.DisplayPersonDetails;
 
 /**
  * Created by Rohit on 3/16/2016.
@@ -19,11 +21,13 @@ import com.tvlistings.model.people.People;
 public class PeopleRecyclerViewAdapter extends RecyclerView.Adapter<PeopleRecyclerViewAdapter.PeopleHolder> {
     RequestQueue mQueue1;
     People mPeople;
+    DisplayPersonDetails mContext;
 
-    public PeopleRecyclerViewAdapter(People mPeople, RequestQueue queue) {
+    public PeopleRecyclerViewAdapter(People mPeople, RequestQueue queue, Context context) {
         Log.i("sanju", "in seasons recycler view");
         this.mPeople = mPeople;
         mQueue1 = queue;
+        mContext = (DisplayPersonDetails) context;
     }
 
     public class PeopleHolder extends RecyclerView.ViewHolder {
@@ -48,13 +52,18 @@ public class PeopleRecyclerViewAdapter extends RecyclerView.Adapter<PeopleRecycl
     }
 
     @Override
-    public void onBindViewHolder(PeopleHolder holder, int position) {
+    public void onBindViewHolder(PeopleHolder holder, final int position) {
         Log.i("sanju", "in people,s holder");
         if ((mPeople.getCast().get(position).getPerson().getImages().getHeadshot().getThumb()) != null && !mPeople.getCast().get(position).getPerson().getImages().getHeadshot().getThumb().isEmpty()) {
             holder.image.setImageUrl(mPeople.getCast().get(position).getPerson().getImages().getHeadshot().getThumb(), TVListingNetworkClient.getInstance().getImageLoader());
         }else {
             holder.image.setImageUrl("https://cdn3.iconfinder.com/data/icons/abstract-1/512/no_image-512.png", TVListingNetworkClient.getInstance().getImageLoader());
-        }
+        }holder.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.displayPersonDetails(mPeople.getCast().get(position).getPerson().getName(), mPeople.getCast().get(position).getPerson().getImages().getHeadshot().getThumb(), mPeople.getCast().get(position).getPerson().getImages().getFanart().getThumb(), mPeople.getCast().get(position).getPerson().getBiography(), mPeople.getCast().get(position).getPerson().getBirthday(), mPeople.getCast().get(position).getPerson().getBirthplace(), mPeople.getCast().get(position).getPerson().getIds().getSlug());
+            }
+        });
         holder.characterName.setText(mPeople.getCast().get(position).getCharacter());
         holder.realName.setText(mPeople.getCast().get(position).getPerson().getName());
     }

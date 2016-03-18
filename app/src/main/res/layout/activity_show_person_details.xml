@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:id="@+id/activity_show_person_detail_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/activity_show_person_details_fanart_networkimageview"
+                android:layout_width="match_parent"
+                android:layout_height="225dp"/>
+
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/activity_show_person_details_headshot_networkimageview"
+                android:layout_width="150dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="7dp"
+                android:layout_below="@id/activity_show_person_details_fanart_networkimageview"
+                android:layout_marginLeft="7dp"/>
+
+            <TextView
+                android:id="@+id/activity_show_person_details_name_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:textColor="#DF000000"
+                android:layout_below="@id/activity_show_person_details_fanart_networkimageview"
+                android:layout_marginTop="13dp"
+                android:layout_toRightOf="@id/activity_show_person_details_headshot_networkimageview"
+                android:layout_marginLeft="10dp"/>
+
+            <TextView
+                android:id="@+id/activity_show_person_details_actor_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activity_show_person_details_name_text_view"
+                android:textSize="17sp"
+                android:text="Actor"
+                android:textColor="#DF000000"
+                android:layout_toRightOf="@id/activity_show_person_details_headshot_networkimageview"
+                android:layout_margin="10dp"/>
+
+            <TextView
+                android:id="@+id/activity_show_person_details_born_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activity_show_person_details_actor_text_view"
+                android:textSize="14sp"
+                android:textColor="#DF000000"
+                android:layout_toRightOf="@id/activity_show_person_details_headshot_networkimageview"
+                android:layout_margin="10dp"/>
+
+            <TextView
+                android:id="@+id/activity_show_person_details_biography_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activity_show_person_details_headshot_networkimageview"
+                android:textSize="15sp"
+                android:textColor="#DF000000"
+                android:layout_margin="10dp"/>
+
+            <TextView
+                android:id="@+id/activity_show_person_details_casting_shows_text_views"
+                android:layout_width="wrap_content"
+                android:textSize="18sp"
+                android:layout_below="@id/activity_show_person_details_biography_text_view"
+                android:textColor="#DF000000"
+                android:text="Casting Shows"
+                android:layout_marginLeft="10dp"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:id="@+id/activity_show_person_details_casting_shows_r_v_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="210dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:layout_below="@id/activity_show_person_details_casting_shows_text_views">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/activity_show_person_details_casting_shows_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="horizontal"
+                    android:layout_below="@id/activity_show_person_details_casting_shows_text_views">
+
+                </android.support.v7.widget.RecyclerView>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

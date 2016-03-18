@@ -33,6 +33,7 @@ import com.tvlistings.view.adapter.PeopleRecyclerViewAdapter;
 import com.tvlistings.view.adapter.PopularRecyclerViewAdapter;
 import com.tvlistings.view.adapter.SeasonsRecyclerViewAdapter;
 import com.tvlistings.view.callback.DisplayEpisodes;
+import com.tvlistings.view.callback.DisplayPersonDetails;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -48,7 +49,7 @@ import butterknife.Bind;
  * Created by Rohit on 3/10/2016.
  */
 
-public class SelectedShowActivity extends BaseSearchActivity implements DisplayEpisodes{
+public class SelectedShowActivity extends BaseSearchActivity implements DisplayEpisodes, DisplayPersonDetails{
     protected String URL2 = "https://api-v2launch.trakt.tv/shows/%s?extended=full,images";
     RequestQueue mQueue;
     @Bind(R.id.activity_selected_show_title_text_view)
@@ -193,7 +194,7 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
                 String reader = jsonObject.toString();
                 Type listType = new TypeToken<People>(){}.getType();
                 mPeople = new GsonBuilder().create().fromJson(reader, listType);
-                mPeopleAdapter = new PeopleRecyclerViewAdapter(mPeople, mQueue);
+                mPeopleAdapter = new PeopleRecyclerViewAdapter(mPeople, mQueue, mContext);
                 mPeoplesRecyclerView.setAdapter(mPeopleAdapter);
             }
         }, new Response.ErrorListener() {
@@ -212,7 +213,33 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
             }
         };
         mQueue.add(request1);
+        String URLrelated = "https://api-v2launch.trakt.tv/shows/%s/related?extended=full,images";
+        String url4 = String.format(URLrelated, mSlug);
+        JsonArrayRequest request2 = new JsonArrayRequest(url4, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray jsonArray) {
+                String reader = jsonArray.toString();
+                Type listType = new TypeToken<ArrayList<Show>>(){}.getType();
+                mRelated = new GsonBuilder().create().fromJson(reader, listType);
+                mRelatedAdapter = new PopularRecyclerViewAdapter(mRelated, mQueue, mContext);
+                mRelatedRecyclerView.setAdapter(mRelatedAdapter);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
 
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String,String> headers = new HashMap<>();
+                headers.put("Content-Type","application/json");
+                headers.put("trakt-api-key","4f6cce7cd051fec2bed645fcd529b923320d91119785a187b3773f3083ff9e32");
+                headers.put("trakt-api-version","2");
+                return headers;
+            }
+        };
+        mQueue.add(request2);
     }
     @Override
     protected int getContentViewId() {
@@ -260,32 +287,18 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
             }
         };
         mQueue.add(req1);
-        String URLrelated = "https://api-v2launch.trakt.tv/shows/%s/related?extended=full,images";
-        String url3 = String.format(URLrelated, mSlug);
-        JsonArrayRequest request = new JsonArrayRequest(url3, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray jsonArray) {
-                String reader = jsonArray.toString();
-                Type listType = new TypeToken<ArrayList<Show>>(){}.getType();
-                mRelated = new GsonBuilder().create().fromJson(reader, listType);
-                mRelatedAdapter = new PopularRecyclerViewAdapter(mRelated, mQueue, mContext);
-                mRelatedRecyclerView.setAdapter(mRelatedAdapter);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
+    }
 
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> headers = new HashMap<>();
-                headers.put("Content-Type","application/json");
-                headers.put("trakt-api-key","4f6cce7cd051fec2bed645fcd529b923320d91119785a187b3773f3083ff9e32");
-                headers.put("trakt-api-version","2");
-                return headers;
-            }
-        };
-        mQueue.add(request);
+    @Override
+    public void displayPersonDetails(String name, String headshot, String fanart, String biography, String birthday, String birthplace, String slug) {
+        Intent intent = new Intent(this, ShowPersonDetailsActivity.class);
+        intent.putExtra("name", name);
+        intent.putExtra("headshot", headshot);
+        intent.putExtra("fanart", fanart);
+        intent.putExtra("biography", biography);
+        intent.putExtra("birthday", birthday);
+        intent.putExtra("birthplace", birthplace);
+        intent.putExtra("slug", slug);
+        startActivity(intent);
     }
 }

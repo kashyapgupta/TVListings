@@ -35,8 +35,8 @@ import butterknife.Bind;
  */
 public class HomeActivity extends BaseSearchActivity implements DisplayShow{
 
-    private String URLtrending = "https://api-v2launch.trakt.tv/shows/trending?extended=full,images";
-    private String URLpopular = "https://api-v2launch.trakt.tv/shows/popular?extended=full,images";
+    private String URLtrending = "https://api-v2launch.trakt.tv/shows/trending?extended=full,images&page=1&limit=20";
+    private String URLpopular = "https://api-v2launch.trakt.tv/shows/popular?extended=full,images&page=1&limit=20";
     private RequestQueue mQueue2;
     private ArrayList<TrendingShows> mTrendingShows;
     private ArrayList<Show> mPopularShows;

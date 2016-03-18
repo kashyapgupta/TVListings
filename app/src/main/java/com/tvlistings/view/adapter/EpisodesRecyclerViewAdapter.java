@@ -66,6 +66,12 @@ public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRe
         }else {
             holder.image.setImageUrl("https://cdn3.iconfinder.com/data/icons/abstract-1/512/no_image-512.png", TVListingNetworkClient.getInstance().getImageLoader());
         }
+        holder.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         int rating = (int)(mEpisodes.get(position).getRating()*10);
         holder.rating.setText(rating+" %");
         holder.title.setText(mEpisodes.get(position).getTitle());
