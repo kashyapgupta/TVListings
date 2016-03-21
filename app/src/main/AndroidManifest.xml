@@ -21,6 +21,7 @@
         </activity>
         <activity android:name=".view.activity.SelectedShowActivity"/>
         <activity android:name=".view.activity.ShowPersonDetailsActivity"/>
+        <activity android:name=".view.activity.ShowEpisodeDetailsActivity"/>
 
     </application>
 

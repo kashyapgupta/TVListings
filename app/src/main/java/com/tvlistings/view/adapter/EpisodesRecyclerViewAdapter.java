@@ -13,6 +13,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.tvlistings.R;
 import com.tvlistings.controller.network.TVListingNetworkClient;
 import com.tvlistings.model.episodes.EpisodeContent;
+import com.tvlistings.view.callback.EpisodeDetails;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,7 @@ public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRe
     ArrayList<EpisodeContent> mEpisodes;
     String mSlug;
     int mSeasonNo;
+    EpisodeDetails mEpisodeDetails;
 
     public EpisodesRecyclerViewAdapter(ArrayList<EpisodeContent> mPeople, RequestQueue queue, String slug, int seasonNo, Context context) {
         Log.i("sanju", "in episodes recycler view");
@@ -31,6 +33,7 @@ public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRe
         mQueue1 = queue;
         this.mSeasonNo = seasonNo;
         this.mSlug = slug;
+        mEpisodeDetails = (EpisodeDetails) context;
     }
 
     public class EpisodeHolder extends RecyclerView.ViewHolder {
@@ -59,7 +62,7 @@ public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRe
     }
 
     @Override
-    public void onBindViewHolder(EpisodeHolder holder, int position) {
+    public void onBindViewHolder(EpisodeHolder holder, final int position) {
         Log.i("sanju", "in epsodes holder");
         if ((mEpisodes.get(position).getImages().getScreenshot().getThumb()) != null && !mEpisodes.get(position).getImages().getScreenshot().getThumb().isEmpty()) {
             holder.image.setImageUrl(mEpisodes.get(position).getImages().getScreenshot().getThumb(), TVListingNetworkClient.getInstance().getImageLoader());
@@ -69,7 +72,7 @@ public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRe
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mEpisodeDetails.episodeDetails(mSlug, mSeasonNo, Integer.valueOf(mEpisodes.get(position).getNumber()));
             }
         });
         int rating = (int)(mEpisodes.get(position).getRating()*10);

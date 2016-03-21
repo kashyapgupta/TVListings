@@ -9,13 +9,15 @@ public class EpisodeContent {
     private double rating;
     private int votes;
     private EpisodeImages images;
+    private String overview;
 
-    public EpisodeContent(String number, String title, double rating, int votes, EpisodeImages images) {
+    public EpisodeContent(String number, String title, double rating, int votes, EpisodeImages images, String overview) {
         this.number = number;
         this.title = title;
         this.rating = rating;
         this.votes = votes;
         this.images = images;
+        this.overview = overview;
     }
 
     public String getNumber() {
@@ -36,5 +38,9 @@ public class EpisodeContent {
 
     public EpisodeImages getImages() {
         return images;
+    }
+
+    public String getOverview() {
+        return overview;
     }
 }

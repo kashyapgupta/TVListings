@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/activity_show_episode_details_poster_networkimageview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <View
+        android:id="@+id/activity_show_episode_details_blackish_view"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignBottom="@id/activity_show_episode_details_poster_networkimageview"
+        android:background="#80000000"/>
+
+    <ImageView
+        android:id="@+id/activity_show_episode_details_heart_image_view"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/heart"
+        android:layout_alignBottom="@id/activity_show_episode_details_poster_networkimageview"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"/>
+
+    <TextView
+        android:id="@+id/activity_show_episode_details_rating_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/activity_show_episode_details_heart_image_view"
+        android:layout_alignBottom="@id/activity_show_episode_details_poster_networkimageview"
+        android:layout_marginBottom="20dp"
+        android:textColor="#BFFFFFFF"
+        android:layout_marginLeft="5dp"/>
+
+    <TextView
+        android:id="@+id/activity_show_episode_details_votes_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/activity_show_episode_details_heart_image_view"
+        android:layout_alignBottom="@id/activity_show_episode_details_poster_networkimageview"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:textColor="#BFFFFFFF"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/activity_show_episode_details_title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/activity_show_episode_details_votes_text_view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:textColor="#BFFFFFFF"
+        android:textSize="18sp"
+        android:layout_alignBottom="@id/activity_show_episode_details_poster_networkimageview"
+        android:layout_marginBottom="5dp"/>
+
+    <TextView
+        android:id="@+id/activity_show_episode_details_overview_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_show_episode_details_poster_networkimageview"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:textSize="16sp"
+        android:padding="7dp" />
+
+</RelativeLayout>

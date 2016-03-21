@@ -34,6 +34,7 @@ import com.tvlistings.view.adapter.PopularRecyclerViewAdapter;
 import com.tvlistings.view.adapter.SeasonsRecyclerViewAdapter;
 import com.tvlistings.view.callback.DisplayEpisodes;
 import com.tvlistings.view.callback.DisplayPersonDetails;
+import com.tvlistings.view.callback.EpisodeDetails;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -49,7 +50,7 @@ import butterknife.Bind;
  * Created by Rohit on 3/10/2016.
  */
 
-public class SelectedShowActivity extends BaseSearchActivity implements DisplayEpisodes, DisplayPersonDetails{
+public class SelectedShowActivity extends BaseSearchActivity implements DisplayEpisodes, DisplayPersonDetails, EpisodeDetails{
     protected String URL2 = "https://api-v2launch.trakt.tv/shows/%s?extended=full,images";
     RequestQueue mQueue;
     @Bind(R.id.activity_selected_show_title_text_view)
@@ -299,6 +300,15 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
         intent.putExtra("birthday", birthday);
         intent.putExtra("birthplace", birthplace);
         intent.putExtra("slug", slug);
+        startActivity(intent);
+    }
+
+    @Override
+    public void episodeDetails(String slug, int seasonNo, int episodeNo) {
+        Intent intent = new Intent(this, ShowEpisodeDetailsActivity.class);
+        intent.putExtra("slug", slug);
+        intent.putExtra("seasonNo", seasonNo);
+        intent.putExtra("episodeNo", episodeNo);
         startActivity(intent);
     }
 }
