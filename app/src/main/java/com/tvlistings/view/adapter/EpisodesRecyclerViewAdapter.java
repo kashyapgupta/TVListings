@@ -6,33 +6,34 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.NetworkImageView;
 import com.tvlistings.R;
+import com.tvlistings.constants.UrlConstants;
+import com.tvlistings.controller.RatingImage;
 import com.tvlistings.controller.network.TVListingNetworkClient;
-import com.tvlistings.model.episodes.EpisodeContent;
+import com.tvlistings.model.episodes.SeasonDetails;
 import com.tvlistings.view.callback.EpisodeDetails;
-
-import java.util.ArrayList;
 
 /**
  * Created by Rohit on 3/16/2016.
  */
 public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRecyclerViewAdapter.EpisodeHolder> {
     RequestQueue mQueue1;
-    ArrayList<EpisodeContent> mEpisodes;
-    String mSlug;
+    SeasonDetails mEpisodes;
+    int id;
     int mSeasonNo;
     EpisodeDetails mEpisodeDetails;
 
-    public EpisodesRecyclerViewAdapter(ArrayList<EpisodeContent> mPeople, RequestQueue queue, String slug, int seasonNo, Context context) {
+    public EpisodesRecyclerViewAdapter(SeasonDetails mPeople, RequestQueue queue, int id, int seasonNo, Context context) {
         Log.i("sanju", "in episodes recycler view");
         this.mEpisodes = mPeople;
         mQueue1 = queue;
         this.mSeasonNo = seasonNo;
-        this.mSlug = slug;
+        this.id = id;
         mEpisodeDetails = (EpisodeDetails) context;
     }
 
@@ -42,9 +43,11 @@ public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRe
         TextView votes;
         TextView title;
         TextView rating;
+        ImageView ratingImage;
 
         public EpisodeHolder(View itemView, int viewType) {
             super(itemView);
+            ratingImage = (ImageView)itemView.findViewById(R.id.adapter_episode_recycler_view_heart_image_view);
             image = (NetworkImageView) itemView.findViewById(R.id.adapter_episode_recycler_view_poster_networkimageview);
             number = (TextView) itemView.findViewById(R.id.adapter_episode_recycler_view_number_text_view);
             votes = (TextView) itemView.findViewById(R.id.adapter_episode_recycler_view_votes_text_view);
@@ -64,22 +67,26 @@ public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRe
     @Override
     public void onBindViewHolder(EpisodeHolder holder, final int position) {
         Log.i("sanju", "in epsodes holder");
-        if ((mEpisodes.get(position).getImages().getScreenshot().getThumb()) != null && !mEpisodes.get(position).getImages().getScreenshot().getThumb().isEmpty()) {
-            holder.image.setImageUrl(mEpisodes.get(position).getImages().getScreenshot().getThumb(), TVListingNetworkClient.getInstance().getImageLoader());
+        String poster = String.format(UrlConstants.IMAGE_URLW_185, mEpisodes.getEpisodes().get(position).getStill_path());
+        if ((mEpisodes.getEpisodes().get(position).getStill_path()) != null && !mEpisodes.getEpisodes().get(position).getStill_path().isEmpty()) {
+            holder.image.setImageUrl(poster, TVListingNetworkClient.getInstance().getImageLoader());
         }else {
-            holder.image.setImageUrl("https://cdn3.iconfinder.com/data/icons/abstract-1/512/no_image-512.png", TVListingNetworkClient.getInstance().getImageLoader());
+            holder.image.setImageUrl("http://www.cens.res.in/images/noimage.png", TVListingNetworkClient.getInstance().getImageLoader());
         }
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mEpisodeDetails.episodeDetails(mSlug, mSeasonNo, Integer.valueOf(mEpisodes.get(position).getNumber()));
+                mEpisodeDetails.episodeDetails(id, mSeasonNo, Integer.valueOf(mEpisodes.getEpisodes().get(position).getEpisode_number()));
             }
         });
-        int rating = (int)(mEpisodes.get(position).getRating()*10);
-        holder.rating.setText(rating+" %");
-        holder.title.setText(mEpisodes.get(position).getTitle());
-        holder.number.setText("Episode "+mEpisodes.get(position).getNumber());
-        holder.votes.setText(mEpisodes.get(position).getVotes() +" votes");
+        double rating = (mEpisodes.getEpisodes().get(position).getVote_average()*10);
+        int image = RatingImage.getRatingImage(rating);
+        holder.ratingImage.setImageResource(image);
+        String trimmedRating = String.format("%.1f", rating);
+        holder.rating.setText(trimmedRating+" %");
+        holder.title.setText(mEpisodes.getEpisodes().get(position).getName());
+        holder.number.setText("Episode "+mEpisodes.getEpisodes().get(position).getEpisode_number());
+        holder.votes.setText(mEpisodes.getEpisodes().get(position).getVote_count() +" votes");
     }
 
     @Override
@@ -87,7 +94,7 @@ public class EpisodesRecyclerViewAdapter extends RecyclerView.Adapter<EpisodesRe
         if (mEpisodes == null) {
             return 0;
         }else {
-            return mEpisodes.size();
+            return mEpisodes.getEpisodes().size();
         }
     }
 

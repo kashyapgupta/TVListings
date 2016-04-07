@@ -2,54 +2,67 @@ package com.tvlistings.view.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.tvlistings.R;
+import com.tvlistings.controller.SendNotification;
+import com.tvlistings.controller.factory.TVListingServiceFactory;
 import com.tvlistings.controller.network.TVListingNetworkClient;
-import com.tvlistings.model.Show;
-import com.tvlistings.model.trending.TrendingShows;
-import com.tvlistings.view.adapter.PopularRecyclerViewAdapter;
-import com.tvlistings.view.adapter.TrendingRecyclerViewAdapter;
+import com.tvlistings.controller.service.ServiceCallbacks;
+import com.tvlistings.controller.service.ShowDetailsService;
+import com.tvlistings.model.BaseResponse;
+import com.tvlistings.model.ShowContent.ShowContent;
+import com.tvlistings.model.searchResult.SearchResultContent;
+import com.tvlistings.model.tvShows.AiringTodayTVShows;
+import com.tvlistings.model.tvShows.PopularTVShows;
+import com.tvlistings.model.tvShows.TVShows;
+import com.tvlistings.model.tvShows.TopRatedTVShows;
+import com.tvlistings.view.adapter.LikedShowsRecyclerViewAdapter;
+import com.tvlistings.view.adapter.TVShowsRecyclerViewAdapter;
 import com.tvlistings.view.callback.DisplayShow;
 
-import org.json.JSONArray;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.Bind;
 
 /**
  * Created by Rohit on 3/14/2016.
  */
-public class HomeActivity extends BaseSearchActivity implements DisplayShow{
 
-    private String URLtrending = "https://api-v2launch.trakt.tv/shows/trending?extended=full,images&page=1&limit=20";
-    private String URLpopular = "https://api-v2launch.trakt.tv/shows/popular?extended=full,images&page=1&limit=20";
+public class HomeActivity extends BaseSearchActivity implements DisplayShow, ServiceCallbacks{
+
     private RequestQueue mQueue2;
-    private ArrayList<TrendingShows> mTrendingShows;
-    private ArrayList<Show> mPopularShows;
-    private TrendingRecyclerViewAdapter mTrendingAdapter;
-    private PopularRecyclerViewAdapter mPopularAdapter;
+    private TVShows mTopRatedShows;
+    private TVShows mPopularShows;
+    private TVShows mAiringTodayShows;
+    private TVShowsRecyclerViewAdapter mTopRatedAdapter;
+    private TVShowsRecyclerViewAdapter mPopularAdapter;
+    private TVShowsRecyclerViewAdapter mAiringTodayAdapter;
+    private LikedShowsRecyclerViewAdapter mLikedShowsAdapter;
     @Bind(R.id.activity_home_trending_recycler_view)
     RecyclerView mTrendingRecyclerView;
     @Bind(R.id.activity_home_popular_recycler_view)
     RecyclerView mPopularRecyclerView;
+    @Bind(R.id.activity_home_airing_today_recycler_view)
+    RecyclerView mAiringTodayRecyclerView;
+    @Bind(R.id.activity_home_liked_show_recycler_view)
+    RecyclerView mLikedShowsRecyclerView;
     Context mContext;
-
-    private LinearLayoutManager mTrendingLinearLayoutManager;
+    ArrayList<ShowContent> mLikedShowsData = new ArrayList<>();
+    ArrayList<Integer> likedShows = new ArrayList<>();
+    SharedPreferences mSharedPreferences;
+    private LinearLayoutManager mTopRatedLinearLayoutManager;
     private LinearLayoutManager mPopularLinearLayoutManager;
+    private LinearLayoutManager mAiringTodayLinearLayoutManager;
+    private LinearLayoutManager mLikedShowsLinearLayoutManager;
 
     @Override
     protected int getContentViewId() {
@@ -60,72 +73,106 @@ public class HomeActivity extends BaseSearchActivity implements DisplayShow{
     protected void onCreate(Bundle savedInstanceState) {
         mContext = this;
         super.onCreate(savedInstanceState);
-        mTrendingShows = new ArrayList<>();
         mQueue2 = TVListingNetworkClient.getInstance().getRequestQueue();
         mTrendingRecyclerView.setHasFixedSize(true);
         mPopularRecyclerView.setHasFixedSize(true);
+        mAiringTodayRecyclerView.setHasFixedSize(true);
+        mLikedShowsRecyclerView.setHasFixedSize(true);
+
         mPopularLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        mTrendingLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mTopRatedLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mAiringTodayLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mLikedShowsLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mPopularRecyclerView.setLayoutManager(mPopularLinearLayoutManager);
-        mTrendingRecyclerView.setLayoutManager(mTrendingLinearLayoutManager);
-        JsonArrayRequest request = new JsonArrayRequest(URLtrending, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray jsonArray) {
-                String reader = jsonArray.toString();
-                Type listType = new TypeToken<ArrayList<TrendingShows>>(){}.getType();
-                mTrendingShows = new GsonBuilder().create().fromJson(reader, listType);
-                mTrendingAdapter = new TrendingRecyclerViewAdapter(mTrendingShows, mQueue2, mContext);
-                mTrendingRecyclerView.setAdapter(mTrendingAdapter);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
+        mTrendingRecyclerView.setLayoutManager(mTopRatedLinearLayoutManager);
+        mAiringTodayRecyclerView.setLayoutManager(mAiringTodayLinearLayoutManager);
+        mLikedShowsRecyclerView.setLayoutManager(mLikedShowsLinearLayoutManager);
 
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> headers = new HashMap<>();
-                headers.put("Content-Type","application/json");
-                headers.put("trakt-api-key","4f6cce7cd051fec2bed645fcd529b923320d91119785a187b3773f3083ff9e32");
-                headers.put("trakt-api-version","2");
-                return headers;
-            }
-        };
-        mQueue2.add(request);
-
-        JsonArrayRequest request1 = new JsonArrayRequest(URLpopular, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray jsonArray) {
-                String reader = jsonArray.toString();
-                Type listType = new TypeToken<ArrayList<Show>>(){}.getType();
-                mPopularShows = new GsonBuilder().create().fromJson(reader, listType);
-                mPopularAdapter = new PopularRecyclerViewAdapter(mPopularShows, mQueue2, mContext);
-                mPopularRecyclerView.setAdapter(mPopularAdapter);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> headers = new HashMap<>();
-                headers.put("Content-Type","application/json");
-                headers.put("trakt-api-key","4f6cce7cd051fec2bed645fcd529b923320d91119785a187b3773f3083ff9e32");
-                headers.put("trakt-api-version","2");
-                return headers;
-            }
-        };
-        mQueue2.add(request1);
+        //popularShows
+        ((ShowDetailsService) TVListingServiceFactory.getInstance().getService(ShowDetailsService.class)).showsListABC(1, HomeActivity.this);
+        //TopRated
+        ((ShowDetailsService) TVListingServiceFactory.getInstance().getService(ShowDetailsService.class)).showsListABC(2, HomeActivity.this);
+        //AiringToday
+        ((ShowDetailsService) TVListingServiceFactory.getInstance().getService(ShowDetailsService.class)).showsListABC(3, HomeActivity.this);
     }
 
     @Override
-    public void displayShow(String slug) {
+    protected void onStart() {
+        super.onStart();
+        mSharedPreferences = getSharedPreferences("showPreferences", MODE_PRIVATE);
+        String shows = mSharedPreferences.getString("likedShows", "");
+        String[] showsIds = shows.split(",");
+
+        likedShows.clear();
+        mLikedShowsData.clear();
+        for (int i = 0; i <showsIds.length; i++) {
+            if (showsIds[i] != "") {
+                likedShows.add(Integer.valueOf(showsIds[i]));
+            }
+        }
+        if (likedShows.size() > 0) {
+            TextView liked = (TextView)findViewById(R.id.activity_home_liked_show_text_view);
+            FrameLayout frameLayout = (FrameLayout)findViewById(R.id.activity_home_liked_show_frame_layout);
+            liked.setVisibility(View.VISIBLE);
+            frameLayout.setVisibility(View.VISIBLE);
+        }else {
+            TextView liked = (TextView)findViewById(R.id.activity_home_liked_show_text_view);
+            FrameLayout frameLayout = (FrameLayout)findViewById(R.id.activity_home_liked_show_frame_layout);
+            liked.setVisibility(View.GONE);
+            frameLayout.setVisibility(View.GONE);
+        }
+
+        for (int i = 0; i < likedShows.size(); i++) {
+            ((ShowDetailsService) TVListingServiceFactory.getInstance().getService(ShowDetailsService.class)).getShowDetail(likedShows.get(i), HomeActivity.this);
+        }
+    }
+
+    @Override
+    public void displayShow(int id, double rating) {
         Intent intent = new Intent(this, SelectedShowActivity.class);
-        intent.putExtra("slug", slug);
+        intent.putExtra("id", id);
+        intent.putExtra("rating", rating);
         startActivity(intent);
     }
 
+    @Override
+    public void onSuccess(BaseResponse response) {
+        if (response instanceof PopularTVShows) {
+            mPopularShows = ((PopularTVShows) response).tvShows;
+            ProgressBar popularProgressBar = (ProgressBar) findViewById(R.id.Activity_home_popular_loading_progressBar);
+            popularProgressBar.setVisibility(View.GONE);
+            mPopularAdapter = new TVShowsRecyclerViewAdapter(mPopularShows, mQueue2, mContext);
+            mPopularRecyclerView.setAdapter(mPopularAdapter);
+        }else if (response instanceof TopRatedTVShows) {
+            mTopRatedShows = ((TopRatedTVShows) response).tvShows;
+            ProgressBar topRatedProgressBar = (ProgressBar) findViewById(R.id.Activity_home_top_rated_loading_progressBar);
+            topRatedProgressBar.setVisibility(View.GONE);
+            mTopRatedAdapter = new TVShowsRecyclerViewAdapter(mTopRatedShows, mQueue2, mContext);
+            mTrendingRecyclerView.setAdapter(mTopRatedAdapter);
+        }else if (response instanceof AiringTodayTVShows) {
+            mAiringTodayShows = ((AiringTodayTVShows) response).tvShows;
+            ProgressBar airingTodayProgressBar = (ProgressBar) findViewById(R.id.Activity_home_airing_today_loading_progressBar);
+            for (int i = 0; i < likedShows.size(); i++) {
+                for (int j = 0; j < mAiringTodayShows.getResults().size(); j++) {
+                    if (likedShows.get(i) == mAiringTodayShows.getResults().get(j).getId()) {
+                        SendNotification notification = new SendNotification();
+                        notification.setNotificationData(this, mAiringTodayShows.getResults().get(j).getName()+" airs today.");
+                    }
+                }
+            }
+            airingTodayProgressBar.setVisibility(View.GONE);
+            mAiringTodayAdapter = new TVShowsRecyclerViewAdapter(mAiringTodayShows, mQueue2, mContext);
+            mAiringTodayRecyclerView.setAdapter(mAiringTodayAdapter);
+        }else if (response instanceof ShowContent) {
+            mLikedShowsData.add((ShowContent) response);
+            ProgressBar likedShowsProgressBar = (ProgressBar)findViewById(R.id.activity_home_liked_show_loading_progressBar);
+            likedShowsProgressBar.setVisibility(View.GONE);
+            if (mLikedShowsData.size() == likedShows.size()) {
+                mLikedShowsAdapter = new LikedShowsRecyclerViewAdapter(mLikedShowsData, mQueue2, mContext);
+                mLikedShowsRecyclerView.setAdapter(mLikedShowsAdapter);
+            }
+        }else if (response instanceof SearchResultContent) {
+            super.onSuccess(response);
+        }
+    }
 }

@@ -5,47 +5,37 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.tvlistings.R;
+import com.tvlistings.controller.factory.TVListingServiceFactory;
 import com.tvlistings.controller.network.TVListingNetworkClient;
-import com.tvlistings.model.PersonsCasting;
+import com.tvlistings.controller.service.PeopleService;
+import com.tvlistings.controller.service.ServiceCallbacks;
+import com.tvlistings.controller.service.ShowDetailsService;
+import com.tvlistings.model.BaseResponse;
+import com.tvlistings.model.PersonDetails;
+import com.tvlistings.model.peopleCasting.PersonCasting;
 import com.tvlistings.view.adapter.PersonCastingShowsAdapter;
 import com.tvlistings.view.callback.DisplayShow;
-
-import org.json.JSONObject;
-
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.Bind;
 
 /**
  * Created by Rohit on 3/18/2016.
  */
-public class ShowPersonDetailsActivity extends BaseListingActivity implements DisplayShow{
-    String URLshows = "https://api-v2launch.trakt.tv/people/%s/shows?extended=full,images";
+public class ShowPersonDetailsActivity extends BaseListingActivity implements DisplayShow, ServiceCallbacks {
     String mName;
     String mHeadshot;
-    String mFanart;
-    String mBirthday;
-    String mBiography;
-    String mBirthplace;
-    String mSlug;
+    PersonDetails mPersonDetails;
+    int mId;
     @Bind(R.id.activity_show_person_details_headshot_networkimageview)
     NetworkImageView mHeadshotImage;
-    @Bind(R.id.activity_show_person_details_fanart_networkimageview)
-    NetworkImageView mFanartImage;
     @Bind(R.id.activity_show_person_details_name_text_view)
     TextView mNameText;
     @Bind(R.id.activity_show_person_details_born_text_view)
@@ -54,9 +44,11 @@ public class ShowPersonDetailsActivity extends BaseListingActivity implements Di
     TextView mBiographyText;
     ImageLoader mImageLoader;
     RequestQueue mQueue;
-    PersonsCasting mPersonsCastingShows;
+    PersonCasting mPersonsCastingShows;
     @Bind(R.id.activity_show_person_details_casting_shows_recycler_view)
     RecyclerView mRecyclerView;
+    @Bind(R.id.activity_show_person_details_casting_shows_text_views)
+    TextView castingShowsTextView;
     private RecyclerView.LayoutManager mLayoutManager;
     private PersonCastingShowsAdapter mPersonCastingShowAdapter;
     private Context mContext;
@@ -68,64 +60,21 @@ public class ShowPersonDetailsActivity extends BaseListingActivity implements Di
         mQueue = TVListingNetworkClient.getInstance().getRequestQueue();
         mImageLoader = TVListingNetworkClient.getInstance().getImageLoader();
         mName = intent.getStringExtra("name");
-        mHeadshot = intent.getStringExtra("headshot");
-        if (mHeadshot.equalsIgnoreCase("null") || mHeadshot.isEmpty()) {
-            mHeadshot = "https://www.irbbarcelona.org/sites/default/files/default_images/people.png";
+        mHeadshot = intent.getStringExtra("poster");
+        if (mHeadshot.equalsIgnoreCase("null")) {
+            mHeadshot = "http://uits.knust.edu.gh/assets/images/content/pics/img2013223_17151.jpg";
         }
-        mFanart = intent.getStringExtra("fanart");
-        if (mFanart.equalsIgnoreCase("null") || mFanart.isEmpty()) {
-            mFanart = "https://www.planwallpaper.com/static/images/7019370-artistic-desktop-backgrounds-images.jpg";
-        }
-        mBirthday = intent.getStringExtra("birthday");
-        mBiography = intent.getStringExtra("biography");
-        mBirthplace = intent.getStringExtra("birthplace");
-        mSlug = intent.getStringExtra("slug");
-        mFanartImage.setImageUrl(mFanart, mImageLoader);
+        mId = intent.getIntExtra("id", 1);
+        Log.i("sanju", String.valueOf(mId));
         mHeadshotImage.setImageUrl(mHeadshot, mImageLoader);
         mNameText.setText(mName);
-        if (mBirthday.equalsIgnoreCase("null") || mBirthday.isEmpty()) {
-            if (mBirthplace.equalsIgnoreCase("null") || mBirthplace.isEmpty()) {
-                mBirthdayText.setText("");
-            }else {
-                mBirthdayText.setText("BORN"+" in " + mBirthplace);
-            }
-        }else {
-            if (mBirthplace.equalsIgnoreCase("null") || mBirthplace.isEmpty()) {
-                mBirthdayText.setText("BORN "+ mBirthday);
-            }else {
-                mBirthdayText.setText("BORN " + mBirthday + " in " + mBirthplace);
-            }
-        }
-        mBiographyText.setText(mBiography);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        String url = String.format(URLshows, mSlug);
-        JsonObjectRequest request = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                String reader = jsonObject.toString();
-                Type listType = new TypeToken<PersonsCasting>(){}.getType();
-                mPersonsCastingShows = new GsonBuilder().create().fromJson(reader, listType);
-                mPersonCastingShowAdapter = new PersonCastingShowsAdapter(mPersonsCastingShows, mQueue, mContext);
-                mRecyclerView.setAdapter(mPersonCastingShowAdapter);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
 
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> headers = new HashMap<>();
-                headers.put("Content-Type","application/json");
-                headers.put("trakt-api-key","4f6cce7cd051fec2bed645fcd529b923320d91119785a187b3773f3083ff9e32");
-                headers.put("trakt-api-version","2");
-                return headers;
-            }
-        };
-        mQueue.add(request);
+        ((PeopleService) TVListingServiceFactory.getInstance().getService(PeopleService.class)).getPersonDetails(mId, ShowPersonDetailsActivity.this);
+
+        ((ShowDetailsService) TVListingServiceFactory.getInstance().getService(ShowDetailsService.class)).personShowList(mId, ShowPersonDetailsActivity.this);
     }
 
     @Override
@@ -133,9 +82,38 @@ public class ShowPersonDetailsActivity extends BaseListingActivity implements Di
         return R.layout.activity_show_person_details;
     }
     @Override
-    public void displayShow(String slug) {
+    public void displayShow(int id, double rating) {
         Intent intent = new Intent(this, SelectedShowActivity.class);
-        intent.putExtra("slug", slug);
+        intent.putExtra("id", id);
+        intent.putExtra("rating", rating);
         startActivity(intent);
+    }
+
+    @Override
+    public void onSuccess(BaseResponse response) {
+        if (response instanceof PersonDetails) {
+            mPersonDetails = (PersonDetails) response;
+            if (mPersonDetails.getBirthday() != null && !mPersonDetails.getBirthday().isEmpty()){
+                if (mPersonDetails.getPlace_of_birth() != null && !mPersonDetails.getPlace_of_birth().isEmpty()) {
+                    mBirthdayText.setText("Born on " + mPersonDetails.getBirthday()+" in " +mPersonDetails.getPlace_of_birth());
+                }else {
+                    mBirthdayText.setText("Born on "+ mPersonDetails.getBirthday());
+                }
+            }else {
+                if (mPersonDetails.getPlace_of_birth() != null && !mPersonDetails.getPlace_of_birth().isEmpty()) {
+                    mBirthdayText.setText("Born in "+mPersonDetails.getPlace_of_birth());
+                }else {
+                    mBirthdayText.setText("");
+                }
+            }
+            mBiographyText.setText(mPersonDetails.getBiography());
+        }else if (response instanceof PersonCasting) {
+            mPersonsCastingShows = (PersonCasting) response;
+            if (mPersonsCastingShows.getCast().size()+mPersonsCastingShows.getCrew().size() > 0) {
+                castingShowsTextView.setVisibility(View.VISIBLE);
+            }
+            mPersonCastingShowAdapter = new PersonCastingShowsAdapter(mPersonsCastingShows, mQueue, mContext);
+            mRecyclerView.setAdapter(mPersonCastingShowAdapter);
+        }
     }
 }

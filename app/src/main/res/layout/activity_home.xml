@@ -1,70 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/game_of_thrones"
         android:scaleType="centerCrop"/>
 
-    <TextView
-        android:id="@+id/activity_home_trending_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#BFFFFFFF"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="10dp"
-        android:text="Trending"
-        android:textSize="21sp"/>
-
-    <LinearLayout
-        android:id="@+id/activity_home_trending_r_v_linear_layout"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="210dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:layout_below="@id/activity_home_trending_text_view">
+        android:layout_height="wrap_content">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/activity_home_trending_recycler_view"
+        <RelativeLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="horizontal"
-            android:layout_below="@id/activity_home_trending_text_view">
+            android:layout_height="match_parent">
 
-        </android.support.v7.widget.RecyclerView>
+            <TextView
+                android:id="@+id/activity_home_liked_show_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#BFFFFFFF"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:text="Liked Shows"
+                android:visibility="gone"
+                android:textSize="21sp"/>
 
-    </LinearLayout>
+            <FrameLayout
+                android:id="@+id/activity_home_liked_show_frame_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_below="@id/activity_home_liked_show_text_view">
 
-    <TextView
-        android:id="@+id/activity_home_popular_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#BFFFFFFF"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_below="@id/activity_home_trending_r_v_linear_layout"
-        android:text="Popular"
-        android:textSize="21sp"/>
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/activity_home_liked_show_loading_progressBar"
+                    android:indeterminate="true"
+                    style="@android:style/Widget.Holo.ProgressBar"
+                    android:layout_gravity="center" />
 
-    <LinearLayout
-        android:id="@+id/activity_home_popular_r_v_linear_layout"
-        android:layout_width="match_parent"
-        android:layout_height="210dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:layout_below="@id/activity_home_popular_text_view">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/activity_home_liked_show_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="210dp"
+                    android:layout_marginTop="10dp"
+                    android:scrollbars="horizontal"
+                    android:layout_below="@id/activity_home_liked_show_text_view">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/activity_home_popular_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="horizontal"
-            android:layout_below="@id/activity_home_popular_text_view">
+                </android.support.v7.widget.RecyclerView>
 
-        </android.support.v7.widget.RecyclerView>
+            </FrameLayout>
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/activity_home_trending_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#BFFFFFFF"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/activity_home_liked_show_frame_layout"
+                android:layout_marginLeft="10dp"
+                android:text="Top Rated"
+                android:textSize="21sp"/>
+
+            <FrameLayout
+                android:id="@+id/activity_home_trending_frame_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activity_home_trending_text_view">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/Activity_home_top_rated_loading_progressBar"
+                    android:indeterminate="true"
+                    style="@android:style/Widget.Holo.ProgressBar"
+                    android:layout_gravity="center" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/activity_home_trending_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="210dp"
+                    android:layout_marginTop="10dp"
+                    android:scrollbars="horizontal"
+                    android:layout_below="@id/activity_home_trending_text_view">
+
+                </android.support.v7.widget.RecyclerView>
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/activity_home_popular_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#BFFFFFFF"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_below="@id/activity_home_trending_frame_layout"
+                android:text="Popular"
+                android:textSize="21sp"/>
+
+            <FrameLayout
+                android:id="@+id/activity_home_popular_frame_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activity_home_popular_text_view">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/Activity_home_popular_loading_progressBar"
+                    android:indeterminate="true"
+                    style="@android:style/Widget.Holo.ProgressBar"
+                    android:layout_gravity="center" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/activity_home_popular_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="210dp"
+                    android:layout_marginTop="10dp"
+                    android:scrollbars="horizontal"
+                    android:layout_below="@id/activity_home_popular_text_view" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/activity_home_airing_today_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#BFFFFFFF"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_below="@id/activity_home_popular_frame_layout"
+                android:text="Airing Today"
+                android:textSize="21sp"/>
+
+            <FrameLayout
+                android:id="@+id/activity_home_airing_today_frame_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activity_home_airing_today_text_view">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/Activity_home_airing_today_loading_progressBar"
+                    android:indeterminate="true"
+                    style="@android:style/Widget.Holo.ProgressBar"
+                    android:layout_gravity="center" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/activity_home_airing_today_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="210dp"
+                    android:layout_marginTop="10dp"
+                    android:scrollbars="horizontal"
+                    android:layout_below="@id/activity_home_airing_today_text_view" />
+
+            </FrameLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
 
 </RelativeLayout>

@@ -46,7 +46,6 @@
         android:id="@+id/adapter_trending_recycler_view_heart_image_view"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:background="@drawable/heart"
         android:layout_toRightOf="@id/adapter_trending_recycler_view_year_text_view"
         android:layout_marginLeft="20dp"
         android:layout_alignParentBottom="true"

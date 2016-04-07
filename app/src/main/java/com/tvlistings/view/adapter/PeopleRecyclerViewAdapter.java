@@ -11,8 +11,9 @@ import android.widget.TextView;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.NetworkImageView;
 import com.tvlistings.R;
+import com.tvlistings.constants.UrlConstants;
 import com.tvlistings.controller.network.TVListingNetworkClient;
-import com.tvlistings.model.people.People;
+import com.tvlistings.model.people.PeopleCastingShow;
 import com.tvlistings.view.callback.DisplayPersonDetails;
 
 /**
@@ -20,10 +21,10 @@ import com.tvlistings.view.callback.DisplayPersonDetails;
  */
 public class PeopleRecyclerViewAdapter extends RecyclerView.Adapter<PeopleRecyclerViewAdapter.PeopleHolder> {
     RequestQueue mQueue1;
-    People mPeople;
+    PeopleCastingShow mPeople;
     DisplayPersonDetails mContext;
 
-    public PeopleRecyclerViewAdapter(People mPeople, RequestQueue queue, Context context) {
+    public PeopleRecyclerViewAdapter(PeopleCastingShow mPeople, RequestQueue queue, Context context) {
         Log.i("sanju", "in seasons recycler view");
         this.mPeople = mPeople;
         mQueue1 = queue;
@@ -53,19 +54,22 @@ public class PeopleRecyclerViewAdapter extends RecyclerView.Adapter<PeopleRecycl
 
     @Override
     public void onBindViewHolder(PeopleHolder holder, final int position) {
+        final String poster;
         Log.i("sanju", "in people,s holder");
-        if ((mPeople.getCast().get(position).getPerson().getImages().getHeadshot().getThumb()) != null && !mPeople.getCast().get(position).getPerson().getImages().getHeadshot().getThumb().isEmpty()) {
-            holder.image.setImageUrl(mPeople.getCast().get(position).getPerson().getImages().getHeadshot().getThumb(), TVListingNetworkClient.getInstance().getImageLoader());
+        if ((mPeople.getCast().get(position).getProfile_path()) != null && !mPeople.getCast().get(position).getProfile_path().isEmpty()) {
+            poster = String.format(UrlConstants.IMAGE_URLW_185, mPeople.getCast().get(position).getProfile_path());
+            holder.image.setImageUrl(poster, TVListingNetworkClient.getInstance().getImageLoader());
         }else {
-            holder.image.setImageUrl("https://cdn3.iconfinder.com/data/icons/abstract-1/512/no_image-512.png", TVListingNetworkClient.getInstance().getImageLoader());
+            poster = "null";
+            holder.image.setImageUrl("http://www.cens.res.in/images/noimage.png", TVListingNetworkClient.getInstance().getImageLoader());
         }holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mContext.displayPersonDetails(mPeople.getCast().get(position).getPerson().getName(), mPeople.getCast().get(position).getPerson().getImages().getHeadshot().getThumb(), mPeople.getCast().get(position).getPerson().getImages().getFanart().getThumb(), mPeople.getCast().get(position).getPerson().getBiography(), mPeople.getCast().get(position).getPerson().getBirthday(), mPeople.getCast().get(position).getPerson().getBirthplace(), mPeople.getCast().get(position).getPerson().getIds().getSlug());
+                mContext.displayPersonDetails(mPeople.getCast().get(position).getId(), mPeople.getCast().get(position).getName(), poster);
             }
         });
         holder.characterName.setText(mPeople.getCast().get(position).getCharacter());
-        holder.realName.setText(mPeople.getCast().get(position).getPerson().getName());
+        holder.realName.setText(mPeople.getCast().get(position).getName());
     }
 
     @Override
@@ -77,9 +81,9 @@ public class PeopleRecyclerViewAdapter extends RecyclerView.Adapter<PeopleRecycl
         }
     }
 
+
     @Override
     public int getItemViewType(int position) {
         return 1;
     }
 }
-

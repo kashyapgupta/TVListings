@@ -11,8 +11,9 @@ import android.widget.TextView;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.NetworkImageView;
 import com.tvlistings.R;
+import com.tvlistings.constants.UrlConstants;
 import com.tvlistings.controller.network.TVListingNetworkClient;
-import com.tvlistings.model.PersonsCasting;
+import com.tvlistings.model.peopleCasting.PersonCasting;
 import com.tvlistings.view.callback.DisplayShow;
 
 /**
@@ -20,10 +21,10 @@ import com.tvlistings.view.callback.DisplayShow;
  */
 public class PersonCastingShowsAdapter extends RecyclerView.Adapter<PersonCastingShowsAdapter.PersonShowHolder> {
     RequestQueue mQueue1;
-    PersonsCasting mPersonsCasting;
+    PersonCasting mPersonsCasting;
     DisplayShow mShow;
 
-    public PersonCastingShowsAdapter(PersonsCasting mPersonsCasting, RequestQueue queue, Context context) {
+    public PersonCastingShowsAdapter(PersonCasting mPersonsCasting, RequestQueue queue, Context context) {
         Log.i("sanju", "in popular's recycler view");
         this.mPersonsCasting = mPersonsCasting;
         mQueue1 = queue;
@@ -54,20 +55,52 @@ public class PersonCastingShowsAdapter extends RecyclerView.Adapter<PersonCastin
     @Override
     public void onBindViewHolder(PersonShowHolder holder, final int position) {
         Log.i("sanju", "in popular's holder");
-        if ((mPersonsCasting.getCast().get(position).getShow().getImages().getFanart().getThumb()) != null && !mPersonsCasting.getCast().get(position).getShow().getImages().getFanart().getThumb().isEmpty()) {
-            holder.image.setImageUrl(mPersonsCasting.getCast().get(position).getShow().getImages().getFanart().getThumb(), TVListingNetworkClient.getInstance().getImageLoader());
-        }else {
-            holder.image.setImageUrl("https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSHQUB909pXldSI4TizR1eF-_j3ce2v72cavRBWpJZkZdAyqop1", TVListingNetworkClient.getInstance().getImageLoader());
-        }
-        holder.image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mShow.displayShow(mPersonsCasting.getCast().get(position).getShow().getIds().getSlug());
+        if (position < mPersonsCasting.getCast().size()) {
+            String poster = String.format(UrlConstants.IMAGE_URLW_300, mPersonsCasting.getCast().get(position).getPoster_path());
+            if ((mPersonsCasting.getCast().get(position).getPoster_path()) != null && !mPersonsCasting.getCast().get(position).getPoster_path().isEmpty()) {
+                holder.image.setImageUrl(poster, TVListingNetworkClient.getInstance().getImageLoader());
+            } else {
+                holder.image.setImageUrl("https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSHQUB909pXldSI4TizR1eF-_j3ce2v72cavRBWpJZkZdAyqop1", TVListingNetworkClient.getInstance().getImageLoader());
             }
-        });
-        int rating = (int)(mPersonsCasting.getCast().get(position).getShow().getRating()*10);
-        holder.rating.setText(rating+" %");
-        holder.title.setText("In " +mPersonsCasting.getCast().get(position).getShow().getTitle()+" as "+mPersonsCasting.getCast().get(position).getCharacter());
+            if (mPersonsCasting.getCast().get(position).getMedia_type().equalsIgnoreCase("tv")) {
+                holder.image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mShow.displayShow(mPersonsCasting.getCast().get(position).getId(), 101);
+                    }
+                });
+                int episodes = mPersonsCasting.getCast().get(position).getEpisode_count();
+                holder.rating.setText("Episodes " + episodes);
+                holder.title.setText("In " + mPersonsCasting.getCast().get(position).getName() + " as " + mPersonsCasting.getCast().get(position).getCharacter());
+            } else {
+                String date = mPersonsCasting.getCast().get(position).getRelease_date();
+                holder.rating.setText(date);
+                holder.title.setText("In " + mPersonsCasting.getCast().get(position).getTitle() + " as " + mPersonsCasting.getCast().get(position).getCharacter());
+            }
+        }else {
+            final int newPosition = position - mPersonsCasting.getCast().size();
+            String poster = String.format(UrlConstants.IMAGE_URLW_300, mPersonsCasting.getCrew().get(newPosition).getPoster_path());
+            if ((mPersonsCasting.getCrew().get(newPosition).getPoster_path()) != null && !mPersonsCasting.getCrew().get(newPosition).getPoster_path().isEmpty()) {
+                holder.image.setImageUrl(poster, TVListingNetworkClient.getInstance().getImageLoader());
+            } else {
+                holder.image.setImageUrl("https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSHQUB909pXldSI4TizR1eF-_j3ce2v72cavRBWpJZkZdAyqop1", TVListingNetworkClient.getInstance().getImageLoader());
+            }
+            if (mPersonsCasting.getCrew().get(newPosition).getMedia_type().equalsIgnoreCase("tv")) {
+                holder.image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mShow.displayShow(mPersonsCasting.getCrew().get(newPosition).getId(), 101);
+                    }
+                });
+                int episodes = mPersonsCasting.getCrew().get(newPosition).getEpisode_count();
+                holder.rating.setText("Episodes " + episodes);
+                holder.title.setText(mPersonsCasting.getCrew().get(newPosition).getJob()+ " of " + mPersonsCasting.getCrew().get(newPosition).getName());
+            } else {
+                String date = mPersonsCasting.getCrew().get(newPosition).getRelease_date();
+                holder.rating.setText(date);
+                holder.title.setText(mPersonsCasting.getCrew().get(newPosition).getJob()+ " of " + mPersonsCasting.getCrew().get(newPosition).getTitle());
+            }
+        }
     }
 
     @Override
@@ -75,7 +108,7 @@ public class PersonCastingShowsAdapter extends RecyclerView.Adapter<PersonCastin
         if (mPersonsCasting == null) {
             return 0;
         }else {
-            return mPersonsCasting.getCast().size();
+            return mPersonsCasting.getCast().size()+mPersonsCasting.getCrew().size();
         }
     }
 

@@ -10,15 +10,15 @@ import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.NetworkImageView;
-import com.github.lzyzsd.circleprogress.DonutProgress;
 import com.tvlistings.R;
+import com.tvlistings.constants.UrlConstants;
 import com.tvlistings.controller.network.TVListingNetworkClient;
-import com.tvlistings.model.SearchResultContent;
+import com.tvlistings.model.searchResult.Results;
+import com.tvlistings.model.searchResult.SearchResultContent;
 import com.tvlistings.view.callback.DisplayShow;
 import com.tvlistings.view.callback.LoadMoreData;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Rohit on 3/10/2016.
@@ -26,7 +26,7 @@ import java.util.List;
 public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecyclerViewAdapter.MyObjectHolder> {
     private final LoadMoreData mCallbacks;
     private final DisplayShow mSeason;
-    List<SearchResultContent> mObjects;
+    ArrayList<Results> mObjects = new ArrayList<>();
     RequestQueue mQueue1;
     private boolean mMoreData;
 
@@ -85,8 +85,9 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
     @Override
     public void onBindViewHolder(MyObjectHolder holder, final int position) {
         if (getItemViewType(position) == 1) {
-            if((mObjects.get(position).getShow().getImages().getPoster().getThumb()) != null && !(mObjects.get(position).getShow().getImages().getPoster().getThumb()).isEmpty()) {
-                holder.image.setImageUrl(mObjects.get(position).getShow().getImages().getPoster().getThumb(), TVListingNetworkClient.getInstance().getImageLoader());
+            if((mObjects.get(position).getPoster_path()) != null && !(mObjects.get(position).getPoster_path().isEmpty())) {
+                String imageURL = String.format(UrlConstants.IMAGE_URLW_185,mObjects.get(position).getPoster_path());
+                holder.image.setImageUrl(imageURL, TVListingNetworkClient.getInstance().getImageLoader());
             }else {
                 holder.image.setImageUrl("http://www.hellocomic.com/images/no_image_available.png", TVListingNetworkClient.getInstance().getImageLoader());
             }
@@ -94,25 +95,20 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
                 @Override
                 public void onClick(View v) {
                     Log.i("sanju","in onClick");
-                    Log.i("sanju", mObjects.get(position).getShow().getIds().getSlug());
-                    mSeason.displayShow(mObjects.get(position).getShow().getIds().getSlug());
+                    Log.i("sanju", String.valueOf(mObjects.get(position).getId()));
+                    double rating = (mObjects.get(position).getVote_average() * 10);
+                    mSeason.displayShow(mObjects.get(position).getId(), rating);
                 }
             });
-            holder.title.setText(mObjects.get(position).getShow().getTitle());
-            holder.year.setText(mObjects.get(position).getShow().getYear());
+            holder.title.setText(mObjects.get(position).getName());
+            holder.year.setText(mObjects.get(position).getFirst_air_date());
         } else {
             mCallbacks.loadMore();
         }
     }
-    public void setData(ArrayList<SearchResultContent> data, boolean moreData, boolean newData) {
-        if(mObjects == null) {
-            mObjects = new ArrayList<>();
-        }
+    public void setData(SearchResultContent data, boolean moreData) {
         this.mMoreData = moreData;
-        if (newData) {
-            mObjects.clear();
-        }
-        mObjects.addAll(data);
+        mObjects.addAll(data.getResults());
         notifyDataSetChanged();
     }
 
@@ -127,5 +123,8 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
                 return 1;
             }
         }
+    }
+    public void clearData() {
+        mObjects.clear();
     }
 }

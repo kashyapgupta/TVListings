@@ -2,47 +2,46 @@ package com.tvlistings.view.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.tvlistings.R;
+import com.tvlistings.constants.UrlConstants;
+import com.tvlistings.controller.RatingImage;
+import com.tvlistings.controller.factory.TVListingServiceFactory;
 import com.tvlistings.controller.network.TVListingNetworkClient;
-import com.tvlistings.model.PerticularShowContents;
-import com.tvlistings.model.SeasonContent;
-import com.tvlistings.model.Show;
-import com.tvlistings.model.episodes.EpisodeContent;
-import com.tvlistings.model.people.People;
+import com.tvlistings.controller.service.PeopleService;
+import com.tvlistings.controller.service.SeasonDetailService;
+import com.tvlistings.controller.service.ServiceCallbacks;
+import com.tvlistings.controller.service.ShowDetailsService;
+import com.tvlistings.model.BaseResponse;
+import com.tvlistings.model.ShowContent.ShowContent;
+import com.tvlistings.model.episodes.SeasonDetails;
+import com.tvlistings.model.people.PeopleCastingShow;
+import com.tvlistings.model.searchResult.SearchResultContent;
+import com.tvlistings.model.tvShows.TVShows;
 import com.tvlistings.view.adapter.EpisodesRecyclerViewAdapter;
 import com.tvlistings.view.adapter.PeopleRecyclerViewAdapter;
-import com.tvlistings.view.adapter.PopularRecyclerViewAdapter;
 import com.tvlistings.view.adapter.SeasonsRecyclerViewAdapter;
+import com.tvlistings.view.adapter.TVShowsRecyclerViewAdapter;
 import com.tvlistings.view.callback.DisplayEpisodes;
 import com.tvlistings.view.callback.DisplayPersonDetails;
 import com.tvlistings.view.callback.EpisodeDetails;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.Bind;
 
@@ -50,11 +49,12 @@ import butterknife.Bind;
  * Created by Rohit on 3/10/2016.
  */
 
-public class SelectedShowActivity extends BaseSearchActivity implements DisplayEpisodes, DisplayPersonDetails, EpisodeDetails{
-    protected String URL2 = "https://api-v2launch.trakt.tv/shows/%s?extended=full,images";
+public class SelectedShowActivity extends BaseSearchActivity implements DisplayEpisodes, DisplayPersonDetails, EpisodeDetails, ServiceCallbacks{
     RequestQueue mQueue;
     @Bind(R.id.activity_selected_show_title_text_view)
     TextView mTitle;
+    @Bind(R.id.activity_selected_show_original_title_text_view)
+    TextView mOriginalTitle;
     @Bind(R.id.activity_selected_show_votes_text_view)
     TextView mVotes;
     @Bind(R.id.activity_selected_show_runtime_text_view)
@@ -67,27 +67,40 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
     NetworkImageView mPoster;
     @Bind(R.id.activity_selected_show_rating_text_view)
     TextView mRating;
-    PerticularShowContents mShowData;
-    People mPeople;
-    Context mContext;
+    @Bind(R.id.activity_selected_show_heart_image_view)
+    ImageView ratingImage;
+    ShowContent mShowData;
+    double mShowRating;
+    PeopleCastingShow mPeople;
+    Context mContext = this;
     int mSeasonNo;
     private SeasonsRecyclerViewAdapter mSeasonsAdapter;
     private PeopleRecyclerViewAdapter mPeopleAdapter;
     private EpisodesRecyclerViewAdapter mEpisodesAdapter;
-    private PopularRecyclerViewAdapter mRelatedAdapter;
+    private TVShowsRecyclerViewAdapter mRelatedAdapter;
     @Bind(R.id.activity_selected_show_seasons_recycler_view)
     RecyclerView mSeasonsRecyclerView;
     @Bind(R.id.activity_selected_show_people_recycler_view)
     RecyclerView mPeoplesRecyclerView;
     @Bind(R.id.activity_selected_show_episodes_recycler_view)
     RecyclerView mEpisodesRecyclerView;
-    String mSlug;
-    ArrayList<SeasonContent> mSeasons;
-    ArrayList<EpisodeContent> mEpisodes;
-    private ArrayList<Show> mRelated;
+    int mId;
+    SeasonDetails mEpisodes;
+    TVShows mRelated;
     @Bind(R.id.activity_selected_show_related_recycler_view)
     RecyclerView mRelatedRecyclerView;
     ImageLoader mImageLoader;
+    @Bind(R.id.activity_selected_show_toggle)
+    ToggleButton liked;
+    @Bind(R.id.activity_selected_show_like_text_view)
+    TextView like;
+    @Bind(R.id.activity_selected_show_unlike_text_view)
+    TextView unlike;
+    ArrayList<Integer> showPreferencesList;
+    SharedPreferences mSharedPreferences;
+    StringBuilder likeShows = new StringBuilder();
+    String likedShows;
+    SharedPreferences.Editor editor;
     private RecyclerView.LayoutManager mRelatedLayoutManager;
     private RecyclerView.LayoutManager mSeasonsLayoutManager;
     private RecyclerView.LayoutManager mPeopleLayoutManager;
@@ -97,12 +110,65 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i("sanju", "in new activity");
-        mContext = this;
         Intent intent = getIntent();
-        mSlug = intent.getStringExtra("slug");
-        Log.i("sanju", mSlug);
-        String url2 = String.format(URL2, mSlug);
-        Log.i("sanju", url2);
+        mId = intent.getIntExtra("id", 1);
+        mShowRating = intent.getDoubleExtra("rating", 1);
+        Log.i("sanju", String.valueOf(mId));
+        mSharedPreferences = getSharedPreferences("showPreferences", Context.MODE_PRIVATE);
+        editor = mSharedPreferences.edit();
+
+        if (showPreferencesList == null) {
+            showPreferencesList = new ArrayList<>();
+        }
+
+        likedShows = mSharedPreferences.getString("likedShows", "");
+        String[] shows = likedShows.split(",");
+
+        for (int i = 0; i < shows.length; i++) {
+            if (!shows[i].equals("")) {
+                showPreferencesList.add(Integer.valueOf(shows[i]));
+            }
+        }
+
+        for (int i = 0; i < showPreferencesList.size(); i++) {
+            if (mId == showPreferencesList.get(i)) {
+                liked.setChecked(true);
+                like.setVisibility(View.GONE);
+                unlike.setVisibility(View.VISIBLE);
+            }
+        }
+
+        liked.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (liked.isChecked()) {
+                    like.setVisibility(View.GONE);
+                    unlike.setVisibility(View.VISIBLE);
+                    showPreferencesList.add(mId);
+                    for (int i = 0; i < showPreferencesList.size(); i++) {
+                        likeShows.append(showPreferencesList.get(i)).append(",");
+                    }
+                    editor.putString("likedShows", likeShows.toString());
+                    editor.commit();
+                    Log.i("liked show", String.valueOf(mSharedPreferences.getInt("show 0", 0)));
+                    Log.i("added", String.valueOf(mId));
+                } else {
+                    like.setVisibility(View.VISIBLE);
+                    unlike.setVisibility(View.GONE);
+                    for (int i = 0; i < showPreferencesList.size(); i++) {
+                        if (mId == showPreferencesList.get(i)) {
+                            showPreferencesList.remove(i);
+                        }
+                    }
+                    for (int i = 0 ; i <  showPreferencesList.size(); i++) {
+                        likeShows.append(showPreferencesList.get(i)).append(",");
+                    }
+                    editor.putString("likedShows", likeShows.toString());
+                    editor.commit();
+                }
+            }
+        });
+
         mImageLoader = TVListingNetworkClient.getInstance().getImageLoader();
         mQueue = TVListingNetworkClient.getInstance().getRequestQueue();
         mSeasonsRecyclerView.setHasFixedSize(true);
@@ -114,133 +180,14 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
         mRelatedRecyclerView.setLayoutManager(mRelatedLayoutManager);
         mSeasonsRecyclerView.setLayoutManager(mSeasonsLayoutManager);
         mPeoplesRecyclerView.setLayoutManager(mPeopleLayoutManager);
-        mSeasons = new ArrayList<>();
-        JsonObjectRequest request = new JsonObjectRequest(url2, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.i("sanju", "in new activity's on response");
-                String reader = response.toString();
-                Type listType = new TypeToken<PerticularShowContents>(){}.getType();
-                mShowData = new GsonBuilder().create().fromJson(reader, listType);
-                mTitle.setText(mShowData.getTitle());
-                int votes = (int) mShowData.getVotes();
-                Log.i("sanju", String.valueOf(votes));
-                mVotes.setText(String.valueOf(votes));
-                mRuntime.setText(mShowData.getRuntime() + " mins");
-                ArrayList<String> genresArray = mShowData.getGenres();
-                String genres = String.valueOf(genresArray);
-                genres = genres.replace("[", "");
-                genres = genres.replace("]", "");
-                mGenres.setText(genres);
-                mDescription.setText(mShowData.getOverview());
-                String thumb = mShowData.getImages().getPoster().getThumb();
-                if(!TextUtils.isEmpty(thumb) && !"null".equals(thumb)) {
-                    mPoster.setImageUrl(thumb, mImageLoader);
-                }else {
-                    mPoster.setImageUrl("https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQPqJzGtMHWmE12HmhqEYZWbmulcZVb8vhUqQcHxan7DQGNrcuF", mImageLoader);
-                }
-                int rating = (int)(mShowData.getRating()*10);
-                mRating.setText(String.valueOf(rating));
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
+        //Show Detail
+        ((ShowDetailsService) TVListingServiceFactory.getInstance().getService(ShowDetailsService.class)).getShowDetail(mId, SelectedShowActivity.this);
 
-            }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> headers = new HashMap<>();
-                headers.put("Content-Type","application/json");
-                headers.put("trakt-api-key","4f6cce7cd051fec2bed645fcd529b923320d91119785a187b3773f3083ff9e32");
-                headers.put("trakt-api-version","2");
-                return headers;
-            }
+        //Cast
+        ((PeopleService) TVListingServiceFactory.getInstance().getService(PeopleService.class)).getCast(mId, SelectedShowActivity.this);
 
-        };
-        mQueue.add(request);
-        String URL = "https://api-v2launch.trakt.tv/shows/%s/seasons?extended=full,images";
-        String url = String.format(URL, mSlug);
-        JsonArrayRequest req = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                Log.i("sanju", "in seasons on response");
-                String reader = response.toString();
-                Type listType = new TypeToken<ArrayList<SeasonContent>>(){}.getType();
-                mSeasons = new GsonBuilder().create().fromJson(reader, listType);
-                mSeasonsAdapter = new SeasonsRecyclerViewAdapter(mSeasons, mQueue, mContext, mSlug);
-                mSeasonsRecyclerView.setAdapter(mSeasonsAdapter);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<>();
-                headers.put("Content-Type", "application/json");
-                headers.put("trakt-api-version", "2");
-                headers.put("trakt-api-key", "4f6cce7cd051fec2bed645fcd529b923320d91119785a187b3773f3083ff9e32");
-                return headers;
-            }
-        };
-        mQueue.add(req);
-        String URL3 = "https://api-v2launch.trakt.tv/shows/%s/people?extended=full,images";
-        String url3 = String.format(URL3, mSlug);
-        JsonObjectRequest request1 = new JsonObjectRequest(url3, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                String reader = jsonObject.toString();
-                Type listType = new TypeToken<People>(){}.getType();
-                mPeople = new GsonBuilder().create().fromJson(reader, listType);
-                mPeopleAdapter = new PeopleRecyclerViewAdapter(mPeople, mQueue, mContext);
-                mPeoplesRecyclerView.setAdapter(mPeopleAdapter);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> headers = new HashMap<>();
-                headers.put("Content-Type","application/json");
-                headers.put("trakt-api-key","4f6cce7cd051fec2bed645fcd529b923320d91119785a187b3773f3083ff9e32");
-                headers.put("trakt-api-version","2");
-                return headers;
-            }
-        };
-        mQueue.add(request1);
-        String URLrelated = "https://api-v2launch.trakt.tv/shows/%s/related?extended=full,images";
-        String url4 = String.format(URLrelated, mSlug);
-        JsonArrayRequest request2 = new JsonArrayRequest(url4, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray jsonArray) {
-                String reader = jsonArray.toString();
-                Type listType = new TypeToken<ArrayList<Show>>(){}.getType();
-                mRelated = new GsonBuilder().create().fromJson(reader, listType);
-                mRelatedAdapter = new PopularRecyclerViewAdapter(mRelated, mQueue, mContext);
-                mRelatedRecyclerView.setAdapter(mRelatedAdapter);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> headers = new HashMap<>();
-                headers.put("Content-Type","application/json");
-                headers.put("trakt-api-key","4f6cce7cd051fec2bed645fcd529b923320d91119785a187b3773f3083ff9e32");
-                headers.put("trakt-api-version","2");
-                return headers;
-            }
-        };
-        mQueue.add(request2);
+        //Simillar Shows
+        ((ShowDetailsService) TVListingServiceFactory.getInstance().getService(ShowDetailsService.class)).showsList(mId, SelectedShowActivity.this);
     }
     @Override
     protected int getContentViewId() {
@@ -248,67 +195,143 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
     }
 
     @Override
-    public void displayEpisodes(int seasonNo, String slug) {
-        TextView episodes = (TextView)findViewById(R.id.activity_selected_show_episodes_text_view);
-        episodes.setVisibility(View.VISIBLE);
-        LinearLayout episodeLV = (LinearLayout)findViewById(R.id.Activity_selected_show_episodes_r_v_linear_layout);
-        episodeLV.setVisibility(View.VISIBLE);
-        mEpisodes = new ArrayList<>();
+    public void displayEpisodes(int seasonNo, final int id) {
         mContext = this;
         mEpisodesRecyclerView.setHasFixedSize(true);
         mEpisodesLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mEpisodesRecyclerView.setLayoutManager(mEpisodesLayoutManager);
-        String URL = "https://api-v2launch.trakt.tv/shows/%s/seasons/%d/episodes?extended=full,images";
-        String url = String.format(URL, slug, seasonNo);
-        mSlug = slug;
         mSeasonNo = seasonNo;
+        mId = id;
         mQueue = TVListingNetworkClient.getInstance().getRequestQueue();
-        JsonArrayRequest req1 = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray jsonArray) {
-                String reader = jsonArray.toString();
-                Type listType = new TypeToken<ArrayList<EpisodeContent>>(){}.getType();
-                mEpisodes = new GsonBuilder().create().fromJson(reader, listType);
-                mEpisodesAdapter = new EpisodesRecyclerViewAdapter(mEpisodes, mQueue, mSlug, mSeasonNo, mContext);
-                mEpisodesRecyclerView.setAdapter(mEpisodesAdapter);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
 
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> headers = new HashMap<>();
-                headers.put("Content-Type","application/json");
-                headers.put("trakt-api-key","4f6cce7cd051fec2bed645fcd529b923320d91119785a187b3773f3083ff9e32");
-                headers.put("trakt-api-version","2");
-                return headers;
-            }
-        };
-        mQueue.add(req1);
+        //Season Detail
+        ((SeasonDetailService) TVListingServiceFactory.getInstance().getService(SeasonDetailService.class)).getSeasonDetail(id, seasonNo, SelectedShowActivity.this);
     }
 
     @Override
-    public void displayPersonDetails(String name, String headshot, String fanart, String biography, String birthday, String birthplace, String slug) {
+    public void displayPersonDetails(int id, String name, String poster) {
         Intent intent = new Intent(this, ShowPersonDetailsActivity.class);
         intent.putExtra("name", name);
-        intent.putExtra("headshot", headshot);
-        intent.putExtra("fanart", fanart);
-        intent.putExtra("biography", biography);
-        intent.putExtra("birthday", birthday);
-        intent.putExtra("birthplace", birthplace);
-        intent.putExtra("slug", slug);
+        intent.putExtra("poster", poster);
+        intent.putExtra("id", id);
+        Log.i("sanju", "person'sid" + " " + String.valueOf(id));
         startActivity(intent);
     }
 
     @Override
-    public void episodeDetails(String slug, int seasonNo, int episodeNo) {
+    public void episodeDetails(int id, int seasonNo, int episodeNo) {
         Intent intent = new Intent(this, ShowEpisodeDetailsActivity.class);
-        intent.putExtra("slug", slug);
+        intent.putExtra("id", id);
         intent.putExtra("seasonNo", seasonNo);
+        Log.i("sanju", String.valueOf(seasonNo));
         intent.putExtra("episodeNo", episodeNo);
         startActivity(intent);
+    }
+
+    @Override
+    public void onSuccess(BaseResponse response) {
+        if (response instanceof ShowContent) {
+            FrameLayout frameLayout = (FrameLayout)findViewById(R.id.activity_selected_show_frame_layout);
+            FrameLayout frameLayout1 = (FrameLayout)findViewById(R.id.activity_selected_show_loading_frame_layout);
+            frameLayout1.setVisibility(View.GONE);
+            frameLayout.setVisibility(View.VISIBLE);
+            mShowData = (ShowContent) response;
+            ArrayList<String> networks = new ArrayList<>();
+            for (int i = 0; i < mShowData.getNetworks().size(); i++) {
+                networks.add(mShowData.getNetworks().get(i).getName());
+            }
+
+            String networks2 = String.valueOf(networks);
+            networks2 = networks2.replace("[", "");
+            networks2 = networks2.replace("]", "");
+/*
+            //notification send
+            String notificationData = (mShowData.getName()+" airs on "+ networks2);
+            SendNotification notification = new SendNotification();
+            notification.setNotificationData(this, notificationData);*/
+
+            String name = mShowData.getName();
+            String originalName = mShowData.getOriginal_name();
+            if (name.equalsIgnoreCase(originalName)) {
+                mTitle.setText(name);
+            }else {
+                mOriginalTitle.setVisibility(View.VISIBLE);
+                mOriginalTitle.setText(originalName);
+                mTitle.setTextSize(16);
+                mTitle.setText("("+name+")");
+            }
+            int votes = mShowData.getVote_count();
+            mVotes.setText(String.valueOf(votes)+" votes");
+            String runtime = String.valueOf(mShowData.getEpisode_run_time());
+            runtime = runtime.replace("[", "");
+            runtime = runtime.replace("]", "");
+            mRuntime.setText("Runtime "+runtime + " mins");
+            ArrayList<String> genresArray = new ArrayList<>();
+            for (int i = 0; i < mShowData.getGenres().size(); i++) {
+                genresArray.add(mShowData.getGenres().get(i).getName());
+            }
+            String genres = String.valueOf(genresArray);
+            genres = genres.replace("[", "");
+            genres = genres.replace("]", "");
+            mGenres.setText(genres);
+            mDescription.setText(mShowData.getOverview());
+            String thumb = mShowData.getPoster_path();
+            if (!TextUtils.isEmpty(thumb) && !"null".equals(thumb)) {
+                mPoster.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mShowData.getPoster_path()), mImageLoader);
+            } else {
+                mPoster.setImageUrl("https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQPqJzGtMHWmE12HmhqEYZWbmulcZVb8vhUqQcHxan7DQGNrcuF", mImageLoader);
+            }
+            if (mShowRating != 101) {
+                String trimmedRating = String.format("%.1f", mShowRating);
+                int image = RatingImage.getRatingImage(mShowRating);
+                ratingImage.setImageResource(image);
+                mRating.setText(trimmedRating + " %");
+            }else {
+                double rating = (mShowData.getVote_average() * 10);
+                int image = RatingImage.getRatingImage(rating);
+                ratingImage.setImageResource(image);
+                mRating.setText(rating + " %");
+            }
+            if (mShowData.getSeasons().size() > 0) {
+                TextView seasonsText = (TextView)findViewById(R.id.activity_selected_show_seasons_text_view);
+                LinearLayout linearLayout = (LinearLayout)findViewById(R.id.Activity_selected_show_season_r_v_linear_layout);
+                seasonsText.setVisibility(View.VISIBLE);
+                linearLayout.setVisibility(View.VISIBLE);
+                mSeasonsAdapter = new SeasonsRecyclerViewAdapter(mShowData, mQueue, mContext, mId);
+                mSeasonsRecyclerView.setAdapter(mSeasonsAdapter);
+            }
+        }else if (response instanceof PeopleCastingShow) {
+            mPeople = (PeopleCastingShow) response;
+            if (mPeople.getCast().size() > 0) {
+                TextView textView = (TextView)findViewById(R.id.activity_selected_show_people_text_view);
+                LinearLayout linearLayout = (LinearLayout)findViewById(R.id.Activity_selected_show_people_r_v_linear_layout);
+                textView.setVisibility(View.VISIBLE);
+                linearLayout.setVisibility(View.VISIBLE);
+                mPeopleAdapter = new PeopleRecyclerViewAdapter(mPeople, mQueue, mContext);
+                mPeoplesRecyclerView.setAdapter(mPeopleAdapter);
+            }
+        }else if (response instanceof TVShows) {
+            mRelated = (TVShows) response;
+            if (mRelated.getResults().size() > 0) {
+                TextView textView = (TextView)findViewById(R.id.activity_selected_show_related_text_view);
+                LinearLayout linearLayout = (LinearLayout)findViewById(R.id.Activity_selected_show_related_r_v_linear_layout);
+                textView.setVisibility(View.VISIBLE);
+                linearLayout.setVisibility(View.VISIBLE);
+                mRelatedAdapter = new TVShowsRecyclerViewAdapter(mRelated, mQueue, mContext);
+                mRelatedRecyclerView.setAdapter(mRelatedAdapter);
+            }
+        }else if (response instanceof SeasonDetails) {
+            mEpisodes = (SeasonDetails) response;
+            if (mEpisodes.getEpisodes().size() > 0) {
+                TextView episodes = (TextView)findViewById(R.id.activity_selected_show_episodes_text_view);
+                episodes.setVisibility(View.VISIBLE);
+                LinearLayout episodeLV = (LinearLayout)findViewById(R.id.Activity_selected_show_episodes_r_v_linear_layout);
+                episodeLV.setVisibility(View.VISIBLE);
+            }
+            mEpisodesAdapter = new EpisodesRecyclerViewAdapter(mEpisodes, mQueue, mId, mSeasonNo, mContext);
+            mEpisodesRecyclerView.setAdapter(mEpisodesAdapter);
+        }else if (response instanceof SearchResultContent) {
+            super.onSuccess(response);
+        }
     }
 }

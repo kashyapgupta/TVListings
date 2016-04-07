@@ -5,12 +5,31 @@
     android:padding="5dp"
     android:layout_height="125dp">
 
-    <com.android.volley.toolbox.NetworkImageView
-        android:id="@+id/adapter_people_recycler_view_poster_networkimageview"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:layout_gravity="center" />
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            style="@android:style/Widget.Holo.ProgressBar"
+            android:layout_gravity="center"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/adapter_people_recycler_view_poster_networkimageview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
 
     <View
         android:layout_width="match_parent"
