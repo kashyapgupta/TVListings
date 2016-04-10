@@ -14,6 +14,7 @@ import com.tvlistings.R;
 import com.tvlistings.constants.UrlConstants;
 import com.tvlistings.controller.network.TVListingNetworkClient;
 import com.tvlistings.model.peopleCasting.PersonCasting;
+import com.tvlistings.view.callback.DisplayMovie;
 import com.tvlistings.view.callback.DisplayShow;
 
 /**
@@ -23,12 +24,14 @@ public class PersonCastingShowsAdapter extends RecyclerView.Adapter<PersonCastin
     RequestQueue mQueue1;
     PersonCasting mPersonsCasting;
     DisplayShow mShow;
+    DisplayMovie mMovie;
 
     public PersonCastingShowsAdapter(PersonCasting mPersonsCasting, RequestQueue queue, Context context) {
         Log.i("sanju", "in popular's recycler view");
         this.mPersonsCasting = mPersonsCasting;
         mQueue1 = queue;
         mShow = (DisplayShow) context;
+        mMovie = (DisplayMovie) context;
     }
 
     public class PersonShowHolder extends RecyclerView.ViewHolder {
@@ -71,11 +74,25 @@ public class PersonCastingShowsAdapter extends RecyclerView.Adapter<PersonCastin
                 });
                 int episodes = mPersonsCasting.getCast().get(position).getEpisode_count();
                 holder.rating.setText("Episodes " + episodes);
-                holder.title.setText("In " + mPersonsCasting.getCast().get(position).getName() + " as " + mPersonsCasting.getCast().get(position).getCharacter());
+                if ((mPersonsCasting.getCast().get(position).getCharacter()) != null && !mPersonsCasting.getCast().get(position).getCharacter().isEmpty()) {
+                    holder.title.setText("In " + mPersonsCasting.getCast().get(position).getName() + " as " + mPersonsCasting.getCast().get(position).getCharacter());
+                }else {
+                    holder.title.setText("In " + mPersonsCasting.getCast().get(position).getName());
+                }
             } else {
+                holder.image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mMovie.displayMovie(mPersonsCasting.getCast().get(position).getId());
+                    }
+                });
                 String date = mPersonsCasting.getCast().get(position).getRelease_date();
                 holder.rating.setText(date);
-                holder.title.setText("In " + mPersonsCasting.getCast().get(position).getTitle() + " as " + mPersonsCasting.getCast().get(position).getCharacter());
+                if ((mPersonsCasting.getCast().get(position).getCharacter()) != null && !mPersonsCasting.getCast().get(position).getCharacter().isEmpty()) {
+                    holder.title.setText("In " + mPersonsCasting.getCast().get(position).getTitle() + " as " + mPersonsCasting.getCast().get(position).getCharacter());
+                }else {
+                    holder.title.setText("In " + mPersonsCasting.getCast().get(position).getTitle());
+                }
             }
         }else {
             final int newPosition = position - mPersonsCasting.getCast().size();
@@ -96,6 +113,12 @@ public class PersonCastingShowsAdapter extends RecyclerView.Adapter<PersonCastin
                 holder.rating.setText("Episodes " + episodes);
                 holder.title.setText(mPersonsCasting.getCrew().get(newPosition).getJob()+ " of " + mPersonsCasting.getCrew().get(newPosition).getName());
             } else {
+                holder.image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mMovie.displayMovie(mPersonsCasting.getCrew().get(newPosition).getId());
+                    }
+                });
                 String date = mPersonsCasting.getCrew().get(newPosition).getRelease_date();
                 holder.rating.setText(date);
                 holder.title.setText(mPersonsCasting.getCrew().get(newPosition).getJob()+ " of " + mPersonsCasting.getCrew().get(newPosition).getTitle());

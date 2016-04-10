@@ -22,6 +22,7 @@ import com.tvlistings.model.BaseResponse;
 import com.tvlistings.model.PersonDetails;
 import com.tvlistings.model.peopleCasting.PersonCasting;
 import com.tvlistings.view.adapter.PersonCastingShowsAdapter;
+import com.tvlistings.view.callback.DisplayMovie;
 import com.tvlistings.view.callback.DisplayShow;
 
 import butterknife.Bind;
@@ -29,7 +30,7 @@ import butterknife.Bind;
 /**
  * Created by Rohit on 3/18/2016.
  */
-public class ShowPersonDetailsActivity extends BaseListingActivity implements DisplayShow, ServiceCallbacks {
+public class ShowPersonDetailsActivity extends BaseListingActivity implements DisplayShow, ServiceCallbacks, DisplayMovie {
     String mName;
     String mHeadshot;
     PersonDetails mPersonDetails;
@@ -81,11 +82,20 @@ public class ShowPersonDetailsActivity extends BaseListingActivity implements Di
     protected int getContentViewId() {
         return R.layout.activity_show_person_details;
     }
+
     @Override
     public void displayShow(int id, double rating) {
         Intent intent = new Intent(this, SelectedShowActivity.class);
         intent.putExtra("id", id);
         intent.putExtra("rating", rating);
+        startActivity(intent);
+    }
+
+    @Override
+    public void displayMovie(int id) {
+        Log.i("movie ID", String.valueOf(id));
+        Intent intent = new Intent(this, SelectedMovieActivity.class);
+        intent.putExtra("id", id);
         startActivity(intent);
     }
 

@@ -19,9 +19,12 @@
                 </category>
             </intent-filter>
         </activity>
+        <activity android:name=".view.activity.TVShowsHomeActivity"/>
+        <activity android:name=".view.activity.MoviesHomeActivity"/>
         <activity android:name=".view.activity.SelectedShowActivity"/>
         <activity android:name=".view.activity.ShowPersonDetailsActivity"/>
         <activity android:name=".view.activity.ShowEpisodeDetailsActivity"/>
+        <activity android:name=".view.activity.SelectedMovieActivity"/>
 
     </application>
 

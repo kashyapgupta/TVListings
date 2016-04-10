@@ -13,7 +13,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.tvlistings.R;
 import com.tvlistings.constants.UrlConstants;
 import com.tvlistings.controller.network.TVListingNetworkClient;
-import com.tvlistings.model.people.PeopleCastingShow;
+import com.tvlistings.model.peopleCasting.PersonCasting;
 import com.tvlistings.view.callback.DisplayPersonDetails;
 
 /**
@@ -21,10 +21,10 @@ import com.tvlistings.view.callback.DisplayPersonDetails;
  */
 public class PeopleRecyclerViewAdapter extends RecyclerView.Adapter<PeopleRecyclerViewAdapter.PeopleHolder> {
     RequestQueue mQueue1;
-    PeopleCastingShow mPeople;
+    PersonCasting mPeople;
     DisplayPersonDetails mContext;
 
-    public PeopleRecyclerViewAdapter(PeopleCastingShow mPeople, RequestQueue queue, Context context) {
+    public PeopleRecyclerViewAdapter(PersonCasting mPeople, RequestQueue queue, Context context) {
         Log.i("sanju", "in seasons recycler view");
         this.mPeople = mPeople;
         mQueue1 = queue;

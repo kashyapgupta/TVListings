@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +24,8 @@ import com.tvlistings.controller.service.ServiceCallbacks;
 import com.tvlistings.model.BaseResponse;
 import com.tvlistings.model.searchResult.SearchResultContent;
 import com.tvlistings.view.adapter.SearchRecyclerViewAdapter;
+import com.tvlistings.view.callback.DisplayMovie;
+import com.tvlistings.view.callback.DisplayPersonDetails;
 import com.tvlistings.view.callback.DisplayShow;
 import com.tvlistings.view.callback.LoadMoreData;
 
@@ -34,7 +37,7 @@ import butterknife.Bind;
 /**
  * Created by Rohit on 3/9/2016.
  */
-public abstract class BaseSearchActivity extends BaseListingActivity implements LoadMoreData,DisplayShow, ServiceCallbacks {
+public abstract class BaseSearchActivity extends BaseListingActivity implements LoadMoreData,DisplayShow, ServiceCallbacks, DisplayPersonDetails, DisplayMovie {
     RequestQueue mQueue;
     protected String mSearch;
     @Bind(R.id.activity_base_search_search_edit_text)
@@ -143,6 +146,14 @@ public abstract class BaseSearchActivity extends BaseListingActivity implements 
     }
 
     @Override
+    public void displayMovie(int id) {
+        Log.i("movie ID", String.valueOf(id));
+        Intent intent = new Intent(this, SelectedMovieActivity.class);
+        intent.putExtra("id", id);
+        startActivity(intent);
+    }
+
+    @Override
     public void onSuccess(BaseResponse response) {
         if(response == null) {
             mTextView.setVisibility(View.VISIBLE);
@@ -165,5 +176,15 @@ public abstract class BaseSearchActivity extends BaseListingActivity implements 
                 mAdapter.setData(mArray, mCurrentPage < mPageCount);
             }
         }
+    }
+
+    @Override
+    public void displayPersonDetails(int id, String name, String poster) {
+        Intent intent = new Intent(this, ShowPersonDetailsActivity.class);
+        intent.putExtra("name", name);
+        intent.putExtra("poster", poster);
+        intent.putExtra("id", id);
+        Log.i("sanju", "person's id" + " " + String.valueOf(id));
+        startActivity(intent);
     }
 }

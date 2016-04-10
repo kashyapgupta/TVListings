@@ -30,7 +30,7 @@ import com.tvlistings.controller.service.ShowDetailsService;
 import com.tvlistings.model.BaseResponse;
 import com.tvlistings.model.ShowContent.ShowContent;
 import com.tvlistings.model.episodes.SeasonDetails;
-import com.tvlistings.model.people.PeopleCastingShow;
+import com.tvlistings.model.peopleCasting.PersonCasting;
 import com.tvlistings.model.searchResult.SearchResultContent;
 import com.tvlistings.model.tvShows.TVShows;
 import com.tvlistings.view.adapter.EpisodesRecyclerViewAdapter;
@@ -71,7 +71,7 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
     ImageView ratingImage;
     ShowContent mShowData;
     double mShowRating;
-    PeopleCastingShow mPeople;
+    PersonCasting mPeople;
     Context mContext = this;
     int mSeasonNo;
     private SeasonsRecyclerViewAdapter mSeasonsAdapter;
@@ -184,7 +184,7 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
         ((ShowDetailsService) TVListingServiceFactory.getInstance().getService(ShowDetailsService.class)).getShowDetail(mId, SelectedShowActivity.this);
 
         //Cast
-        ((PeopleService) TVListingServiceFactory.getInstance().getService(PeopleService.class)).getCast(mId, SelectedShowActivity.this);
+        ((PeopleService) TVListingServiceFactory.getInstance().getService(PeopleService.class)).getShowCast(mId, SelectedShowActivity.this);
 
         //Simillar Shows
         ((ShowDetailsService) TVListingServiceFactory.getInstance().getService(ShowDetailsService.class)).showsList(mId, SelectedShowActivity.this);
@@ -214,7 +214,7 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
         intent.putExtra("name", name);
         intent.putExtra("poster", poster);
         intent.putExtra("id", id);
-        Log.i("sanju", "person'sid" + " " + String.valueOf(id));
+        Log.i("sanju", "person's id" + " " + String.valueOf(id));
         startActivity(intent);
     }
 
@@ -300,8 +300,8 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
                 mSeasonsAdapter = new SeasonsRecyclerViewAdapter(mShowData, mQueue, mContext, mId);
                 mSeasonsRecyclerView.setAdapter(mSeasonsAdapter);
             }
-        }else if (response instanceof PeopleCastingShow) {
-            mPeople = (PeopleCastingShow) response;
+        }else if (response instanceof PersonCasting) {
+            mPeople = (PersonCasting) response;
             if (mPeople.getCast().size() > 0) {
                 TextView textView = (TextView)findViewById(R.id.activity_selected_show_people_text_view);
                 LinearLayout linearLayout = (LinearLayout)findViewById(R.id.Activity_selected_show_people_r_v_linear_layout);

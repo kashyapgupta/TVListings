@@ -16,8 +16,13 @@ public class Results {
     private String name;
     private String first_air_date;
     private String original_name;
+    private String media_type;
+    private String title;
+    private String original_title;
+    private String profile_path;
+    private String release_date;
 
-    public Results(String poster_path, String backdrop_path, int id, double vote_average, String overview, ArrayList<Integer> genre_ids, int vote_count, String name, String first_air_date, String original_name) {
+    public Results(String poster_path, String backdrop_path, int id, double vote_average, String overview, ArrayList<Integer> genre_ids, int vote_count, String name, String first_air_date, String original_name, String media_type, String title, String original_title, String profile_path, String release_date) {
         this.poster_path = poster_path;
         this.backdrop_path = backdrop_path;
         this.id = id;
@@ -28,6 +33,11 @@ public class Results {
         this.name = name;
         this.first_air_date = first_air_date;
         this.original_name = original_name;
+        this.media_type = media_type;
+        this.title = title;
+        this.original_title = original_title;
+        this.profile_path = profile_path;
+        this.release_date = release_date;
     }
 
     public String getPoster_path() {
@@ -69,4 +79,25 @@ public class Results {
     public String getOriginal_name() {
         return original_name;
     }
+
+    public String getMedia_type() {
+        return media_type;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getOriginal_title() {
+        return original_title;
+    }
+
+    public String getProfile_path() {
+        return profile_path;
+    }
+
+    public String getRelease_date() {
+        return release_date;
+    }
+
 }

@@ -13,8 +13,9 @@ public class PersonsCrew {
     private String media_type;
     private String title;
     private String release_date;
+    private String profile_path;
 
-    public PersonsCrew(int episode_count, String first_air_date, int id, String job, String name, String poster_path, String media_type, String title, String release_date) {
+    public PersonsCrew(int episode_count, String first_air_date, int id, String job, String name, String poster_path, String media_type, String title, String release_date, String profile_path) {
         this.episode_count = episode_count;
         this.first_air_date = first_air_date;
         this.id = id;
@@ -24,6 +25,7 @@ public class PersonsCrew {
         this.media_type = media_type;
         this.title = title;
         this.release_date = release_date;
+        this.profile_path = profile_path;
     }
 
     public int getEpisode_count() {
@@ -61,4 +63,9 @@ public class PersonsCrew {
     public String getRelease_date() {
         return release_date;
     }
+
+    public String getProfile_path() {
+        return profile_path;
+    }
+
 }

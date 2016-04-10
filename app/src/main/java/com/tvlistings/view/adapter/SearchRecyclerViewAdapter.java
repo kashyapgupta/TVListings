@@ -15,6 +15,8 @@ import com.tvlistings.constants.UrlConstants;
 import com.tvlistings.controller.network.TVListingNetworkClient;
 import com.tvlistings.model.searchResult.Results;
 import com.tvlistings.model.searchResult.SearchResultContent;
+import com.tvlistings.view.callback.DisplayMovie;
+import com.tvlistings.view.callback.DisplayPersonDetails;
 import com.tvlistings.view.callback.DisplayShow;
 import com.tvlistings.view.callback.LoadMoreData;
 
@@ -28,12 +30,16 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
     private final DisplayShow mSeason;
     ArrayList<Results> mObjects = new ArrayList<>();
     RequestQueue mQueue1;
+    private final DisplayPersonDetails mPerson;
+    private final DisplayMovie mMovie;
     private boolean mMoreData;
 
     public SearchRecyclerViewAdapter(RequestQueue queue1, LoadMoreData callbacks) {
         mQueue1 = queue1;
         mCallbacks = callbacks;
         mSeason = (DisplayShow) callbacks;
+        mPerson = (DisplayPersonDetails) callbacks;
+        mMovie = (DisplayMovie) callbacks;
         Log.i("sanju", "in Recycler view");
     }
 
@@ -85,23 +91,70 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
     @Override
     public void onBindViewHolder(MyObjectHolder holder, final int position) {
         if (getItemViewType(position) == 1) {
-            if((mObjects.get(position).getPoster_path()) != null && !(mObjects.get(position).getPoster_path().isEmpty())) {
-                String imageURL = String.format(UrlConstants.IMAGE_URLW_185,mObjects.get(position).getPoster_path());
-                holder.image.setImageUrl(imageURL, TVListingNetworkClient.getInstance().getImageLoader());
-            }else {
-                holder.image.setImageUrl("http://www.hellocomic.com/images/no_image_available.png", TVListingNetworkClient.getInstance().getImageLoader());
-            }
-            holder.image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.i("sanju","in onClick");
-                    Log.i("sanju", String.valueOf(mObjects.get(position).getId()));
-                    double rating = (mObjects.get(position).getVote_average() * 10);
-                    mSeason.displayShow(mObjects.get(position).getId(), rating);
+
+            if (mObjects.get(position).getMedia_type().equalsIgnoreCase("tv")) {
+
+                if((mObjects.get(position).getPoster_path()) != null && !(mObjects.get(position).getPoster_path().isEmpty())) {
+                    String imageURL = String.format(UrlConstants.IMAGE_URLW_185,mObjects.get(position).getPoster_path());
+                    holder.image.setImageUrl(imageURL, TVListingNetworkClient.getInstance().getImageLoader());
+                }else {
+                    holder.image.setImageUrl("http://www.hellocomic.com/images/no_image_available.png", TVListingNetworkClient.getInstance().getImageLoader());
                 }
-            });
-            holder.title.setText(mObjects.get(position).getName());
-            holder.year.setText(mObjects.get(position).getFirst_air_date());
+
+                holder.image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.i("sanju", "in onClick");
+                        Log.i("sanju", String.valueOf(mObjects.get(position).getId()));
+                        double rating = (mObjects.get(position).getVote_average() * 10);
+                        mSeason.displayShow(mObjects.get(position).getId(), rating);
+                    }
+                });
+
+                holder.title.setText(mObjects.get(position).getName());
+                holder.year.setText(mObjects.get(position).getFirst_air_date());
+
+            }else if (mObjects.get(position).getMedia_type().equalsIgnoreCase("movie")) {
+
+                if((mObjects.get(position).getPoster_path()) != null && !(mObjects.get(position).getPoster_path().isEmpty())) {
+                    String imageURL = String.format(UrlConstants.IMAGE_URLW_185,mObjects.get(position).getPoster_path());
+                    holder.image.setImageUrl(imageURL, TVListingNetworkClient.getInstance().getImageLoader());
+                }else {
+                    holder.image.setImageUrl("http://www.hellocomic.com/images/no_image_available.png", TVListingNetworkClient.getInstance().getImageLoader());
+                }
+
+                holder.image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mMovie.displayMovie(mObjects.get(position).getId());
+                    }
+                });
+
+                holder.title.setText(mObjects.get(position).getTitle());
+                holder.year.setText(mObjects.get(position).getRelease_date());
+
+            }else if (mObjects.get(position).getMedia_type().equalsIgnoreCase("person")) {
+
+                final String poster;
+
+                if((mObjects.get(position).getProfile_path()) != null && !(mObjects.get(position).getProfile_path().isEmpty())) {
+                    poster = String.format(UrlConstants.IMAGE_URLW_185,mObjects.get(position).getProfile_path());
+                    holder.image.setImageUrl(poster, TVListingNetworkClient.getInstance().getImageLoader());
+                }else {
+                    poster = "null";
+                    holder.image.setImageUrl("http://www.hellocomic.com/images/no_image_available.png", TVListingNetworkClient.getInstance().getImageLoader());
+                }
+
+                holder.image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mPerson.displayPersonDetails(mObjects.get(position).getId(), mObjects.get(position).getName(), poster);
+                    }
+                });
+                holder.title.setText(mObjects.get(position).getName());
+                holder.year.setText("");
+            }
+
         } else {
             mCallbacks.loadMore();
         }
