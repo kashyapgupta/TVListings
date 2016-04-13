@@ -22,12 +22,14 @@ import com.tvlistings.view.callback.DisplayPersonDetails;
 public class PeopleRecyclerViewAdapter extends RecyclerView.Adapter<PeopleRecyclerViewAdapter.PeopleHolder> {
     RequestQueue mQueue1;
     PersonCasting mPeople;
+    Boolean isCast;
     DisplayPersonDetails mContext;
 
-    public PeopleRecyclerViewAdapter(PersonCasting mPeople, RequestQueue queue, Context context) {
+    public PeopleRecyclerViewAdapter(PersonCasting mPeople, RequestQueue queue, Context context, Boolean isCast) {
         Log.i("sanju", "in seasons recycler view");
         this.mPeople = mPeople;
         mQueue1 = queue;
+        this.isCast = isCast;
         mContext = (DisplayPersonDetails) context;
     }
 
@@ -54,22 +56,42 @@ public class PeopleRecyclerViewAdapter extends RecyclerView.Adapter<PeopleRecycl
 
     @Override
     public void onBindViewHolder(PeopleHolder holder, final int position) {
-        final String poster;
-        Log.i("sanju", "in people,s holder");
-        if ((mPeople.getCast().get(position).getProfile_path()) != null && !mPeople.getCast().get(position).getProfile_path().isEmpty()) {
-            poster = String.format(UrlConstants.IMAGE_URLW_185, mPeople.getCast().get(position).getProfile_path());
-            holder.image.setImageUrl(poster, TVListingNetworkClient.getInstance().getImageLoader());
+        if (isCast) {
+
+            final String poster;
+            Log.i("sanju", "in people,s holder");
+            if ((mPeople.getCast().get(position).getProfile_path()) != null && !mPeople.getCast().get(position).getProfile_path().isEmpty()) {
+                poster = String.format(UrlConstants.IMAGE_URLW_185, mPeople.getCast().get(position).getProfile_path());
+                holder.image.setImageUrl(poster, TVListingNetworkClient.getInstance().getImageLoader());
+            }else {
+                poster = "null";
+                holder.image.setImageUrl("http://www.cens.res.in/images/noimage.png", TVListingNetworkClient.getInstance().getImageLoader());
+            }holder.image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mContext.displayPersonDetails(mPeople.getCast().get(position).getId(), mPeople.getCast().get(position).getName(), poster);
+                }
+            });
+            holder.characterName.setText(mPeople.getCast().get(position).getCharacter());
+            holder.realName.setText(mPeople.getCast().get(position).getName());
         }else {
-            poster = "null";
-            holder.image.setImageUrl("http://www.cens.res.in/images/noimage.png", TVListingNetworkClient.getInstance().getImageLoader());
-        }holder.image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mContext.displayPersonDetails(mPeople.getCast().get(position).getId(), mPeople.getCast().get(position).getName(), poster);
-            }
-        });
-        holder.characterName.setText(mPeople.getCast().get(position).getCharacter());
-        holder.realName.setText(mPeople.getCast().get(position).getName());
+            final String poster;
+            Log.i("sanju", "in people,s holder");
+            if ((mPeople.getCrew().get(position).getProfile_path()) != null && !mPeople.getCrew().get(position).getProfile_path().isEmpty()) {
+                poster = String.format(UrlConstants.IMAGE_URLW_185, mPeople.getCrew().get(position).getProfile_path());
+                holder.image.setImageUrl(poster, TVListingNetworkClient.getInstance().getImageLoader());
+            }else {
+                poster = "null";
+                holder.image.setImageUrl("http://www.cens.res.in/images/noimage.png", TVListingNetworkClient.getInstance().getImageLoader());
+            }holder.image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mContext.displayPersonDetails(mPeople.getCrew().get(position).getId(), mPeople.getCrew().get(position).getName(), poster);
+                }
+            });
+            holder.characterName.setText(mPeople.getCrew().get(position).getJob());
+            holder.realName.setText(mPeople.getCrew().get(position).getName());
+        }
     }
 
     @Override
@@ -77,7 +99,11 @@ public class PeopleRecyclerViewAdapter extends RecyclerView.Adapter<PeopleRecycl
         if (mPeople == null) {
             return 0;
         }else {
-            return mPeople.getCast().size();
+            if (isCast) {
+                return mPeople.getCast().size();
+            }else {
+                return mPeople.getCrew().size();
+            }
         }
     }
 

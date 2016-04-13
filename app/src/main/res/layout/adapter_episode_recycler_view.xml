@@ -53,7 +53,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#BFFFFFFF"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:gravity="center"/>
 
 
     <ImageView
@@ -69,6 +70,7 @@
         android:layout_toRightOf="@id/adapter_episode_recycler_view_heart_image_view"
         android:layout_width="wrap_content"
         android:textSize="7sp"
+        android:layout_marginTop="4dp"
         android:layout_alignTop="@id/adapter_episode_recycler_view_heart_image_view"
         android:layout_marginLeft="1dp"
         android:textColor="#BFFFFFFF"
@@ -79,11 +81,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="2dp"
-        android:layout_toRightOf="@id/adapter_episode_recycler_view_heart_image_view"
+        android:layout_marginRight="8dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignBottom="@id/adapter_episode_recycler_view_rating_text_view"
         android:textSize="7sp"
-        android:layout_marginTop="0dp"
-        android:textColor="#BFFFFFFF"
-        android:layout_below="@id/adapter_episode_recycler_view_rating_text_view"/>
+        android:layout_marginTop="4dp"
+        android:textColor="#BFFFFFFF"/>
 
 
 </RelativeLayout>

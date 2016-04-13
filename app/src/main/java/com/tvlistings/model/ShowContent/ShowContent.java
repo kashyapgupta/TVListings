@@ -1,6 +1,7 @@
 package com.tvlistings.model.ShowContent;
 
 import com.tvlistings.model.BaseResponse;
+import com.tvlistings.model.movieContents.ProductionCompanies;
 
 import java.util.ArrayList;
 
@@ -25,8 +26,14 @@ public class ShowContent extends BaseResponse {
     private String type;
     private double vote_average;
     private int vote_count;
+    private String homepage;
+    private boolean in_production;
+    ArrayList<String> languages;
+    private String last_air_date;
+    ArrayList<ProductionCompanies> production_companies;
+    private String status;
 
-    public ShowContent(String backdrop_path, ArrayList<Creators> created_by, ArrayList<Integer> episode_run_time, String first_air_date, ArrayList<ShowGenres> genres, int id, String name, String original_name, ArrayList<Networks> networks, int number_of_episodes, int number_of_seasons, String overview, String poster_path, ArrayList<Seasons> seasons, String type, double vote_average, int vote_count) {
+    public ShowContent(String backdrop_path, ArrayList<Creators> created_by, ArrayList<Integer> episode_run_time, String first_air_date, ArrayList<ShowGenres> genres, int id, String name, String original_name, ArrayList<Networks> networks, int number_of_episodes, int number_of_seasons, String overview, String poster_path, ArrayList<Seasons> seasons, String type, double vote_average, int vote_count, String homepage, boolean in_production, ArrayList<String> languages, String last_air_date, ArrayList<ProductionCompanies> production_companies, String status) {
         this.backdrop_path = backdrop_path;
         this.created_by = created_by;
         this.episode_run_time = episode_run_time;
@@ -44,6 +51,12 @@ public class ShowContent extends BaseResponse {
         this.type = type;
         this.vote_average = vote_average;
         this.vote_count = vote_count;
+        this.homepage = homepage;
+        this.in_production = in_production;
+        this.languages = languages;
+        this.last_air_date = last_air_date;
+        this.production_companies = production_companies;
+        this.status = status;
     }
 
     public String getBackdrop_path() {
@@ -113,4 +126,29 @@ public class ShowContent extends BaseResponse {
     public int getVote_count() {
         return vote_count;
     }
+
+    public String getHomepage() {
+        return homepage;
+    }
+
+    public boolean isIn_production() {
+        return in_production;
+    }
+
+    public ArrayList<String> getLanguages() {
+        return languages;
+    }
+
+    public String getLast_air_date() {
+        return last_air_date;
+    }
+
+    public ArrayList<ProductionCompanies> getProduction_companies() {
+        return production_companies;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+    
 }

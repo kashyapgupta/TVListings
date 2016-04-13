@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/activity_movie_collection_poster_background_network_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/activity_movie_collection_backdrop_network_image_view"
+                android:layout_width="match_parent"
+                android:layout_height="210dp"/>
+
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/activity_movie_collection_poster_network_image_view"
+                android:layout_width="150dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="140dp"
+                android:layout_marginLeft="5dp"/>
+
+            <TextView
+                android:id="@+id/activity_movie_collection_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#BFFFFFFF"
+                android:textSize="19sp"
+                android:layout_below="@id/activity_movie_collection_backdrop_network_image_view"
+                android:padding="7dp"
+                android:layout_toRightOf="@id/activity_movie_collection_poster_network_image_view"/>
+
+            <ImageView
+                android:id="@+id/activity_movie_collection_rating_image_view"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="7dp"
+                android:layout_marginTop="5dp"
+                android:layout_below="@id/activity_movie_collection_title_text_view"
+                android:layout_toRightOf="@id/activity_movie_collection_poster_network_image_view"/>
+
+            <TextView
+                android:id="@+id/activity_movie_collection_rating_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:textColor="#BFFFFFFF"
+                android:layout_marginTop="5dp"
+                android:textSize="18sp"
+                android:layout_below="@id/activity_movie_collection_title_text_view"
+                android:layout_toRightOf="@id/activity_movie_collection_rating_image_view"/>
+
+            <TextView
+                android:id="@+id/activity_movie_collection_overview_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activity_movie_collection_poster_network_image_view"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="25dp"
+                android:layout_centerHorizontal="true"
+                android:padding="8dp"
+                android:textSize="16sp"
+                android:textColor="#BFFFFFFF"/>
+
+            <TextView
+                android:id="@+id/activity_movie_collection_movies_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activity_movie_collection_overview_text_view"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="15dp"
+                android:visibility="gone"
+                android:textColor="#BFFFFFFF"
+                android:textSize="25dp"
+                android:text="Movies"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/activity_movie_collection_movies_recycler_view"
+                android:layout_width="wrap_content"
+                android:layout_height="210dp"
+                android:layout_below="@id/activity_movie_collection_movies_text_view"
+                android:layout_margin="5dp"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

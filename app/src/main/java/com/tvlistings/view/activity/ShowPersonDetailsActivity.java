@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.tvlistings.R;
+import com.tvlistings.constants.UrlConstants;
 import com.tvlistings.controller.factory.TVListingServiceFactory;
 import com.tvlistings.controller.network.TVListingNetworkClient;
 import com.tvlistings.controller.service.PeopleService;
@@ -62,12 +64,11 @@ public class ShowPersonDetailsActivity extends BaseListingActivity implements Di
         mImageLoader = TVListingNetworkClient.getInstance().getImageLoader();
         mName = intent.getStringExtra("name");
         mHeadshot = intent.getStringExtra("poster");
+        mId = intent.getIntExtra("id", 1);
+        Log.i("sanju", String.valueOf(mId));
         if (mHeadshot.equalsIgnoreCase("null")) {
             mHeadshot = "http://uits.knust.edu.gh/assets/images/content/pics/img2013223_17151.jpg";
         }
-        mId = intent.getIntExtra("id", 1);
-        Log.i("sanju", String.valueOf(mId));
-        mHeadshotImage.setImageUrl(mHeadshot, mImageLoader);
         mNameText.setText(mName);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -103,6 +104,10 @@ public class ShowPersonDetailsActivity extends BaseListingActivity implements Di
     public void onSuccess(BaseResponse response) {
         if (response instanceof PersonDetails) {
             mPersonDetails = (PersonDetails) response;
+            if (!TextUtils.isEmpty(mPersonDetails.getProfile_path()) && !"null".equalsIgnoreCase(mPersonDetails.getProfile_path())) {
+                mHeadshot = String.format(UrlConstants.IMAGE_URLW_185, mPersonDetails.getProfile_path());
+            }
+            mHeadshotImage.setImageUrl(mHeadshot, mImageLoader);
             if (mPersonDetails.getBirthday() != null && !mPersonDetails.getBirthday().isEmpty()){
                 if (mPersonDetails.getPlace_of_birth() != null && !mPersonDetails.getPlace_of_birth().isEmpty()) {
                     mBirthdayText.setText("Born on " + mPersonDetails.getBirthday()+" in " +mPersonDetails.getPlace_of_birth());

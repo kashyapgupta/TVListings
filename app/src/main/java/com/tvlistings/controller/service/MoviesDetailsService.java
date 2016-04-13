@@ -8,6 +8,7 @@ import com.tvlistings.controller.network.response.JSONGetCallback;
 import com.tvlistings.controller.network.response.ResponseError;
 import com.tvlistings.model.ShowContent.ShowContent;
 import com.tvlistings.model.movieContents.MovieContent;
+import com.tvlistings.model.movieContents.MoviesCollectionContent;
 import com.tvlistings.model.moviesList.MoviesList;
 import com.tvlistings.model.moviesList.NowPlayingMoviesList;
 import com.tvlistings.model.moviesList.PopularMoviesList;
@@ -59,6 +60,25 @@ public class MoviesDetailsService extends TVListingBaseService {
                 }.getType();
                 MoviesList moviesList = new GsonBuilder().create().fromJson(reader, listType);
                 callbacks.onSuccess(moviesList);
+            }
+
+            @Override
+            public void onError(ResponseError error) {
+
+            }
+        });
+    }
+
+    public void getCollectionDetail (int id, final ServiceCallbacks callbacks) {
+        String url = String.format(UrlConstants.MOVIE_COLLECTION_URL, id);
+
+        TVListingNetworkClient.getInstance().get(url, new JSONGetCallback() {
+            @Override
+            public void onSuccess(JSONObject responseObject) {
+                String reader = responseObject.toString();
+                Type listType = new TypeToken<MoviesCollectionContent>(){}.getType();
+                MoviesCollectionContent moviesCollectionContent = new GsonBuilder().create().fromJson(reader, listType);
+                callbacks.onSuccess(moviesCollectionContent);
             }
 
             @Override

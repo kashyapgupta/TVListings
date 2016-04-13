@@ -33,7 +33,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#80000000"/>
+            android:background="@color/halfBlack"/>
 
         <ScrollView
             android:layout_width="wrap_content"
@@ -66,7 +66,7 @@
                 <TextView
                     android:id="@+id/activity_selected_show_genres_text_view"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="15dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:gravity="center"
@@ -81,7 +81,7 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:background="@drawable/check"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="25dp"
                     android:paddingLeft="10dp"
                     android:layout_marginLeft="170dp"
                     android:layout_below="@id/activity_selected_show_genres_text_view"
@@ -115,7 +115,7 @@
                     android:id="@+id/activity_selected_show_heart_image_view"
                     android:layout_width="30dp"
                     android:layout_height="37dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="22dp"
                     android:layout_marginLeft="10dp"
                     android:layout_below="@id/activity_selected_show_genres_text_view"/>
 
@@ -126,7 +126,7 @@
                     android:textSize="20sp"
                     android:layout_marginLeft="3dp"
                     android:layout_below="@id/activity_selected_show_genres_text_view"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="25dp"
                     android:textColor="#BFFFFFFF"
                     android:layout_height="wrap_content" />
 
@@ -134,10 +134,10 @@
                     android:id="@+id/activity_selected_show_votes_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="240dp"
+                    android:layout_marginLeft="230dp"
                     android:layout_toRightOf="@id/activity_selected_show_heart_image_view"
                     android:textSize="18sp"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="25dp"
                     android:textColor="#BFFFFFFF"
                     android:layout_below="@id/activity_selected_show_genres_text_view"/>
 
@@ -147,27 +147,132 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:padding="7dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="23dp"
                     android:layout_below="@id/activity_selected_show_heart_image_view"
                     android:textColor="#BFFFFFFF"
                     android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/activity_selected_show_no_of_seasons_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#BFFFFFFF"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="16sp"
+                    android:layout_marginTop="2dp"
+                    android:layout_below="@id/activity_selected_show_description_text_view" />
+
+                <TextView
+                    android:id="@+id/activity_selected_show_no_of_episodes_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#BFFFFFFF"
+                    android:layout_marginLeft="250dp"
+                    android:layout_marginRight="7dp"
+                    android:textSize="16sp"
+                    android:layout_marginTop="2dp"
+                    android:layout_below="@id/activity_selected_show_description_text_view" />
+
+                <TextView
+                    android:id="@+id/activity_selected_show_created_by_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#BFFFFFFF"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="16sp"
+                    android:visibility="gone"
+                    android:text="Created By : "
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@id/activity_selected_show_no_of_seasons_text_view" />
+
+                <org.apmem.tools.layouts.FlowLayout
+                    android:id="@+id/activity_selected_show_created_by_flow_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:orientation="horizontal"
+                    android:layout_below="@id/activity_selected_show_created_by_text_view"/>
+
+                <TextView
+                    android:id="@+id/activity_selected_show_status_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#BFFFFFFF"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="16sp"
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@id/activity_selected_show_created_by_flow_layout" />
+
+                <TextView
+                    android:id="@+id/activity_selected_show_first_air_date_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#BFFFFFFF"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="16sp"
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@id/activity_selected_show_status_text_view" />
+
+                <TextView
+                    android:id="@+id/activity_selected_show_last_air_date_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#BFFFFFFF"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="16sp"
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@id/activity_selected_show_first_air_date_text_view" />
+
+                <TextView
+                    android:id="@+id/activity_selected_show_language_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#BFFFFFFF"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="16sp"
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@id/activity_selected_show_last_air_date_text_view" />
 
                 <TextView
                     android:id="@+id/activity_selected_show_runtime_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#BFFFFFFF"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="10dp"
                     android:textSize="16sp"
                     android:layout_marginTop="15dp"
-                    android:layout_below="@id/activity_selected_show_description_text_view" />
+                    android:layout_below="@id/activity_selected_show_language_text_view" />
+
+                <TextView
+                    android:id="@+id/activity_selected_show_homepage_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#BFFFFFFF"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="16sp"
+                    android:text="Homepage : "
+                    android:visibility="gone"
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@id/activity_selected_show_runtime_text_view" />
+
+                <TextView
+                    android:id="@+id/activity_selected_show_link_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/tomato"
+                    android:textSize="16sp"
+                    android:layout_toRightOf="@id/activity_selected_show_homepage_text_view"
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@id/activity_selected_show_runtime_text_view" />
+
 
                 <TextView
                     android:id="@+id/activity_selected_show_seasons_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/activity_selected_show_runtime_text_view"
-                    android:layout_marginLeft="5dp"
+                    android:layout_below="@id/activity_selected_show_link_text_view"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="20dp"
                     android:textSize="20sp"
                     android:visibility="gone"
@@ -238,33 +343,73 @@
                     android:text="People"
                     android:layout_below="@id/Activity_selected_show_episodes_r_v_linear_layout"/>
 
+                <TextView
+                    android:id="@+id/activity_selected_show_people_cast_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="15dp"
+                    android:textSize="20sp"
+                    android:visibility="gone"
+                    android:textColor="#BFFFFFFF"
+                    android:text="Cast"
+                    android:layout_below="@id/activity_selected_show_people_text_view"/>
+
                 <LinearLayout
-                    android:id="@+id/Activity_selected_show_people_r_v_linear_layout"
+                    android:id="@+id/Activity_selected_show_people_cast_r_v_linear_layout"
                     android:layout_width="match_parent"
                     android:layout_height="125dp"
                     android:layout_marginTop="10dp"
                     android:visibility="gone"
                     android:orientation="horizontal"
-                    android:layout_below="@id/activity_selected_show_people_text_view">
+                    android:layout_below="@id/activity_selected_show_people_cast_text_view">
 
                     <android.support.v7.widget.RecyclerView
-                        android:id="@+id/activity_selected_show_people_recycler_view"
+                        android:id="@+id/activity_selected_show_people_cast_recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_margin="5dp"
                         android:scrollbars="horizontal"
-                        android:layout_below="@id/activity_selected_show_seasons_text_view">
-
-                    </android.support.v7.widget.RecyclerView>
+                        android:layout_below="@id/activity_selected_show_people_cast_text_view"/>
 
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/activity_selected_show_people_crew_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="15dp"
+                    android:textSize="20sp"
+                    android:visibility="gone"
+                    android:textColor="#BFFFFFFF"
+                    android:text="Crew"
+                    android:layout_below="@id/Activity_selected_show_people_cast_r_v_linear_layout"/>
+
+                <LinearLayout
+                    android:id="@+id/Activity_selected_show_people_crew_r_v_linear_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="125dp"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone"
+                    android:orientation="horizontal"
+                    android:layout_below="@id/activity_selected_show_people_crew_text_view">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/activity_selected_show_people_crew_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_margin="5dp"
+                        android:scrollbars="horizontal"
+                        android:layout_height="125dp"
+                        android:layout_below="@id/activity_selected_show_people_crew_text_view"/>
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/activity_selected_show_related_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/Activity_selected_show_people_r_v_linear_layout"
+                    android:layout_below="@id/Activity_selected_show_people_crew_r_v_linear_layout"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="20dp"
                     android:visibility="gone"

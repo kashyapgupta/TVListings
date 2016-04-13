@@ -43,7 +43,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#BFFFFFFF"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:gravity="center"/>
 
     <TextView
         android:id="@+id/adapter_people_recycler_view_real_name_text_view"
@@ -53,6 +54,7 @@
         android:layout_height="wrap_content"
         android:textColor="#FFA500"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="4dp"
         android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

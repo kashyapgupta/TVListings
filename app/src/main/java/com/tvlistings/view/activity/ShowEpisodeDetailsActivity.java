@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,7 +31,7 @@ import butterknife.Bind;
 /**
  * Created by Rohit on 3/21/2016.
  */
-public class ShowEpisodeDetailsActivity extends BaseListingActivity implements DisplayPersonDetails, ServiceCallbacks {
+public class ShowEpisodeDetailsActivity extends BaseSearchActivity implements DisplayPersonDetails, ServiceCallbacks {
     RequestQueue mQueue;
     ImageLoader mImageLoader;
     Episodes mEpisode;
@@ -96,7 +97,7 @@ public class ShowEpisodeDetailsActivity extends BaseListingActivity implements D
             mEpisode = (Episodes) response;
             String poster = String.format(UrlConstants.IMAGE_URLW_300, mEpisode.getStill_path());
             String background = String.format(UrlConstants.IMAGE_URLW_500, mEpisode.getStill_path());
-            if (!mEpisode.getStill_path().isEmpty() && !mEpisode.getStill_path().equalsIgnoreCase("null")) {
+            if (!TextUtils.isEmpty(mEpisode.getStill_path()) && !"null".equalsIgnoreCase(mEpisode.getStill_path())) {
                 mPoster.setImageUrl(poster, mImageLoader);
                 mBackground.setImageUrl(background, mImageLoader);
             } else {

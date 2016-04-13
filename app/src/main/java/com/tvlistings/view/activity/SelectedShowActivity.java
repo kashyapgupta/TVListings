@@ -41,6 +41,8 @@ import com.tvlistings.view.callback.DisplayEpisodes;
 import com.tvlistings.view.callback.DisplayPersonDetails;
 import com.tvlistings.view.callback.EpisodeDetails;
 
+import org.apmem.tools.layouts.FlowLayout;
+
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -51,60 +53,110 @@ import butterknife.Bind;
 
 public class SelectedShowActivity extends BaseSearchActivity implements DisplayEpisodes, DisplayPersonDetails, EpisodeDetails, ServiceCallbacks{
     RequestQueue mQueue;
+
     @Bind(R.id.activity_selected_show_title_text_view)
     TextView mTitle;
+
     @Bind(R.id.activity_selected_show_original_title_text_view)
     TextView mOriginalTitle;
+
     @Bind(R.id.activity_selected_show_votes_text_view)
     TextView mVotes;
+
     @Bind(R.id.activity_selected_show_runtime_text_view)
     TextView mRuntime;
+
     @Bind(R.id.activity_selected_show_genres_text_view)
     TextView mGenres;
+
     @Bind(R.id.activity_selected_show_description_text_view)
     TextView mDescription;
+
     @Bind(R.id.activity_selected_show_poster_networkimageview)
     NetworkImageView mPoster;
+
     @Bind(R.id.activity_selected_show_rating_text_view)
     TextView mRating;
+
     @Bind(R.id.activity_selected_show_heart_image_view)
     ImageView ratingImage;
+
     ShowContent mShowData;
     double mShowRating;
     PersonCasting mPeople;
     Context mContext = this;
     int mSeasonNo;
+
     private SeasonsRecyclerViewAdapter mSeasonsAdapter;
-    private PeopleRecyclerViewAdapter mPeopleAdapter;
+    private PeopleRecyclerViewAdapter mPeopleCastAdapter;
+    private PeopleRecyclerViewAdapter mPeopleCrewAdapter;
     private EpisodesRecyclerViewAdapter mEpisodesAdapter;
     private TVShowsRecyclerViewAdapter mRelatedAdapter;
+
     @Bind(R.id.activity_selected_show_seasons_recycler_view)
     RecyclerView mSeasonsRecyclerView;
-    @Bind(R.id.activity_selected_show_people_recycler_view)
-    RecyclerView mPeoplesRecyclerView;
+
+    @Bind(R.id.activity_selected_show_people_cast_recycler_view)
+    RecyclerView mPeopleCastRecyclerView;
+
+    @Bind(R.id.activity_selected_show_people_crew_recycler_view)
+    RecyclerView mPeopleCrewRecyclerView;
+
     @Bind(R.id.activity_selected_show_episodes_recycler_view)
     RecyclerView mEpisodesRecyclerView;
+
     int mId;
     SeasonDetails mEpisodes;
     TVShows mRelated;
+    ImageLoader mImageLoader;
+
     @Bind(R.id.activity_selected_show_related_recycler_view)
     RecyclerView mRelatedRecyclerView;
-    ImageLoader mImageLoader;
+
     @Bind(R.id.activity_selected_show_toggle)
     ToggleButton liked;
+
     @Bind(R.id.activity_selected_show_like_text_view)
     TextView like;
+
     @Bind(R.id.activity_selected_show_unlike_text_view)
     TextView unlike;
+
+    @Bind(R.id.activity_selected_show_status_text_view)
+    TextView mStatus;
+
+    @Bind(R.id.activity_selected_show_no_of_seasons_text_view)
+    TextView mNoOfSeasons;
+
+    @Bind(R.id.activity_selected_show_no_of_episodes_text_view)
+    TextView mNoOfEpisodes;
+
+    @Bind(R.id.activity_selected_show_language_text_view)
+    TextView mLanguages;
+
+    @Bind(R.id.activity_selected_show_first_air_date_text_view)
+    TextView mFirstAirDate;
+
+    @Bind(R.id.activity_selected_show_last_air_date_text_view)
+    TextView mLastAirDate;
+
+    @Bind(R.id.activity_selected_show_link_text_view)
+    TextView mHomepage;
+
+    @Bind(R.id.activity_selected_show_created_by_flow_layout)
+    FlowLayout mFlowLayoutCreatedBy;
+
     ArrayList<Integer> showPreferencesList;
     SharedPreferences mSharedPreferences;
     StringBuilder likeShows = new StringBuilder();
     String likedShows;
     SharedPreferences.Editor editor;
-    private RecyclerView.LayoutManager mRelatedLayoutManager;
-    private RecyclerView.LayoutManager mSeasonsLayoutManager;
-    private RecyclerView.LayoutManager mPeopleLayoutManager;
-    private RecyclerView.LayoutManager mEpisodesLayoutManager;
+
+    private LinearLayoutManager mRelatedLayoutManager;
+    private LinearLayoutManager mSeasonsLayoutManager;
+    private LinearLayoutManager mPeopleCastLayoutManager;
+    private LinearLayoutManager mPeopleCrewLayoutManager;
+    private LinearLayoutManager mEpisodesLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,13 +225,16 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
         mQueue = TVListingNetworkClient.getInstance().getRequestQueue();
         mSeasonsRecyclerView.setHasFixedSize(true);
         mRelatedRecyclerView.setHasFixedSize(true);
-        mPeoplesRecyclerView.setHasFixedSize(true);
+        mPeopleCastRecyclerView.setHasFixedSize(true);
+        mPeopleCrewRecyclerView.setHasFixedSize(true);
         mRelatedLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mSeasonsLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        mPeopleLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mPeopleCastLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mPeopleCrewLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mRelatedRecyclerView.setLayoutManager(mRelatedLayoutManager);
         mSeasonsRecyclerView.setLayoutManager(mSeasonsLayoutManager);
-        mPeoplesRecyclerView.setLayoutManager(mPeopleLayoutManager);
+        mPeopleCastRecyclerView.setLayoutManager(mPeopleCastLayoutManager);
+        mPeopleCrewRecyclerView.setLayoutManager(mPeopleCrewLayoutManager);
         //Show Detail
         ((ShowDetailsService) TVListingServiceFactory.getInstance().getService(ShowDetailsService.class)).getShowDetail(mId, SelectedShowActivity.this);
 
@@ -260,6 +315,84 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
                 mTitle.setTextSize(16);
                 mTitle.setText("("+name+")");
             }
+
+            if (mShowData.isIn_production()) {
+                mStatus.setText("Status : "+"In production");
+            }else if (!TextUtils.isEmpty(mShowData.getStatus()) && !"null".equalsIgnoreCase(mShowData.getStatus())) {
+                mStatus.setText("Status : " +mShowData.getStatus());
+            }else {
+                mStatus.setVisibility(View.GONE);
+            }
+            if (!TextUtils.isEmpty(mShowData.getFirst_air_date()) && !"null".equalsIgnoreCase(mShowData.getFirst_air_date())) {
+                mFirstAirDate.setText("First air date : " + mShowData.getFirst_air_date());
+            }else {
+                mFirstAirDate.setVisibility(View.GONE);
+            }
+            if (!TextUtils.isEmpty(mShowData.getLast_air_date()) && !"null".equalsIgnoreCase(mShowData.getLast_air_date())) {
+                mLastAirDate.setText("Last air date : "+mShowData.getLast_air_date());
+            }else {
+                mLastAirDate.setVisibility(View.GONE);
+            }
+            if (mShowData.getNumber_of_seasons() > 0) {
+                if (mShowData.getNumber_of_episodes() > 0) {
+                    mNoOfSeasons.setText("Seasons : "+mShowData.getNumber_of_seasons());
+                    mNoOfEpisodes.setText("Episodes : " +mShowData.getNumber_of_episodes());
+                }else {
+                    mNoOfSeasons.setText("Seasons : "+mShowData.getNumber_of_seasons());
+                    mNoOfEpisodes.setVisibility(View.GONE);
+                }
+            }else {
+                mNoOfEpisodes.setVisibility(View.GONE);
+                mNoOfSeasons.setVisibility(View.GONE);
+            }
+            if (!TextUtils.isEmpty(mShowData.getHomepage()) && !"null".equalsIgnoreCase(mShowData.getHomepage())) {
+                TextView textView = (TextView)findViewById(R.id.activity_selected_show_homepage_text_view);
+                textView.setVisibility(View.VISIBLE);
+                mHomepage.setText(mShowData.getHomepage());
+            }else {
+                mHomepage.setVisibility(View.GONE);
+            }
+            TextView textView;
+
+            if (mShowData.getCreated_by().size() > 0) {
+                TextView textView1 = (TextView)findViewById(R.id.activity_selected_show_created_by_text_view);
+                textView1.setVisibility(View.VISIBLE);
+                for (int i = 0; i < mShowData.getCreated_by().size(); i++) {
+                    textView = new TextView(this);
+                    textView.setTextSize(16);
+                    textView.setTextColor(getResources().getColor(R.color.tomato));
+                    if (i < (mShowData.getCreated_by().size() - 1)) {
+                        textView.setText(mShowData.getCreated_by().get(i).getName()+", ");
+                    }else {
+                        textView.setText(mShowData.getCreated_by().get(i).getName());
+                    }
+                    mFlowLayoutCreatedBy.addView(textView);
+                    final int finalI = i;
+                    textView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Log.i("created by id", String.valueOf(mShowData.getCreated_by().get(finalI).getId()));
+                            Intent intent = new Intent(mContext, ShowPersonDetailsActivity.class);
+                            intent.putExtra("name", mShowData.getCreated_by().get(finalI).getName());
+                            intent.putExtra("id", mShowData.getCreated_by().get(finalI).getId());
+                            intent.putExtra("poster", "null");
+                            startActivity(intent);
+                        }
+                    });
+                }
+            }
+
+            String language;
+            if (mShowData.getLanguages().size() > 0) {
+                language = mShowData.getLanguages().toString();
+                language = language.replace("[", "");
+                language = language.replace("]", "");
+
+                mLanguages.setText("Languages : "+language);
+            }else {
+                mLanguages.setVisibility(View.GONE);
+            }
+
             int votes = mShowData.getVote_count();
             mVotes.setText(String.valueOf(votes)+" votes");
             String runtime = String.valueOf(mShowData.getEpisode_run_time());
@@ -304,11 +437,24 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
             mPeople = (PersonCasting) response;
             if (mPeople.getCast().size() > 0) {
                 TextView textView = (TextView)findViewById(R.id.activity_selected_show_people_text_view);
-                LinearLayout linearLayout = (LinearLayout)findViewById(R.id.Activity_selected_show_people_r_v_linear_layout);
+                TextView textView1 = (TextView)findViewById(R.id.activity_selected_show_people_cast_text_view);
+                LinearLayout linearLayout = (LinearLayout)findViewById(R.id.Activity_selected_show_people_cast_r_v_linear_layout);
                 textView.setVisibility(View.VISIBLE);
+                textView1.setVisibility(View.VISIBLE);
                 linearLayout.setVisibility(View.VISIBLE);
-                mPeopleAdapter = new PeopleRecyclerViewAdapter(mPeople, mQueue, mContext);
-                mPeoplesRecyclerView.setAdapter(mPeopleAdapter);
+                mPeopleCastAdapter = new PeopleRecyclerViewAdapter(mPeople, mQueue, mContext, true);
+                mPeopleCastRecyclerView.setAdapter(mPeopleCastAdapter);
+            }
+            if (mPeople.getCrew().size() > 0) {
+
+                TextView textView = (TextView)findViewById(R.id.activity_selected_show_people_text_view);
+                TextView textView1 = (TextView)findViewById(R.id.activity_selected_show_people_crew_text_view);
+                LinearLayout linearLayout = (LinearLayout)findViewById(R.id.Activity_selected_show_people_crew_r_v_linear_layout);
+                textView.setVisibility(View.VISIBLE);
+                textView1.setVisibility(View.VISIBLE);
+                linearLayout.setVisibility(View.VISIBLE);
+                mPeopleCrewAdapter = new PeopleRecyclerViewAdapter(mPeople, mQueue, mContext, false);
+                mPeopleCrewRecyclerView.setAdapter(mPeopleCrewAdapter);
             }
         }else if (response instanceof TVShows) {
             mRelated = (TVShows) response;

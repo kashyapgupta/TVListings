@@ -10,6 +10,7 @@ public class UrlConstants {
     public static final String IMAGE_URLW_500 = "http://image.tmdb.org/t/p/w500%s";
     public static final String SHOW_URL = "http://api.themoviedb.org/3/tv/%d?api_key=c23fe079e72d437208ac3638b04f7c80";
     public static final String MOVIE_URL = "http://api.themoviedb.org/3/movie/%d?api_key=c23fe079e72d437208ac3638b04f7c80";
+    public static final String MOVIE_COLLECTION_URL = "http://api.themoviedb.org/3/collection/%d?api_key=c23fe079e72d437208ac3638b04f7c80";
     public static final String SEASON_URL = "http://api.themoviedb.org/3/tv/%d/season/%d?api_key=c23fe079e72d437208ac3638b04f7c80";
     public static final String SHOW_PEOPLE_URL = "http://api.themoviedb.org/3/tv/%d/credits?api_key=c23fe079e72d437208ac3638b04f7c80";
     public static final String MOVIE_PEOPLE_URL = "http://api.themoviedb.org/3/movie/%d/credits?api_key=c23fe079e72d437208ac3638b04f7c80";

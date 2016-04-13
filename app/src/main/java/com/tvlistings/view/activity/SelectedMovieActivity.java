@@ -3,6 +3,7 @@ package com.tvlistings.view.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -79,6 +80,15 @@ public class SelectedMovieActivity extends BaseSearchActivity implements Service
     @Bind(R.id.activity_selected_movie_tagline_text_view)
     TextView mTagline;
 
+    @Bind(R.id.activity_selected_movie_collection_text_view)
+    TextView mCollection;
+
+    @Bind(R.id.activity_selected_movie_language_spoken_text_view)
+    TextView mLanguage;
+
+    @Bind(R.id.activity_selected_movie_link_text_view)
+    TextView mHomepage;
+
     @Bind(R.id.activity_selected_movie_release_date_text_view)
     TextView mReleaseDate;
 
@@ -97,16 +107,21 @@ public class SelectedMovieActivity extends BaseSearchActivity implements Service
     @Bind(R.id.activity_selected_movie_heart_image_view)
     ImageView mRatingImage;
 
-    @Bind(R.id.activity_selected_movie_people_recycler_view)
-    RecyclerView mPeopleRecyclerview;
+    @Bind(R.id.activity_selected_movie_people_cast_recycler_view)
+    RecyclerView mPeopleCastRecyclerview;
+
+    @Bind(R.id.activity_selected_movie_people_crew_recycler_view)
+    RecyclerView mPeopleCrewRecyclerview;
 
     @Bind(R.id.activity_selected_movie_related_recycler_view)
     RecyclerView mRelatedMoviesRecyclerView;
 
-    LinearLayoutManager mPeopleLinearLayoutManager;
+    LinearLayoutManager mPeopleCastLinearLayoutManager;
+    LinearLayoutManager mPeopleCrewLinearLayoutManager;
     LinearLayoutManager mRelatedMoviesLinearLayoutManager;
 
-    PeopleRecyclerViewAdapter mPeopleAdapter;
+    PeopleRecyclerViewAdapter mPeopleCastAdapter;
+    PeopleRecyclerViewAdapter mPeopleCrewAdapter;
     MoviesRecyclerViewAdapter mRelatedMoviesAdapter;
 
     StringBuilder likeMovies = new StringBuilder();
@@ -184,9 +199,13 @@ public class SelectedMovieActivity extends BaseSearchActivity implements Service
         mQueue = TVListingNetworkClient.getInstance().getRequestQueue();
         mImageLoader = TVListingNetworkClient.getInstance().getImageLoader();
 
-        mPeopleRecyclerview.setHasFixedSize(true);
-        mPeopleLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        mPeopleRecyclerview.setLayoutManager(mPeopleLinearLayoutManager);
+        mPeopleCastRecyclerview.setHasFixedSize(true);
+        mPeopleCastLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mPeopleCastRecyclerview.setLayoutManager(mPeopleCastLinearLayoutManager);
+
+        mPeopleCrewRecyclerview.setHasFixedSize(true);
+        mPeopleCrewLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mPeopleCrewRecyclerview.setLayoutManager(mPeopleCrewLinearLayoutManager);
 
         mRelatedMoviesRecyclerView.setHasFixedSize(true);
         mRelatedMoviesLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -243,6 +262,7 @@ public class SelectedMovieActivity extends BaseSearchActivity implements Service
             runtime = runtime.replace("[", "");
             runtime = runtime.replace("]", "");
             if (Integer.valueOf(runtime) != 0) {
+                mRuntime.setVisibility(View.VISIBLE);
                 mRuntime.setText("Runtime: " + runtime + " mins");
             }
             ArrayList<String> genresArray = new ArrayList<>();
@@ -265,29 +285,90 @@ public class SelectedMovieActivity extends BaseSearchActivity implements Service
             mRatingImage.setImageResource(image);
             mRating.setText(rating + " %");
             if ((mMovieData.getTagline()) != null && !mMovieData.getTagline().isEmpty()) {
+                mTagline.setVisibility(View.VISIBLE);
                 mTagline.setText("Tagline: "+mMovieData.getTagline());
+            }
+            if (mMovieData.getBelongs_to_collection() != null) {
+                if (!"null".equalsIgnoreCase(mMovieData.getBelongs_to_collection().getName()) && !TextUtils.isEmpty(mMovieData.getBelongs_to_collection().getName())) {
+                    TextView textView = (TextView)findViewById(R.id.activity_selected_movie_part_of_text_view);
+                    textView.setVisibility(View.VISIBLE);
+                    mCollection.setVisibility(View.VISIBLE);
+                    mCollection.setText(mMovieData.getBelongs_to_collection().getName());
+                }
+            }
+
+            mCollection.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, MovieCollectionActivity.class);
+                    intent.putExtra("collectionID", mMovieData.getBelongs_to_collection().getId());
+                    startActivity(intent);
+                }
+            });
+            ArrayList<String> languages = new ArrayList<>();
+            for (int i = 0; i < mMovieData.getSpoken_languages().size(); i++) {
+                languages.add(mMovieData.getSpoken_languages().get(i).getName());
+            }
+            String languages_spoken = String.valueOf(languages);
+            languages_spoken = languages_spoken.replace("[", "");
+            languages_spoken = languages_spoken.replace("]", "");
+            if (!languages_spoken.isEmpty()) {
+                TextView textView = (TextView)findViewById(R.id.activity_selected_movie_language_text_view);
+                textView.setVisibility(View.VISIBLE);
+                mLanguage.setVisibility(View.VISIBLE);
+                mLanguage.setText(languages_spoken);
+            }
+            if (mMovieData.getHomepage() != null && !mMovieData.getHomepage().isEmpty()) {
+                TextView textView = (TextView)findViewById(R.id.activity_selected_movie_homepage_text_view);
+                textView.setVisibility(View.VISIBLE);
+                mHomepage.setVisibility(View.VISIBLE);
+                mHomepage.setText(mMovieData.getHomepage());
+                mHomepage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mMovieData.getHomepage()));
+                        startActivity(intent);
+                    }
+                });
             }
             if ((mMovieData.getBudget()) != null && !mMovieData.getBudget().isEmpty()) {
                 if ((Integer.valueOf(mMovieData.getBudget())) != 0) {
+                    mBudget.setVisibility(View.VISIBLE);
                     mBudget.setText("Budget: $" + mMovieData.getBudget());
                 }
             }
             if ((mMovieData.getRevenue()) != null && !mMovieData.getRevenue().isEmpty()) {
                 if ((Integer.valueOf(mMovieData.getRevenue())) != 0) {
+                    mRevenue.setVisibility(View.VISIBLE);
                     mRevenue.setText("Revenue: $" + mMovieData.getRevenue());
                 }
             }
             if ((mMovieData.getRelease_date()) != null && !mMovieData.getRelease_date().isEmpty()) {
+                mReleaseDate.setVisibility(View.VISIBLE);
                 mReleaseDate.setText("Release Date: "+mMovieData.getRelease_date());
             }
         }else if (response instanceof PersonCasting) {
             mPeople = (PersonCasting) response;
-            TextView textView = (TextView)findViewById(R.id.activity_selected_movie_people_text_view);
-            LinearLayout linearLayout = (LinearLayout)findViewById(R.id.activity_selected_movie_people_r_v_linear_layout);
-            textView.setVisibility(View.VISIBLE);
-            linearLayout.setVisibility(View.VISIBLE);
-            mPeopleAdapter = new PeopleRecyclerViewAdapter(mPeople, mQueue, mContext);
-            mPeopleRecyclerview.setAdapter(mPeopleAdapter);
+            if (mPeople.getCast().size() > 0) {
+                TextView textView = (TextView) findViewById(R.id.activity_selected_movie_people_text_view);
+                TextView textView1 = (TextView)findViewById(R.id.activity_selected_movie_people_cast_text_view);
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.activity_selected_movie_people_cast_r_v_linear_layout);
+                textView.setVisibility(View.VISIBLE);
+                textView1.setVisibility(View.VISIBLE);
+                linearLayout.setVisibility(View.VISIBLE);
+                mPeopleCastAdapter = new PeopleRecyclerViewAdapter(mPeople, mQueue, mContext, true);
+                mPeopleCastRecyclerview.setAdapter(mPeopleCastAdapter);
+            }
+            if (mPeople.getCrew().size() > 0) {
+                TextView textView = (TextView) findViewById(R.id.activity_selected_movie_people_text_view);
+                TextView textView1 = (TextView)findViewById(R.id.activity_selected_movie_people_crew_text_view);
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.activity_selected_movie_people_crew_r_v_linear_layout);
+                textView.setVisibility(View.VISIBLE);
+                linearLayout.setVisibility(View.VISIBLE);
+                textView1.setVisibility(View.VISIBLE);
+                mPeopleCrewAdapter = new PeopleRecyclerViewAdapter(mPeople, mQueue, mContext, false);
+                mPeopleCrewRecyclerview.setAdapter(mPeopleCrewAdapter);
+            }
         }else if (response instanceof MoviesList) {
             mRelatedMovies = (MoviesList) response;
             if (mRelatedMovies.getResults().size() > 0) {

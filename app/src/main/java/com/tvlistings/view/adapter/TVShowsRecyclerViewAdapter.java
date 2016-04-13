@@ -83,6 +83,7 @@ public class TVShowsRecyclerViewAdapter extends RecyclerView.Adapter<TVShowsRecy
         String name = mPopularShows.getResults().get(position).getName();
         String originalName = mPopularShows.getResults().get(position).getOriginal_name();
         if (name.toLowerCase().equals(originalName.toLowerCase())) {
+            holder.originalTitle.setText("");
             holder.title.setText(name);
         }else {
             holder.originalTitle.setText(originalName);
