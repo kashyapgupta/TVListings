@@ -20,6 +20,8 @@
                 </category>
             </intent-filter>
         </activity>
+        <activity android:name=".view.activity.DiscoverHomeActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"/>
         <activity android:name=".view.activity.TVShowsHomeActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"/>
         <activity android:name=".view.activity.MoviesHomeActivity"
@@ -33,6 +35,12 @@
         <activity android:name=".view.activity.SelectedMovieActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"/>
         <activity android:name=".view.activity.MovieCollectionActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"/>
+        <activity android:name=".view.activity.PersonsHomeActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"/>
+        <activity android:name=".view.activity.SelectedNetworkActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"/>
+        <activity android:name=".view.activity.ProductionCompanyActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"/>
 
     </application>

@@ -54,11 +54,17 @@ public class HomeActivity extends  BaseSearchActivity implements ServiceCallback
     @Bind(R.id.activity_home_movies_image_view)
     ImageView mMovie;
 
+    @Bind(R.id.activity_home_discover_image_view)
+    ImageView mDiscover;
+
     @Bind(R.id.activity_home_people_image_view)
     ImageView mPeople;
 
     @Bind(R.id.activity_home_tv_show_text_view)
     TextView mTvShowsTextView;
+
+    @Bind(R.id.activity_home_discover_text_view)
+    TextView mDiscoverTextView;
 
     @Bind(R.id.activity_home_movies_text_view)
     TextView mMoviesTextView;
@@ -95,6 +101,7 @@ public class HomeActivity extends  BaseSearchActivity implements ServiceCallback
         mTvShow.setImageResource(R.mipmap.ic_tv_white_48dp);
         mMovie.setImageResource(R.mipmap.ic_movie_white_48dp);
         mPeople.setImageResource(R.mipmap.ic_people_outline_white_48dp);
+        mDiscover.setImageResource(R.mipmap.ic_search_white_48dp);
 
         mTvShowsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,7 +122,16 @@ public class HomeActivity extends  BaseSearchActivity implements ServiceCallback
         mPeopleTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(mContext, PersonsHomeActivity.class);
+                startActivity(intent);
+            }
+        });
 
+        mDiscoverTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, DiscoverHomeActivity.class);
+                startActivity(intent);
             }
         });
     }

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E9000000">
+
+    <TextView
+        android:id="@+id/activity_discover_home_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:textColor="#BFFFFFFF"
+        android:text="Discover new Movies and TV Shows"
+        android:textSize="21sp"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/activity_discover_home_year_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:textColor="#BFFFFFFF"
+        android:text="Year : "
+        android:textSize="18sp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/activity_discover_home_text_view"/>
+
+
+    <LinearLayout
+        android:id="@+id/activity_discover_home_year_linear_layout"
+        android:layout_width="70dp"
+        android:layout_height="25dp"
+        android:background="#FFFFFFFF"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/activity_discover_home_year_text_view">
+
+        <Spinner
+            android:id="@+id/activity_discover_home_year_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/activity_discover_home_sort_by_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="95dp"
+        android:textColor="#BFFFFFFF"
+        android:text="Sort By : "
+        android:textSize="18sp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/activity_discover_home_text_view"/>
+
+
+    <LinearLayout
+        android:id="@+id/activity_discover_home_sort_by_linear_layout"
+        android:layout_width="150dp"
+        android:layout_height="25dp"
+        android:background="#FFFFFFFF"
+        android:layout_marginLeft="95dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/activity_discover_home_sort_by_text_view">
+
+        <Spinner
+            android:id="@+id/activity_discover_home_sort_by_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/activity_discover_home_type_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="260dp"
+        android:textColor="#BFFFFFFF"
+        android:text="Type : "
+        android:textSize="18sp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/activity_discover_home_text_view"/>
+
+
+    <LinearLayout
+        android:id="@+id/activity_discover_home_type_linear_layout"
+        android:layout_width="80dp"
+        android:layout_height="25dp"
+        android:background="#FFFFFFFF"
+        android:layout_marginLeft="260dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/activity_discover_home_type_text_view">
+
+        <Spinner
+            android:id="@+id/activity_discover_home_type_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/activity_discover_home_results_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_discover_home_year_linear_layout"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"/>
+
+</RelativeLayout>

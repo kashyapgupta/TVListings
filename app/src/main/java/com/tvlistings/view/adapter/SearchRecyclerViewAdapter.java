@@ -152,7 +152,15 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
                     }
                 });
                 holder.title.setText(mObjects.get(position).getName());
-                holder.year.setText("");
+                if (mObjects.get(position).getKnown_for().size() > 0) {
+                    if ("movie".equalsIgnoreCase(mObjects.get(position).getKnown_for().get(0).getMedia_type())) {
+                        holder.year.setText("Known for : "+mObjects.get(position).getKnown_for().get(0).getTitle());
+                    }else if ("tv".equalsIgnoreCase(mObjects.get(position).getKnown_for().get(0).getMedia_type())) {
+                        holder.year.setText("Known for : "+mObjects.get(position).getKnown_for().get(0).getName());
+                    }else {
+                        holder.year.setText("");
+                    }
+                }
             }
 
         } else {

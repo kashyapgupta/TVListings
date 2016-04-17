@@ -211,15 +211,37 @@
                     android:layout_below="@id/activity_selected_movie_release_date_text_view" />
 
                 <TextView
+                    android:id="@+id/activity_selected_movie_production_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#BFFFFFFF"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="12dp"
+                    android:text="Production Companies : "
+                    android:visibility="gone"
+                    android:textSize="16sp"
+                    android:layout_below="@id/activity_selected_movie_runtime_text_view" />
+
+                <org.apmem.tools.layouts.FlowLayout
+                    android:id="@+id/activity_selected_movie_production_flow_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="12dp"
+                    android:orientation="horizontal"
+                    android:layout_below="@id/activity_selected_movie_production_text_view"/>
+
+                <TextView
                     android:id="@+id/activity_selected_movie_budget_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
+                    android:layout_marginTop="7dp"
                     android:textColor="#BFFFFFFF"
                     android:padding="7dp"
                     android:layout_marginLeft="5dp"
                     android:textSize="16sp"
-                    android:layout_below="@id/activity_selected_movie_runtime_text_view" />
+                    android:layout_below="@id/activity_selected_movie_production_flow_layout" />
 
                 <TextView
                     android:id="@+id/activity_selected_movie_revenue_text_view"

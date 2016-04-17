@@ -7,6 +7,7 @@ import com.tvlistings.controller.network.TVListingNetworkClient;
 import com.tvlistings.controller.network.response.JSONGetCallback;
 import com.tvlistings.controller.network.response.ResponseError;
 import com.tvlistings.model.PersonDetails;
+import com.tvlistings.model.PopularPeople;
 import com.tvlistings.model.peopleCasting.PersonCasting;
 
 import org.json.JSONObject;
@@ -69,6 +70,27 @@ public class PeopleService extends TVListingBaseService {
                 }.getType();
                 PersonDetails personDetails = new GsonBuilder().create().fromJson(reader, listType);
                 callbacks.onSuccess(personDetails);
+            }
+
+            @Override
+            public void onError(ResponseError error) {
+
+            }
+        });
+    }
+
+    public void getPopularPeople(int mCurrentPage, final ServiceCallbacks callbacks) {
+
+        String url = String.format(UrlConstants.POPULAR_PEOPLE, mCurrentPage);
+
+        TVListingNetworkClient.getInstance().get(url, new JSONGetCallback() {
+            @Override
+            public void onSuccess(JSONObject responseObject) {
+                String reader = responseObject.toString();
+                Type listType = new TypeToken<PopularPeople>() {
+                }.getType();
+                PopularPeople popularPersons = new GsonBuilder().create().fromJson(reader, listType);
+                callbacks.onSuccess(popularPersons);
             }
 
             @Override

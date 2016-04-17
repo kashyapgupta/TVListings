@@ -1,0 +1,86 @@
+package com.tvlistings.view.activity;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.widget.TextView;
+
+import com.android.volley.RequestQueue;
+import com.tvlistings.R;
+import com.tvlistings.controller.factory.TVListingServiceFactory;
+import com.tvlistings.controller.network.TVListingNetworkClient;
+import com.tvlistings.controller.service.MoviesDetailsService;
+import com.tvlistings.model.BaseResponse;
+import com.tvlistings.model.DiscoveredData;
+import com.tvlistings.model.searchResult.SearchResultContent;
+import com.tvlistings.view.adapter.DiscoverRecyclerViewAdapter;
+
+import butterknife.Bind;
+
+/**
+ * Created by Rohit on 4/18/2016.
+ */
+public class ProductionCompanyActivity extends BaseSearchActivity {
+
+    RequestQueue mQueue;
+    Context mContext;
+    int mProductionId;
+    DiscoveredData mMovieData;
+    DiscoverRecyclerViewAdapter mMovieRecyclerViewAdapter;
+    LinearLayoutManager mMovieLinearLayoutManager;
+
+    @Bind(R.id.activity_production_company_movies_recycler_view)
+    RecyclerView mMovieRecyclerView;
+
+    @Bind(R.id.activity_production_company_name_text_view)
+    TextView mName;
+    private int mCurrentPage = 1;
+    private int mPageCount;
+
+    @Override
+    protected int getContentViewId() {
+        return R.layout.activity_production_company;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mContext = this;
+        mQueue = TVListingNetworkClient.getInstance().getRequestQueue();
+
+        mMovieRecyclerView.setHasFixedSize(true);
+        mMovieLinearLayoutManager = new LinearLayoutManager(this);
+        mMovieRecyclerView.setLayoutManager(mMovieLinearLayoutManager);
+
+        mMovieRecyclerViewAdapter = new DiscoverRecyclerViewAdapter(mQueue, mContext);
+        mMovieRecyclerView.setAdapter(mMovieRecyclerViewAdapter);
+
+        Intent intent = getIntent();
+        String name = intent.getStringExtra("name");
+        mName.setText(name);
+
+        mProductionId = intent.getIntExtra("id", 0);
+        ((MoviesDetailsService) TVListingServiceFactory.getInstance().getService(MoviesDetailsService.class)).getProductionCompanyMovies(mProductionId, mCurrentPage, ProductionCompanyActivity.this);
+    }
+
+    @Override
+    public void loadMore() {
+        if (mCurrentPage < mPageCount) {
+            mCurrentPage++;
+            ((MoviesDetailsService) TVListingServiceFactory.getInstance().getService(MoviesDetailsService.class)).getProductionCompanyMovies(mProductionId, mCurrentPage, ProductionCompanyActivity.this);
+        }
+    }
+
+    @Override
+    public void onSuccess(BaseResponse response) {
+        if (response instanceof SearchResultContent) {
+            super.onSuccess(response);
+        }else if (response instanceof DiscoveredData) {
+            mMovieData = (DiscoveredData) response;
+            mPageCount = mMovieData.getTotal_pages();
+            mMovieRecyclerViewAdapter.setData(mMovieData.getResults());
+        }
+    }
+}

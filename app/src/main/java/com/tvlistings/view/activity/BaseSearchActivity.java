@@ -116,6 +116,7 @@ public abstract class BaseSearchActivity extends BaseListingActivity implements 
     public void loadMore() {
 
         if(mCurrentPage < mPageCount) {
+
             ((SearchService)TVListingServiceFactory.getInstance().getService(SearchService.class)).search(mSearch, mCurrentPage, BaseSearchActivity.this);
         }
     }

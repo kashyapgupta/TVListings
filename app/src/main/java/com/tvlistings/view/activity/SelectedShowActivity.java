@@ -3,6 +3,7 @@ package com.tvlistings.view.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -145,6 +146,12 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
 
     @Bind(R.id.activity_selected_show_created_by_flow_layout)
     FlowLayout mFlowLayoutCreatedBy;
+
+    @Bind(R.id.activity_selected_show_networks_flow_layout)
+    FlowLayout mNetworksFlowLayout;
+
+    @Bind(R.id.activity_selected_show_production_flow_layout)
+    FlowLayout mProductionFlowLayout;
 
     ArrayList<Integer> showPreferencesList;
     SharedPreferences mSharedPreferences;
@@ -352,6 +359,13 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
             }else {
                 mHomepage.setVisibility(View.GONE);
             }
+            mHomepage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mShowData.getHomepage()));
+                    startActivity(intent);
+                }
+            });
             TextView textView;
 
             if (mShowData.getCreated_by().size() > 0) {
@@ -377,6 +391,59 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
                             intent.putExtra("id", mShowData.getCreated_by().get(finalI).getId());
                             intent.putExtra("poster", "null");
                             startActivity(intent);
+                        }
+                    });
+                }
+            }
+
+            if (mShowData.getNetworks().size() > 0) {
+                TextView textView1 = (TextView)findViewById(R.id.activity_selected_show_networks_text_view);
+                textView1.setVisibility(View.VISIBLE);
+                for (int i = 0; i < mShowData.getNetworks().size(); i++) {
+                    textView = new TextView(this);
+                    textView.setTextSize(16);
+                    textView.setTextColor(getResources().getColor(R.color.tomato));
+                    if (i < (mShowData.getNetworks().size() - 1)) {
+                        textView.setText(mShowData.getNetworks().get(i).getName()+", ");
+                    }else {
+                        textView.setText(mShowData.getNetworks().get(i).getName());
+                    }
+                    mNetworksFlowLayout.addView(textView);
+                    final int finalI = i;
+                    textView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(mContext, SelectedNetworkActivity.class);
+                            intent.putExtra("name", mShowData.getNetworks().get(finalI).getName());
+                            intent.putExtra("id", mShowData.getNetworks().get(finalI).getId());
+                            startActivity(intent);
+                        }
+                    });
+                }
+            }
+
+            if (mShowData.getProduction_companies().size() > 0) {
+                TextView textView1 = (TextView)findViewById(R.id.activity_selected_show_production_text_view);
+                textView1.setVisibility(View.VISIBLE);
+                for (int i = 0; i < mShowData.getProduction_companies().size(); i++) {
+                    textView = new TextView(this);
+                    textView.setTextSize(16);
+                    textView.setTextColor(getResources().getColor(R.color.tomato));
+                    if (i < (mShowData.getProduction_companies().size() - 1)) {
+                        textView.setText(mShowData.getProduction_companies().get(i).getName()+", ");
+                    }else {
+                        textView.setText(mShowData.getProduction_companies().get(i).getName());
+                    }
+                    mProductionFlowLayout.addView(textView);
+                    final int finalI = i;
+                    textView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(mContext, ProductionCompanyActivity.class);
+                            intent.putExtra("name", mShowData.getProduction_companies().get(finalI).getName());
+                            intent.putExtra("id", mShowData.getProduction_companies().get(finalI).getId());
+                            startActivity(intent);
+
                         }
                     });
                 }

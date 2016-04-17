@@ -205,6 +205,29 @@
                     android:layout_below="@id/activity_selected_show_created_by_flow_layout" />
 
                 <TextView
+                    android:id="@+id/activity_selected_show_networks_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#BFFFFFFF"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="16sp"
+                    android:text="Networks : "
+                    android:visibility="gone"
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@id/activity_selected_show_status_text_view" />
+
+                <org.apmem.tools.layouts.FlowLayout
+                    android:id="@+id/activity_selected_show_networks_flow_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/activity_selected_show_networks_text_view"
+                    android:layout_marginLeft="10dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@id/activity_selected_show_status_text_view" />
+
+
+                <TextView
                     android:id="@+id/activity_selected_show_first_air_date_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -212,7 +235,7 @@
                     android:layout_marginLeft="10dp"
                     android:textSize="16sp"
                     android:layout_marginTop="15dp"
-                    android:layout_below="@id/activity_selected_show_status_text_view" />
+                    android:layout_below="@id/activity_selected_show_networks_flow_layout" />
 
                 <TextView
                     android:id="@+id/activity_selected_show_last_air_date_text_view"
@@ -224,6 +247,28 @@
                     android:layout_marginTop="15dp"
                     android:layout_below="@id/activity_selected_show_first_air_date_text_view" />
 
+
+                <TextView
+                    android:id="@+id/activity_selected_show_production_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#BFFFFFFF"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="16sp"
+                    android:text="Production Companies : "
+                    android:visibility="gone"
+                    android:layout_marginTop="15dp"
+                    android:layout_below="@id/activity_selected_show_last_air_date_text_view" />
+
+                <org.apmem.tools.layouts.FlowLayout
+                    android:id="@+id/activity_selected_show_production_flow_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:orientation="horizontal"
+                    android:layout_below="@id/activity_selected_show_production_text_view"/>
+
                 <TextView
                     android:id="@+id/activity_selected_show_language_text_view"
                     android:layout_width="wrap_content"
@@ -232,7 +277,7 @@
                     android:layout_marginLeft="10dp"
                     android:textSize="16sp"
                     android:layout_marginTop="15dp"
-                    android:layout_below="@id/activity_selected_show_last_air_date_text_view" />
+                    android:layout_below="@id/activity_selected_show_production_flow_layout" />
 
                 <TextView
                     android:id="@+id/activity_selected_show_runtime_text_view"

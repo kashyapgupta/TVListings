@@ -6,6 +6,7 @@ import com.tvlistings.constants.UrlConstants;
 import com.tvlistings.controller.network.TVListingNetworkClient;
 import com.tvlistings.controller.network.response.JSONGetCallback;
 import com.tvlistings.controller.network.response.ResponseError;
+import com.tvlistings.model.DiscoveredData;
 import com.tvlistings.model.ShowContent.ShowContent;
 import com.tvlistings.model.movieContents.MovieContent;
 import com.tvlistings.model.movieContents.MoviesCollectionContent;
@@ -134,5 +135,25 @@ public class MoviesDetailsService extends TVListingBaseService {
                 }
             });
         }
+    }
+
+    public void getProductionCompanyMovies (int id, int page, final ServiceCallbacks callbacks) {
+        String url = String.format(UrlConstants.PRODUCTION_COMPANY_MOVIES, id, page);
+
+        TVListingNetworkClient.getInstance().get(url, new JSONGetCallback() {
+            @Override
+            public void onSuccess(JSONObject responseObject) {
+                String reader = responseObject.toString();
+                Type listType = new TypeToken<DiscoveredData>() {
+                }.getType();
+                DiscoveredData discoveredData = new GsonBuilder().create().fromJson(reader, listType);
+                callbacks.onSuccess(discoveredData);
+            }
+
+            @Override
+            public void onError(ResponseError error) {
+
+            }
+        });
     }
 }

@@ -5,4 +5,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="tomato">#FFFF6347</color>
     <color name="halfBlack">#80000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
 </resources>

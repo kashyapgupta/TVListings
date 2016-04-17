@@ -36,6 +36,8 @@ import com.tvlistings.view.adapter.MoviesRecyclerViewAdapter;
 import com.tvlistings.view.adapter.PeopleRecyclerViewAdapter;
 import com.tvlistings.view.callback.DisplayPersonDetails;
 
+import org.apmem.tools.layouts.FlowLayout;
+
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -52,6 +54,9 @@ public class SelectedMovieActivity extends BaseSearchActivity implements Service
 
     @Bind(R.id.activity_selected_movie_title_text_view)
     TextView mTitle;
+
+    @Bind(R.id.activity_selected_movie_production_flow_layout)
+    FlowLayout mProductionFlowLayout;
 
     @Bind(R.id.activity_selected_movie_original_title_text_view)
     TextView mOriginalTitle;
@@ -305,6 +310,34 @@ public class SelectedMovieActivity extends BaseSearchActivity implements Service
                     startActivity(intent);
                 }
             });
+
+            TextView textView2;
+            if (mMovieData.getProduction_companies().size() > 0) {
+                TextView textView1 = (TextView)findViewById(R.id.activity_selected_movie_production_text_view);
+                textView1.setVisibility(View.VISIBLE);
+                for (int i = 0; i < mMovieData.getProduction_companies().size(); i++) {
+                    textView2 = new TextView(this);
+                    textView2.setTextSize(16);
+                    textView2.setTextColor(getResources().getColor(R.color.tomato));
+                    if (i < (mMovieData.getProduction_companies().size() - 1)) {
+                        textView2.setText(mMovieData.getProduction_companies().get(i).getName()+", ");
+                    }else {
+                        textView2.setText(mMovieData.getProduction_companies().get(i).getName());
+                    }
+                    mProductionFlowLayout.addView(textView2);
+                    final int finalI = i;
+                    textView2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(mContext, ProductionCompanyActivity.class);
+                            intent.putExtra("name", mMovieData.getProduction_companies().get(finalI).getName());
+                            intent.putExtra("id", mMovieData.getProduction_companies().get(finalI).getId());
+                            startActivity(intent);
+                        }
+                    });
+                }
+            }
+
             ArrayList<String> languages = new ArrayList<>();
             for (int i = 0; i < mMovieData.getSpoken_languages().size(); i++) {
                 languages.add(mMovieData.getSpoken_languages().get(i).getName());
