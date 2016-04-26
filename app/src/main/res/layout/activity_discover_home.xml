@@ -15,81 +15,23 @@
         android:layout_marginTop="10dp"/>
 
     <TextView
-        android:id="@+id/activity_discover_home_year_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:textColor="#BFFFFFFF"
-        android:text="Year : "
-        android:textSize="18sp"
-        android:layout_marginTop="20dp"
-        android:layout_below="@id/activity_discover_home_text_view"/>
-
-
-    <LinearLayout
-        android:id="@+id/activity_discover_home_year_linear_layout"
-        android:layout_width="70dp"
-        android:layout_height="25dp"
-        android:background="#FFFFFFFF"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_below="@id/activity_discover_home_year_text_view">
-
-        <Spinner
-            android:id="@+id/activity_discover_home_year_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:spinnerMode="dropdown" />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/activity_discover_home_sort_by_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="95dp"
-        android:textColor="#BFFFFFFF"
-        android:text="Sort By : "
-        android:textSize="18sp"
-        android:layout_marginTop="20dp"
-        android:layout_below="@id/activity_discover_home_text_view"/>
-
-
-    <LinearLayout
-        android:id="@+id/activity_discover_home_sort_by_linear_layout"
-        android:layout_width="150dp"
-        android:layout_height="25dp"
-        android:background="#FFFFFFFF"
-        android:layout_marginLeft="95dp"
-        android:layout_marginTop="10dp"
-        android:layout_below="@id/activity_discover_home_sort_by_text_view">
-
-        <Spinner
-            android:id="@+id/activity_discover_home_sort_by_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:spinnerMode="dropdown" />
-
-    </LinearLayout>
-
-    <TextView
         android:id="@+id/activity_discover_home_type_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="260dp"
+        android:layout_marginLeft="10dp"
         android:textColor="#BFFFFFFF"
         android:text="Type : "
         android:textSize="18sp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@id/activity_discover_home_text_view"/>
 
 
     <LinearLayout
         android:id="@+id/activity_discover_home_type_linear_layout"
-        android:layout_width="80dp"
+        android:layout_width="135dp"
         android:layout_height="25dp"
         android:background="#FFFFFFFF"
-        android:layout_marginLeft="260dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_below="@id/activity_discover_home_type_text_view">
 
@@ -101,12 +43,288 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/activity_discover_home_results_recycler_view"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/activity_discover_home_sort_by_text_view"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/activity_discover_home_year_linear_layout"
+        android:layout_marginLeft="175dp"
+        android:textColor="#BFFFFFFF"
+        android:text="Sort By : "
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/activity_discover_home_text_view"/>
+
+
+    <LinearLayout
+        android:id="@+id/activity_discover_home_sort_by_linear_layout"
+        android:layout_width="150dp"
+        android:layout_height="25dp"
+        android:background="#FFFFFFFF"
+        android:layout_marginLeft="175dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/activity_discover_home_sort_by_text_view">
+
+        <Spinner
+            android:id="@+id/activity_discover_home_sort_by_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown" />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/activity_discover_home_genres_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="15dp"/>
+        android:textColor="#BFFFFFFF"
+        android:text="Genres : "
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/activity_discover_home_type_linear_layout"/>
+
+
+    <LinearLayout
+        android:id="@+id/activity_discover_home_genres_linear_layout"
+        android:layout_width="135dp"
+        android:layout_height="25dp"
+        android:background="#FFFFFFFF"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/activity_discover_home_genres_text_view">
+
+        <com.tvlistings.controller.MultiSpinner
+            android:id="@+id/activity_discover_home_genres_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown" />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/activity_discover_home_select_keywords_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#BFFFFFFF"
+        android:textSize="18sp"
+        android:layout_marginLeft="175dp"
+        android:layout_marginTop="10dp"
+        android:text="Keywords : "
+        android:layout_below="@id/activity_discover_home_type_linear_layout"/>
+
+    <org.apmem.tools.layouts.FlowLayout
+        android:id="@+id/activity_discover_home_select_keywords_flow_layout"
+        android:layout_below="@id/activity_discover_home_select_keywords_text_view"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_marginLeft="175dp"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFFFF"/>
+
+    <EditText
+        android:id="@+id/activity_discover_home_select_keywords_edit_text"
+        android:layout_width="150dp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="175dp"
+        android:layout_marginTop="10dp"
+        android:background="#FFFFFFFF"
+        android:layout_below="@id/activity_discover_home_select_keywords_flow_layout"/>
+
+    <TextView
+        android:id="@+id/activity_discover_home_min_release_date_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#BFFFFFFF"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:text="Min Release Date"
+        android:layout_below="@id/activity_discover_home_select_keywords_edit_text"/>
+
+    <TextView
+        android:id="@+id/activity_discover_home_select_min_release_date_text_view"
+        android:layout_width="110dp"
+        android:textSize="17sp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:background="#FFFFFFFF"
+        android:layout_below="@id/activity_discover_home_min_release_date_text_view"/>
+
+    <Button
+        android:id="@+id/activity_discover_home_select_min_release_date_button"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="7dp"
+        android:layout_toRightOf="@id/activity_discover_home_select_min_release_date_text_view"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/activity_discover_home_min_release_date_text_view"/>
+
+    <TextView
+        android:id="@+id/activity_discover_home_max_release_date_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#BFFFFFFF"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="175dp"
+        android:text="Max Release Date"
+        android:layout_below="@id/activity_discover_home_select_keywords_edit_text"/>
+
+    <TextView
+        android:id="@+id/activity_discover_home_select_max_release_date_text_view"
+        android:layout_width="130dp"
+        android:textSize="17sp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="175dp"
+        android:layout_marginTop="10dp"
+        android:background="#FFFFFFFF"
+        android:layout_below="@id/activity_discover_home_max_release_date_text_view"/>
+
+    <Button
+        android:id="@+id/activity_discover_home_select_max_release_date_button"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="7dp"
+        android:layout_toRightOf="@id/activity_discover_home_select_max_release_date_text_view"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/activity_discover_home_max_release_date_text_view"/>
+
+    <TextView
+        android:id="@+id/activity_discover_home_select_min_vote_count_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#BFFFFFFF"
+        android:textSize="18sp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="Min Votes : "
+        android:layout_below="@id/activity_discover_home_select_min_release_date_text_view"/>
+
+    <EditText
+        android:id="@+id/activity_discover_home_select_min_vote_edit_text"
+        android:layout_width="135dp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:background="#FFFFFFFF"
+        android:maxLength="5"
+        android:inputType="number"
+        android:layout_below="@id/activity_discover_home_select_min_vote_count_text_view"/>
+
+    <TextView
+        android:id="@+id/activity_discover_home_select_max_vote_count_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#BFFFFFFF"
+        android:textSize="18sp"
+        android:layout_marginLeft="175dp"
+        android:layout_marginTop="10dp"
+        android:text="Max Votes : "
+        android:layout_below="@id/activity_discover_home_select_max_release_date_text_view"/>
+
+    <EditText
+        android:id="@+id/activity_discover_home_select_max_vote_count_edit_text"
+        android:layout_width="150dp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="175dp"
+        android:layout_marginTop="10dp"
+        android:background="#FFFFFFFF"
+        android:maxLength="5"
+        android:inputType="number"
+        android:layout_below="@id/activity_discover_home_select_max_vote_count_text_view"/>
+
+    <TextView
+        android:id="@+id/activity_discover_home_select_min_rating_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#BFFFFFFF"
+        android:textSize="18sp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="Min Rating : "
+        android:layout_below="@id/activity_discover_home_select_min_vote_edit_text"/>
+
+    <EditText
+        android:id="@+id/activity_discover_home_select_min_rating_edit_text"
+        android:layout_width="135dp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="10dp"
+        android:inputType="numberDecimal"
+        android:layout_marginTop="10dp"
+        android:maxLength="3"
+        android:background="#FFFFFFFF"
+        android:layout_below="@id/activity_discover_home_select_min_rating_text_view"/>
+
+    <TextView
+        android:id="@+id/activity_discover_home_select_max_rating_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#BFFFFFFF"
+        android:textSize="18sp"
+        android:layout_marginLeft="175dp"
+        android:layout_marginTop="10dp"
+        android:text="Max Rating : "
+        android:layout_below="@id/activity_discover_home_select_max_vote_count_edit_text"/>
+
+    <EditText
+        android:id="@+id/activity_discover_home_select_max_rating_edit_text"
+        android:layout_width="150dp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="175dp"
+        android:layout_marginTop="10dp"
+        android:inputType="numberDecimal"
+        android:maxLength="3"
+        android:background="#FFFFFFFF"
+        android:layout_below="@id/activity_discover_home_select_max_rating_text_view"/>
+
+    <FrameLayout
+        android:id="@+id/activity_discover_home_keyword_frame_layout"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_below="@id/activity_discover_home_select_keywords_edit_text"
+        android:layout_marginLeft="175dp"
+        android:background="#FFFFFFFF">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/activity_discover_home_select_keywords_recycler_view"
+            android:layout_width="150dp"
+            android:visibility="gone"
+            android:layout_height="150dp"/>
+
+        <TextView
+            android:id="@+id/activity_discover_home_no_keyword_text_view"
+            android:text="No such Keyword"
+            android:layout_marginTop="15dp"
+            android:textColor="#FF000000"
+            android:visibility="gone"
+            android:textSize="17sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/activity_discover_home_keyword_loading_progressBar"
+            android:indeterminate="true"
+            android:visibility="gone"
+            style="@android:style/Widget.Holo.ProgressBar"
+            android:layout_gravity="center"/>
+
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/activity_discover_home_discover_button"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="25dp"
+        android:gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:text="Discover"
+        android:layout_below="@id/activity_discover_home_select_min_rating_edit_text"/>
 
 </RelativeLayout>

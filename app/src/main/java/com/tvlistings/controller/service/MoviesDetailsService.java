@@ -138,7 +138,7 @@ public class MoviesDetailsService extends TVListingBaseService {
     }
 
     public void getProductionCompanyMovies (int id, int page, final ServiceCallbacks callbacks) {
-        String url = String.format(UrlConstants.PRODUCTION_COMPANY_MOVIES, id, page);
+        String url = String.format(UrlConstants.PRODUCTION_COMPANY_MOVIES, id, page+1);
 
         TVListingNetworkClient.getInstance().get(url, new JSONGetCallback() {
             @Override

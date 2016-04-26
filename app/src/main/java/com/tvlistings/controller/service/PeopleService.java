@@ -81,7 +81,7 @@ public class PeopleService extends TVListingBaseService {
 
     public void getPopularPeople(int mCurrentPage, final ServiceCallbacks callbacks) {
 
-        String url = String.format(UrlConstants.POPULAR_PEOPLE, mCurrentPage);
+        String url = String.format(UrlConstants.POPULAR_PEOPLE, mCurrentPage+1);
 
         TVListingNetworkClient.getInstance().get(url, new JSONGetCallback() {
             @Override

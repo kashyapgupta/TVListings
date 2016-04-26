@@ -42,6 +42,8 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"/>
         <activity android:name=".view.activity.ProductionCompanyActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"/>
+        <activity android:name=".view.activity.DiscoveredResultActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"/>
 
     </application>
 

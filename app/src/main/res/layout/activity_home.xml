@@ -18,83 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/activity_home_tv_show_image_view"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginLeft="10dp"
-                android:padding="7dp"/>
-
-            <TextView
-                android:id="@+id/activity_home_tv_show_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textAlignment="center"
-                android:layout_marginTop="19dp"
-                android:layout_toRightOf="@id/activity_home_tv_show_image_view"
-                android:textColor="#BFFFFFFF"
-                android:text="TvShows"/>
-
-            <ImageView
-                android:id="@+id/activity_home_movies_image_view"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:padding="7dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginLeft="190dp"/>
-
-            <TextView
-                android:id="@+id/activity_home_movies_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:layout_toRightOf="@id/activity_home_movies_image_view"
-                android:textColor="#BFFFFFFF"
-                android:layout_marginTop="19dp"
-                android:text="Movies"/>
-
-            <ImageView
-                android:id="@+id/activity_home_people_image_view"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:padding="7dp"
-                android:layout_marginTop="15dp"
-                android:layout_below="@id/activity_home_tv_show_image_view"
-                android:layout_marginLeft="15dp"/>
-
-            <TextView
-                android:id="@+id/activity_home_people_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:layout_toRightOf="@id/activity_home_people_image_view"
-                android:layout_below="@id/activity_home_tv_show_image_view"
-                android:textColor="#BFFFFFFF"
-                android:layout_marginTop="19dp"
-                android:text="People"/>
-
-            <ImageView
-                android:id="@+id/activity_home_discover_image_view"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:padding="7dp"
-                android:layout_marginTop="15dp"
-                android:layout_below="@id/activity_home_tv_show_image_view"
-                android:layout_marginLeft="190dp"/>
-
-            <TextView
-                android:id="@+id/activity_home_discover_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:layout_toRightOf="@id/activity_home_discover_image_view"
-                android:layout_below="@id/activity_home_tv_show_image_view"
-                android:textColor="#BFFFFFFF"
-                android:layout_marginTop="19dp"
-                android:text="Discover"/>
-
             <TextView
                 android:id="@+id/activity_home_no_liked_text_view"
                 android:layout_width="wrap_content"
@@ -106,8 +29,7 @@
                 android:visibility="gone"
                 android:layout_centerHorizontal="true"
                 android:text="No Show or Movie liked."
-                android:layout_height="wrap_content"
-                android:layout_below="@id/activity_home_discover_image_view"/>
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:id="@+id/activity_home_liked_show_text_view"
@@ -117,7 +39,6 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp"
                 android:text="Liked Shows"
-                android:layout_below="@id/activity_home_discover_image_view"
                 android:visibility="gone"
                 android:textSize="21sp"/>
 

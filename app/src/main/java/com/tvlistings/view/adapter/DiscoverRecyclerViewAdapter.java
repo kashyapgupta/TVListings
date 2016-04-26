@@ -37,6 +37,7 @@ public class DiscoverRecyclerViewAdapter extends RecyclerView.Adapter<DiscoverRe
     DisplayShow mShow;
     LoadMoreData mCallback;
     boolean isMovie;
+    private boolean moreData;
 
     public DiscoverRecyclerViewAdapter(RequestQueue queue, Context context) {
         Log.i("sanju", "in mMoviesList's recycler view");
@@ -61,7 +62,6 @@ public class DiscoverRecyclerViewAdapter extends RecyclerView.Adapter<DiscoverRe
         public DiscoveredListHolder(View itemView, int viewType) {
             super(itemView);
             if (viewType == 1) {
-                progressBar = (ProgressBar)itemView.findViewById(R.id.adapter_discover_recycler_view_progress_bar);
                 relativeLayout = (RelativeLayout) itemView.findViewById(R.id.adapter_discover_recycler_view_relative_layout);
                 ratingImage = (ImageView) itemView.findViewById(R.id.adapter_discover_recycler_view_rating_image_view);
                 image = (NetworkImageView) itemView.findViewById(R.id.adapter_discover_recycler_view_poster_network_image_view);
@@ -69,8 +69,10 @@ public class DiscoverRecyclerViewAdapter extends RecyclerView.Adapter<DiscoverRe
                 title = (TextView) itemView.findViewById(R.id.adapter_discover_recycler_view_title_text_view);
                 originalTitle = (TextView) itemView.findViewById(R.id.adapter_discover_recycler_view_original_title_text_view);
                 rating = (TextView) itemView.findViewById(R.id.adapter_discover_recycler_view_rating_text_view);
-                circleImageView = (CircleImageView)itemView.findViewById(R.id.adapter_discover_recycler_view_load_more_image_view);
-                loadMore = (TextView)itemView.findViewById(R.id.adapter_discover_recycler_view_load_more_text_view);
+            }else {
+                loadMore = (TextView) itemView.findViewById(R.id.load_more_text_view);
+                circleImageView = (CircleImageView) itemView.findViewById(R.id.load_more_image_view);
+                progressBar = (ProgressBar) itemView.findViewById(R.id.load_more_progressBar);
             }
         }
     }
@@ -78,87 +80,94 @@ public class DiscoverRecyclerViewAdapter extends RecyclerView.Adapter<DiscoverRe
     @Override
     public DiscoveredListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         DiscoveredListHolder myDiscoveredListHolder;
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_discover_recycler_view, parent, false);
-        myDiscoveredListHolder = new DiscoveredListHolder(view, viewType);
+        if (viewType == 1) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_discover_recycler_view, parent, false);
+            myDiscoveredListHolder = new DiscoveredListHolder(view, viewType);
+        }else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.load_more, parent, false);
+            myDiscoveredListHolder = new DiscoveredListHolder(view, viewType);
+        }
         return myDiscoveredListHolder;
     }
 
     @Override
     public void onBindViewHolder(final DiscoveredListHolder holder, final int position) {
         Log.i("sanju", "in movies's holder");
-        if (position == mDiscoveredData.size()-1) {
-            holder.circleImageView.setVisibility(View.VISIBLE);
-            holder.loadMore.setVisibility(View.VISIBLE);
-        }else {
-            holder.loadMore.setVisibility(View.GONE);
-            holder.circleImageView.setVisibility(View.GONE);
-        }
-        holder.progressBar.setVisibility(View.GONE);
-        holder.circleImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.progressBar.setVisibility(View.VISIBLE);
-                holder.loadMore.setVisibility(View.GONE);
-                holder.circleImageView.setVisibility(View.GONE);
-                mCallback.loadMore();
+        if (getItemViewType(position) == 1) {
+            if ((mDiscoveredData.get(position).getPoster_path()) != null && !mDiscoveredData.get(position).getPoster_path().isEmpty()) {
+                String poster = String.format(UrlConstants.IMAGE_URLW_500, mDiscoveredData.get(position).getPoster_path());
+                holder.image.setImageUrl(poster, TVListingNetworkClient.getInstance().getImageLoader());
+            } else {
+                holder.image.setImageUrl("https://c2.staticflickr.com/6/5119/5857770033_f346c22d02.jpg", TVListingNetworkClient.getInstance().getImageLoader());
             }
-        });
-        holder.loadMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.progressBar.setVisibility(View.VISIBLE);
-                holder.loadMore.setVisibility(View.GONE);
-                holder.circleImageView.setVisibility(View.GONE);
-                mCallback.loadMore();
+            final double rating = (mDiscoveredData.get(position).getVote_average() * 10);
+            String trimmedRating = String.format("%.1f", rating);
+            holder.rating.setText(trimmedRating + " %");
+            int image = RatingImage.getRatingImage(rating);
+            holder.ratingImage.setImageResource(image);
+            String title;
+            if (!TextUtils.isEmpty(mDiscoveredData.get(position).getTitle()) && !"null".equalsIgnoreCase(mDiscoveredData.get(position).getTitle())) {
+                title = mDiscoveredData.get(position).getTitle();
+                isMovie = true;
+            } else {
+                title = mDiscoveredData.get(position).getName();
+                isMovie = false;
             }
-        });
-        if ((mDiscoveredData.get(position).getPoster_path()) != null && !mDiscoveredData.get(position).getPoster_path().isEmpty()) {
-            String poster = String.format(UrlConstants.IMAGE_URLW_500, mDiscoveredData.get(position).getPoster_path());
-            holder.image.setImageUrl(poster, TVListingNetworkClient.getInstance().getImageLoader());
-        } else {
-            holder.image.setImageUrl("https://c2.staticflickr.com/6/5119/5857770033_f346c22d02.jpg", TVListingNetworkClient.getInstance().getImageLoader());
-        }
-        final double rating = (mDiscoveredData.get(position).getVote_average() * 10);
-        String trimmedRating = String.format("%.1f", rating);
-        holder.rating.setText(trimmedRating + " %");
-        int image = RatingImage.getRatingImage(rating);
-        holder.ratingImage.setImageResource(image);
-        String title;
-        if (!TextUtils.isEmpty(mDiscoveredData.get(position).getTitle()) && !"null".equalsIgnoreCase(mDiscoveredData.get(position).getTitle())) {
-            title = mDiscoveredData.get(position).getTitle();
-            isMovie = true;
-        } else {
-            title = mDiscoveredData.get(position).getName();
-            isMovie = false;
-        }
-        String originalTitle;
-        if (!TextUtils.isEmpty(mDiscoveredData.get(position).getOriginal_title()) && !"null".equalsIgnoreCase(mDiscoveredData.get(position).getOriginal_title())) {
-            originalTitle = mDiscoveredData.get(position).getOriginal_title();
-        } else {
-            originalTitle = mDiscoveredData.get(position).getOriginal_name();
-        }
-        if (title.toLowerCase().equals(originalTitle.toLowerCase())) {
-            holder.originalTitle.setText("");
-            holder.originalTitle.setVisibility(View.GONE);
-            holder.title.setText(title);
-        } else {
-            holder.originalTitle.setVisibility(View.VISIBLE);
-            holder.originalTitle.setText(originalTitle);
-            holder.title.setText("(" + title + ")");
-        }
+            String originalTitle;
+            if (!TextUtils.isEmpty(mDiscoveredData.get(position).getOriginal_title()) && !"null".equalsIgnoreCase(mDiscoveredData.get(position).getOriginal_title())) {
+                originalTitle = mDiscoveredData.get(position).getOriginal_title();
+            } else {
+                originalTitle = mDiscoveredData.get(position).getOriginal_name();
+            }
+            if (title.toLowerCase().equals(originalTitle.toLowerCase())) {
+                holder.originalTitle.setText("");
+                holder.originalTitle.setVisibility(View.GONE);
+                holder.title.setText(title);
+            } else {
+                holder.originalTitle.setVisibility(View.VISIBLE);
+                holder.originalTitle.setText(originalTitle);
+                holder.title.setTextSize(16);
+                holder.title.setText("(" + title + ")");
+            }
 
-        holder.overview.setText(mDiscoveredData.get(position).getOverview());
+            holder.overview.setText(mDiscoveredData.get(position).getOverview());
 
-        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isMovie) {
-                    mMovie.displayMovie(mDiscoveredData.get(position).getId());
-                } else {
-                    mShow.displayShow(mDiscoveredData.get(position).getId(), rating);
+            holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isMovie) {
+                        mMovie.displayMovie(mDiscoveredData.get(position).getId());
+                    } else {
+                        mShow.displayShow(mDiscoveredData.get(position).getId(), rating);
+                    }
                 }
-            }
-        });
+            });
+        }else {
+
+            holder.loadMore.setVisibility(View.VISIBLE);
+            holder.circleImageView.setVisibility(View.VISIBLE);
+            holder.progressBar.setVisibility(View.GONE);
+
+            holder.loadMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.loadMore.setVisibility(View.GONE);
+                    holder.circleImageView.setVisibility(View.GONE);
+                    holder.progressBar.setVisibility(View.VISIBLE);
+                    mCallback.loadMore();
+                }
+            });
+
+            holder.circleImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.loadMore.setVisibility(View.GONE);
+                    holder.circleImageView.setVisibility(View.GONE);
+                    holder.progressBar.setVisibility(View.VISIBLE);
+                    mCallback.loadMore();
+                }
+            });
+        }
     }
 
     @Override
@@ -166,16 +175,29 @@ public class DiscoverRecyclerViewAdapter extends RecyclerView.Adapter<DiscoverRe
         if (mDiscoveredData == null) {
             return 0;
         }else {
-            return mDiscoveredData.size();
+            if (moreData) {
+                return mDiscoveredData.size() + 1;
+            }else {
+                return mDiscoveredData.size();
+            }
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        return 1;
+        if (position < mDiscoveredData.size()) {
+            return 1;
+        }else {
+            if (moreData) {
+                return 0;
+            }else {
+                return 1;
+            }
+        }
     }
 
-    public void setData (ArrayList<Results> mDiscoveredData) {
+    public void setData (ArrayList<Results> mDiscoveredData, boolean moreData) {
+        this.moreData = moreData;
         this.mDiscoveredData.addAll(mDiscoveredData);
         notifyDataSetChanged();
     }

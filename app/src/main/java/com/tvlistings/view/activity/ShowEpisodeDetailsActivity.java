@@ -9,6 +9,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -37,6 +39,14 @@ public class ShowEpisodeDetailsActivity extends BaseSearchActivity implements Di
     Episodes mEpisode;
     @Bind(R.id.activity_show_episode_details_poster_networkimageview)
     NetworkImageView mPoster;
+    @Bind(R.id.activity_show_episode_details_season_no_text_view)
+    TextView mSeasonNoTextView;
+    @Bind(R.id.activity_show_episode_details_episode_no_text_view)
+    TextView mEpisodeNoTextView;
+    @Bind(R.id.activity_show_episode_details_relative_layout)
+    RelativeLayout mRelativeLayout;
+    @Bind(R.id.activity_show_episode_details_loading_progressBar)
+    ProgressBar mLoadingProgressBar;
     @Bind(R.id.activity_show_episode_details_heart_image_view)
     ImageView ratingImage;
     @Bind(R.id.activity_show_episode_details_rating_text_view)
@@ -95,6 +105,8 @@ public class ShowEpisodeDetailsActivity extends BaseSearchActivity implements Di
     public void onSuccess(BaseResponse response) {
         if (response instanceof Episodes) {
             mEpisode = (Episodes) response;
+            mLoadingProgressBar.setVisibility(View.GONE);
+            mRelativeLayout.setVisibility(View.VISIBLE);
             String poster = String.format(UrlConstants.IMAGE_URLW_300, mEpisode.getStill_path());
             String background = String.format(UrlConstants.IMAGE_URLW_500, mEpisode.getStill_path());
             if (!TextUtils.isEmpty(mEpisode.getStill_path()) && !"null".equalsIgnoreCase(mEpisode.getStill_path())) {
@@ -103,6 +115,8 @@ public class ShowEpisodeDetailsActivity extends BaseSearchActivity implements Di
             } else {
                 mPoster.setImageUrl("https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSHQUB909pXldSI4TizR1eF-_j3ce2v72cavRBWpJZkZdAyqop1", mImageLoader);
             }
+            mSeasonNoTextView.setText("Season : "+mEpisode.getSeason_number());
+            mEpisodeNoTextView.setText("Episode : "+mEpisode.getEpisode_number());
             mTitle.setText(mEpisode.getName());
             mVotes.setText(mEpisode.getVote_count() + " votes");
             double rating = (mEpisode.getVote_average() * 10);
@@ -113,9 +127,12 @@ public class ShowEpisodeDetailsActivity extends BaseSearchActivity implements Di
             mOverview.setText(mEpisode.getOverview());
             if (mEpisode.getCrew().size() > 0) {
                 crewTextView.setVisibility(View.VISIBLE);
+                mEpisodeCrewAdapter = new EpisodeCrewRecyclerViewAdapter(mEpisode, mQueue, mContext);
+                mEpisodeCrewRecyclerView.setAdapter(mEpisodeCrewAdapter);
+            }else {
+                crewTextView.setVisibility(View.GONE);
+                mEpisodeCrewRecyclerView.setVisibility(View.GONE);
             }
-            mEpisodeCrewAdapter = new EpisodeCrewRecyclerViewAdapter(mEpisode, mQueue, mContext);
-            mEpisodeCrewRecyclerView.setAdapter(mEpisodeCrewAdapter);
         }
     }
 }

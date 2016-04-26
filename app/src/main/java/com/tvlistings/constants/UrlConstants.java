@@ -28,7 +28,10 @@ public class UrlConstants {
     public static final String UPCOMING_MOVIES = "http://api.themoviedb.org/3/movie/upcoming?api_key=c23fe079e72d437208ac3638b04f7c80";
     public static final String NOW_PLAYING_MOVIES = "http://api.themoviedb.org/3/movie/now_playing?api_key=c23fe079e72d437208ac3638b04f7c80";
     public static final String POPULAR_PEOPLE = "http://api.themoviedb.org/3/person/popular?api_key=c23fe079e72d437208ac3638b04f7c80&page=%d";
-    public static final String DISCOVER_MOVIES = "http://api.themoviedb.org/3/discover/movie?api_key=c23fe079e72d437208ac3638b04f7c80&sort_by=%s&primary_release_year=%d&page=%d";
     public static final String NETWORK_SHOWS = "http://api.themoviedb.org/3/discover/tv?api_key=c23fe079e72d437208ac3638b04f7c80&with_networks=%d&page=%d";
     public static final String PRODUCTION_COMPANY_MOVIES = "http://api.themoviedb.org/3/company/%d/movies?api_key=c23fe079e72d437208ac3638b04f7c80&page=%d";
+    public static final String MOVIE_GENRES = "http://api.themoviedb.org/3/genre/movie/list?api_key=c23fe079e72d437208ac3638b04f7c80";
+    public static final String TV_GENRES = "http://api.themoviedb.org/3/genre/tv/list?api_key=c23fe079e72d437208ac3638b04f7c80";
+    public static final String SEARCH_KEYWORD = "http://api.themoviedb.org/3/search/keyword?api_key=c23fe079e72d437208ac3638b04f7c80&query=%s&page=%d";
+    public static final String DISCOVER_URL = "http://api.themoviedb.org/3/discover/%s?api_key=c23fe079e72d437208ac3638b04f7c80";
 }

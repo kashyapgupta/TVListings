@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -32,6 +34,12 @@ public class SelectedNetworkActivity extends BaseSearchActivity {
 
     @Bind(R.id.activity_selected_network_shows_recycler_view)
     RecyclerView mShowsRecyclerView;
+
+    @Bind(R.id.activity_selected_network_loading_progressBar)
+    ProgressBar mLoadingProgressBar;
+
+    @Bind(R.id.activity_selected_network_no_result_text_view)
+    TextView mNoResultTextView;
 
     @Bind(R.id.activity_selected_network_name_text_view)
     TextView mName;
@@ -61,6 +69,7 @@ public class SelectedNetworkActivity extends BaseSearchActivity {
 
         mShowsRecyclerViewAdapter = new DiscoverRecyclerViewAdapter(mQueue, mContext);
         mShowsRecyclerView.setAdapter(mShowsRecyclerViewAdapter);
+        mShowsRecyclerViewAdapter.clearData();
 
         ((DiscoverService) TVListingServiceFactory.getInstance().getService(DiscoverService.class)).getNetworkShows(mNetworkId, mCurrentPage, SelectedNetworkActivity.this);
     }
@@ -68,7 +77,6 @@ public class SelectedNetworkActivity extends BaseSearchActivity {
     @Override
     public void loadMore() {
         if (mCurrentPage < mPageCount) {
-            mCurrentPage++;
             ((DiscoverService) TVListingServiceFactory.getInstance().getService(DiscoverService.class)).getNetworkShows(mNetworkId, mCurrentPage, SelectedNetworkActivity.this);
         }
     }
@@ -80,7 +88,14 @@ public class SelectedNetworkActivity extends BaseSearchActivity {
         }else if (response instanceof DiscoveredData) {
             mNetworkShows = (DiscoveredData) response;
             mPageCount = mNetworkShows.getTotal_pages();
-            mShowsRecyclerViewAdapter.setData(mNetworkShows.getResults());
+            mLoadingProgressBar.setVisibility(View.GONE);
+            if (mNetworkShows.getResults().size() > 0) {
+                mShowsRecyclerView.setVisibility(View.VISIBLE);
+                mCurrentPage++;
+                mShowsRecyclerViewAdapter.setData(mNetworkShows.getResults(), mCurrentPage < mPageCount);
+            }else {
+                mNoResultTextView.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

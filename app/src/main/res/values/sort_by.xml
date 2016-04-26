@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="movie_sort_by">
+        <item>Popularity Descending</item>
+        <item>Popularity Ascending</item>
+        <item>Rating Descending</item>
+        <item>Rating Ascending</item>
+        <item>Revenue Descending</item>
+        <item>Revenue Ascending</item>
+        <item>Vote Count Descending</item>
+        <item>Vote Count Ascending</item>
+        <item>Title (A-Z)</item>
+        <item>Title (Z-A)</item>
+    </string-array>
+
+    <array name="movie_sort_by_ids">
+        <item>popularity.desc</item>
+        <item>popularity.asc</item>
+        <item>vote_average.desc</item>
+        <item>vote_average.asc</item>
+        <item>revenue.desc</item>
+        <item>revenue.asc</item>
+        <item>vote_count.desc</item>
+        <item>vote_count.asc</item>
+        <item>original_title.desc</item>
+        <item>original_title.asc</item>
+    </array>
+
+    <string-array name="tv_shows_sort_by">
+        <item>Popularity Descending</item>
+        <item>Popularity Ascending</item>
+        <item>Rating Descending</item>
+        <item>Rating Ascending</item>
+        <item>Vote Count Descending</item>
+        <item>Vote Count Ascending</item>
+        <item>Title (A-Z)</item>
+        <item>Title (Z-A)</item>
+    </string-array>
+
+    <array name="tv_shows_sort_by_ids">
+        <item>popularity.desc</item>
+        <item>popularity.asc</item>
+        <item>vote_average.desc</item>
+        <item>vote_average.asc</item>
+        <item>vote_count.desc</item>
+        <item>vote_count.asc</item>
+        <item>original_title.desc</item>
+        <item>original_title.asc</item>
+    </array>
+
+</resources>

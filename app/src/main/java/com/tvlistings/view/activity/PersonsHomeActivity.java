@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.android.volley.RequestQueue;
 import com.tvlistings.R;
@@ -34,8 +35,8 @@ public class PersonsHomeActivity extends BaseSearchActivity implements ServiceCa
     @Bind(R.id.activity_persons_home_popular_people_recycler_view)
     RecyclerView mPopularPeopleRecyclerView;
 
-    @Bind(R.id.activity_persons_home_image_ciecular_image)
-    CircleImageView mLoadMore;
+    @Bind(R.id.activity_persons_home_loading_progressBar)
+    ProgressBar mLoadingPrograssBar;
 
     RequestQueue mQueue;
     PopularPersonsRecyclerViewAdapter mPopularPersonsRecyclerViewAdapter;
@@ -43,7 +44,7 @@ public class PersonsHomeActivity extends BaseSearchActivity implements ServiceCa
     Context mContext;
     PopularPeople mPopularPeople;
     int mColor;
-    private int mCurrentPage = 1;
+    private int mCurrentPage = 0;
     private int mPageCount = 20;
     LoadMoreData mLoadMoreData;
 
@@ -69,23 +70,13 @@ public class PersonsHomeActivity extends BaseSearchActivity implements ServiceCa
 
         mPopularPersonsRecyclerViewAdapter.clearData();
         ((PeopleService) TVListingServiceFactory.getInstance().getService(PeopleService.class)).getPopularPeople(mCurrentPage, PersonsHomeActivity.this);
-
-        mLoadMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mCurrentPage < mPageCount) {
-                    mLoadMoreData.loadMore();
-                }else {
-                    mLoadMore.setVisibility(View.GONE);
-                }
-            }
-        });
-
     }
 
     @Override
     public void loadMore() {
-        ((PeopleService) TVListingServiceFactory.getInstance().getService(PeopleService.class)).getPopularPeople(mCurrentPage, PersonsHomeActivity.this);
+        if (mCurrentPage < mPageCount) {
+            ((PeopleService) TVListingServiceFactory.getInstance().getService(PeopleService.class)).getPopularPeople(mCurrentPage, PersonsHomeActivity.this);
+        }
     }
 
     @Override
@@ -120,8 +111,10 @@ public class PersonsHomeActivity extends BaseSearchActivity implements ServiceCa
             super.onSuccess(response);
         }else if (response instanceof PopularPeople) {
             mPopularPeople = (PopularPeople) response;
-            mPopularPersonsRecyclerViewAdapter.setData(mPopularPeople);
+            mLoadingPrograssBar.setVisibility(View.GONE);
+            mPopularPeopleRecyclerView.setVisibility(View.VISIBLE);
             mCurrentPage++;
+            mPopularPersonsRecyclerViewAdapter.setData(mPopularPeople, mCurrentPage < mPageCount);
         }
     }
 }

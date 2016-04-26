@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#E9000000"
+    android:gravity="center_horizontal">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/load_more_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="21dp"
+                android:textColor="#BFFFFFFF"
+                android:textSize="20sp"
+                android:text="Load More"/>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/load_more_image_view"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                app:civ_border_width="2dp"
+                android:layout_marginLeft="4dp"
+                android:layout_toRightOf="@id/load_more_text_view"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/load_more" />
+
+        </RelativeLayout>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/load_more_progressBar"
+            android:visibility="gone"
+            android:indeterminate="true"
+            style="@android:style/Widget.Holo.ProgressBar"
+            android:layout_gravity="center_horizontal"/>
+
+    </FrameLayout>
+
+</RelativeLayout>

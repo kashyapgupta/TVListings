@@ -6,28 +6,28 @@ import com.tvlistings.constants.UrlConstants;
 import com.tvlistings.controller.network.TVListingNetworkClient;
 import com.tvlistings.controller.network.response.JSONGetCallback;
 import com.tvlistings.controller.network.response.ResponseError;
-import com.tvlistings.model.DiscoveredData;
+import com.tvlistings.model.genresList.MovieGenresList;
+import com.tvlistings.model.genresList.ShowGenresList;
 
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 
 /**
- * Created by Rohit on 4/16/2016.
+ * Created by Rohit on 4/18/2016.
  */
-public class DiscoverService extends TVListingBaseService {
+public class GenresService extends TVListingBaseService {
 
-    public void getNetworkShows (int id, int page, final ServiceCallbacks callbacks) {
-        String url = String.format(UrlConstants.NETWORK_SHOWS, id, page+1);
-
+    public void getMovieGenres (final ServiceCallbacks callbacks) {
+        String url = UrlConstants.MOVIE_GENRES;
         TVListingNetworkClient.getInstance().get(url, new JSONGetCallback() {
             @Override
             public void onSuccess(JSONObject responseObject) {
                 String reader = responseObject.toString();
-                Type listType = new TypeToken<DiscoveredData>() {
+                Type listType = new TypeToken<MovieGenresList>() {
                 }.getType();
-                DiscoveredData discoveredData = new GsonBuilder().create().fromJson(reader, listType);
-                callbacks.onSuccess(discoveredData);
+                MovieGenresList movieGenresList = new GsonBuilder().create().fromJson(reader, listType);
+                callbacks.onSuccess(movieGenresList);
             }
 
             @Override
@@ -37,18 +37,16 @@ public class DiscoverService extends TVListingBaseService {
         });
     }
 
-    public void getDiscoveredData (String url, int page, final ServiceCallbacks callbacks) {
-
-        url = String.format(url, page+1);
-
+    public void getShowGenres (final ServiceCallbacks callbacks) {
+        String url = UrlConstants.TV_GENRES;
         TVListingNetworkClient.getInstance().get(url, new JSONGetCallback() {
             @Override
             public void onSuccess(JSONObject responseObject) {
                 String reader = responseObject.toString();
-                Type listType = new TypeToken<DiscoveredData>() {
+                Type listType = new TypeToken<ShowGenresList>() {
                 }.getType();
-                DiscoveredData discoveredData = new GsonBuilder().create().fromJson(reader, listType);
-                callbacks.onSuccess(discoveredData);
+                ShowGenresList showGenresList = new GsonBuilder().create().fromJson(reader, listType);
+                callbacks.onSuccess(showGenresList);
             }
 
             @Override
@@ -57,5 +55,4 @@ public class DiscoverService extends TVListingBaseService {
             }
         });
     }
-
 }

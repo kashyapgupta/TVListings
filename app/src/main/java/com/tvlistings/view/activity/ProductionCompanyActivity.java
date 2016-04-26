@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -34,9 +36,15 @@ public class ProductionCompanyActivity extends BaseSearchActivity {
     @Bind(R.id.activity_production_company_movies_recycler_view)
     RecyclerView mMovieRecyclerView;
 
+    @Bind(R.id.activity_production_company_no_result_text_view)
+    TextView mNoResultTextView;
+
+    @Bind(R.id.activity_production_company_loading_progressBar)
+    ProgressBar mLoadingProgressbar;
+
     @Bind(R.id.activity_production_company_name_text_view)
     TextView mName;
-    private int mCurrentPage = 1;
+    private int mCurrentPage = 0;
     private int mPageCount;
 
     @Override
@@ -57,6 +65,8 @@ public class ProductionCompanyActivity extends BaseSearchActivity {
         mMovieRecyclerViewAdapter = new DiscoverRecyclerViewAdapter(mQueue, mContext);
         mMovieRecyclerView.setAdapter(mMovieRecyclerViewAdapter);
 
+        mMovieRecyclerViewAdapter.clearData();
+
         Intent intent = getIntent();
         String name = intent.getStringExtra("name");
         mName.setText(name);
@@ -68,7 +78,6 @@ public class ProductionCompanyActivity extends BaseSearchActivity {
     @Override
     public void loadMore() {
         if (mCurrentPage < mPageCount) {
-            mCurrentPage++;
             ((MoviesDetailsService) TVListingServiceFactory.getInstance().getService(MoviesDetailsService.class)).getProductionCompanyMovies(mProductionId, mCurrentPage, ProductionCompanyActivity.this);
         }
     }
@@ -80,7 +89,14 @@ public class ProductionCompanyActivity extends BaseSearchActivity {
         }else if (response instanceof DiscoveredData) {
             mMovieData = (DiscoveredData) response;
             mPageCount = mMovieData.getTotal_pages();
-            mMovieRecyclerViewAdapter.setData(mMovieData.getResults());
+            mLoadingProgressbar.setVisibility(View.GONE);
+            if (mMovieData.getResults().size() > 0) {
+                mMovieRecyclerView.setVisibility(View.VISIBLE);
+                mCurrentPage++;
+                mMovieRecyclerViewAdapter.setData(mMovieData.getResults(), mCurrentPage < mPageCount);
+            }else {
+                mNoResultTextView.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

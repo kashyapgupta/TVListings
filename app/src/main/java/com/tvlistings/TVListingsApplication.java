@@ -8,6 +8,7 @@ import com.tvlistings.controller.factory.TVListingServiceFactory;
 import com.tvlistings.controller.network.TVListingNetworkClient;
 import com.tvlistings.controller.service.DiscoverService;
 import com.tvlistings.controller.service.EpisodeDetailsService;
+import com.tvlistings.controller.service.GenresService;
 import com.tvlistings.controller.service.MoviesDetailsService;
 import com.tvlistings.controller.service.PeopleService;
 import com.tvlistings.controller.service.SearchService;
@@ -38,5 +39,6 @@ public class TVListingsApplication extends Application {
         TVListingServiceFactory.getInstance().addService(EpisodeDetailsService.class, new EpisodeDetailsService());
         TVListingServiceFactory.getInstance().addService(MoviesDetailsService.class, new MoviesDetailsService());
         TVListingServiceFactory.getInstance().addService(DiscoverService.class, new DiscoverService());
+        TVListingServiceFactory.getInstance().addService(GenresService.class, new GenresService());
     }
 }

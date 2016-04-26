@@ -6,6 +6,7 @@ import com.tvlistings.constants.UrlConstants;
 import com.tvlistings.controller.network.TVListingNetworkClient;
 import com.tvlistings.controller.network.response.JSONGetCallback;
 import com.tvlistings.controller.network.response.ResponseError;
+import com.tvlistings.model.keywordsSearchResult.KeywordSearchResult;
 import com.tvlistings.model.searchResult.SearchResultContent;
 
 import org.json.JSONObject;
@@ -28,6 +29,27 @@ public class SearchService extends TVListingBaseService {
                 }.getType();
                 SearchResultContent searchResultContent = new GsonBuilder().create().fromJson(reader, listType);
                 callbacks.onSuccess(searchResultContent);
+            }
+
+            @Override
+            public void onError(ResponseError error) {
+
+            }
+        });
+    }
+
+    public void searchKeyword(String mSearch, int mCurrentPage, final ServiceCallbacks callbacks) {
+
+        String mUrl = String.format(UrlConstants.SEARCH_KEYWORD, mSearch, mCurrentPage+1);
+
+        TVListingNetworkClient.getInstance().get(mUrl, new JSONGetCallback() {
+            @Override
+            public void onSuccess(JSONObject responseObject) {
+                String reader = responseObject.toString();
+                Type listType = new TypeToken<KeywordSearchResult>() {
+                }.getType();
+                KeywordSearchResult keywordSearchResult = new GsonBuilder().create().fromJson(reader, listType);
+                callbacks.onSuccess(keywordSearchResult);
             }
 
             @Override

@@ -66,38 +66,4 @@
         android:textSize="12sp"
         android:maxLines="4"/>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/adapter_discover_recycler_view_load_more_image_view"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_below="@id/adapter_discover_recycler_view_overview_text_view"
-        android:layout_marginLeft="295dp"
-        android:visibility="gone"
-        app:civ_border_width="2dp"
-        android:layout_marginTop="18dp"
-        android:src="@drawable/load_more" />
-
-    <TextView
-        android:id="@+id/adapter_discover_recycler_view_load_more_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="21dp"
-        android:visibility="gone"
-        android:layout_below="@id/adapter_discover_recycler_view_overview_text_view"
-        android:layout_marginLeft="190dp"
-        android:textColor="#BFFFFFFF"
-        android:textSize="20sp"
-        android:text="Load More"/>
-
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/adapter_discover_recycler_view_progress_bar"
-        android:indeterminate="true"
-        style="@android:style/Widget.Holo.ProgressBar"
-        android:layout_gravity="center_horizontal"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        android:layout_below="@id/adapter_discover_recycler_view_poster_network_image_view"/>
-
 </RelativeLayout>

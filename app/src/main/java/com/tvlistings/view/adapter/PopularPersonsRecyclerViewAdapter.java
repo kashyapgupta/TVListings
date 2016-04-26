@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -36,6 +37,7 @@ public class PopularPersonsRecyclerViewAdapter extends RecyclerView.Adapter<Popu
     DisplayMovie mDisplayMovie;
     DisplayShow mDisplayShow;
     private int mColor;
+    private boolean mMoreData;
 
     public PopularPersonsRecyclerViewAdapter (RequestQueue queue, Context context, int mColor) {
         Log.i("sanju", "in seasons recycler view");
@@ -52,80 +54,96 @@ public class PopularPersonsRecyclerViewAdapter extends RecyclerView.Adapter<Popu
         NetworkImageView image;
         FlowLayout flowLayout;
         TextView title;
+        ProgressBar progressBar;
 
         public PopularPeopleHolder(View itemView, int viewType) {
             super(itemView);
-            image = (NetworkImageView) itemView.findViewById(R.id.adapter_popular_people_recycler_view_poster_networkimageview);
-            flowLayout = (FlowLayout)itemView.findViewById(R.id.adapter_popular_people_recycler_view_known_for_flow_layout);
-            title = (TextView)itemView.findViewById(R.id.adapter_popular_people_recycler_view_title_text_view);
+            if (viewType == 1) {
+                image = (NetworkImageView) itemView.findViewById(R.id.adapter_popular_people_recycler_view_poster_networkimageview);
+                flowLayout = (FlowLayout) itemView.findViewById(R.id.adapter_popular_people_recycler_view_known_for_flow_layout);
+                title = (TextView) itemView.findViewById(R.id.adapter_popular_people_recycler_view_title_text_view);
+            }else if (viewType == 0) {
+                progressBar = (ProgressBar)itemView.findViewById(R.id.loading_progressBar);
+            }
         }
     }
 
     @Override
     public PopularPeopleHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        PopularPeopleHolder myPopularPeopleHolder;
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_popular_people_recycler_view, parent, false);
-        myPopularPeopleHolder = new PopularPeopleHolder(view, viewType);
+        PopularPeopleHolder myPopularPeopleHolder = null;
+        if (viewType == 1) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_popular_people_recycler_view, parent, false);
+            myPopularPeopleHolder = new PopularPeopleHolder(view, viewType);
+        }else if (viewType == 0) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.progress_bar, parent, false);
+            myPopularPeopleHolder = new PopularPeopleHolder(view, viewType);
+        }
         return myPopularPeopleHolder;
     }
 
     @Override
     public void onBindViewHolder(PopularPeopleHolder holder, final int position) {
-        holder.flowLayout.removeAllViews();
-        final String poster;
-        Log.i("sanju", "in people,s holder");
-        if ((mPopularPeople.get(position).getProfile_path()) != null && !mPopularPeople.get(position).getProfile_path().isEmpty()) {
-            poster = String.format(UrlConstants.IMAGE_URLW_185, mPopularPeople.get(position).getProfile_path());
-            holder.image.setImageUrl(poster, TVListingNetworkClient.getInstance().getImageLoader());
-        }else {
-            poster = "null";
-            holder.image.setImageUrl("http://www.cens.res.in/images/noimage.png", TVListingNetworkClient.getInstance().getImageLoader());
-        }holder.image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPerson.displayPersonDetails(mPopularPeople.get(position).getId(), mPopularPeople.get(position).getName(), poster);
+        if (getItemViewType(position) == 1) {
+            holder.flowLayout.removeAllViews();
+            final String poster;
+            Log.i("sanju", "in people,s holder");
+            if ((mPopularPeople.get(position).getProfile_path()) != null && !mPopularPeople.get(position).getProfile_path().isEmpty()) {
+                poster = String.format(UrlConstants.IMAGE_URLW_185, mPopularPeople.get(position).getProfile_path());
+                holder.image.setImageUrl(poster, TVListingNetworkClient.getInstance().getImageLoader());
+            } else {
+                poster = "null";
+                holder.image.setImageUrl("http://www.cens.res.in/images/noimage.png", TVListingNetworkClient.getInstance().getImageLoader());
             }
-        });
-        holder.title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPerson.displayPersonDetails(mPopularPeople.get(position).getId(), mPopularPeople.get(position).getName(), poster);
-            }
-        });
-        holder.title.setText(mPopularPeople.get(position).getName());
-        TextView textView;
-        if (mPopularPeople.get(position).getKnown_for().size() > 0) {
-            for (int i = 0; i < mPopularPeople.get(position).getKnown_for().size(); i++) {
-                textView = new TextView(mContext);
-                textView.setTextColor(mColor);
-                textView.setTextSize(14);
-                if ("tv".equalsIgnoreCase(mPopularPeople.get(position).getKnown_for().get(i).getMedia_type())) {
-                    if (i < (mPopularPeople.get(position).getKnown_for().size() - 1)) {
-                        textView.setText(mPopularPeople.get(position).getKnown_for().get(i).getName() + ", ");
-                    } else {
-                        textView.setText(mPopularPeople.get(position).getKnown_for().get(i).getName());
-                    }
-                }else if ("movie".equalsIgnoreCase(mPopularPeople.get(position).getKnown_for().get(i).getMedia_type())) {
-                    if (i < (mPopularPeople.get(position).getKnown_for().size() - 1)) {
-                        textView.setText(mPopularPeople.get(position).getKnown_for().get(i).getTitle() + ", ");
-                    } else {
-                        textView.setText(mPopularPeople.get(position).getKnown_for().get(i).getTitle());
-                    }
+            holder.image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mPerson.displayPersonDetails(mPopularPeople.get(position).getId(), mPopularPeople.get(position).getName(), poster);
                 }
-                holder.flowLayout.addView(textView);
-                final int finalI = i;
-                textView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if ("tv".equalsIgnoreCase(mPopularPeople.get(position).getKnown_for().get(finalI).getMedia_type())) {
-                            double rating = (mPopularPeople.get(position).getKnown_for().get(finalI).getVote_average() * 10);
-                            mDisplayShow.displayShow(mPopularPeople.get(position).getKnown_for().get(finalI).getId(), rating);
-                        } else if ("movie".equalsIgnoreCase(mPopularPeople.get(position).getKnown_for().get(finalI).getMedia_type())) {
-                            mDisplayMovie.displayMovie(mPopularPeople.get(position).getKnown_for().get(finalI).getId());
+            });
+            holder.title.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mPerson.displayPersonDetails(mPopularPeople.get(position).getId(), mPopularPeople.get(position).getName(), poster);
+                }
+            });
+            holder.title.setText(mPopularPeople.get(position).getName());
+            TextView textView;
+            if (mPopularPeople.get(position).getKnown_for().size() > 0) {
+                for (int i = 0; i < mPopularPeople.get(position).getKnown_for().size(); i++) {
+                    textView = new TextView(mContext);
+                    textView.setTextColor(mColor);
+                    textView.setTextSize(14);
+                    if ("tv".equalsIgnoreCase(mPopularPeople.get(position).getKnown_for().get(i).getMedia_type())) {
+                        if (i < (mPopularPeople.get(position).getKnown_for().size() - 1)) {
+                            textView.setText(mPopularPeople.get(position).getKnown_for().get(i).getName() + ", ");
+                        } else {
+                            textView.setText(mPopularPeople.get(position).getKnown_for().get(i).getName());
+                        }
+                    } else if ("movie".equalsIgnoreCase(mPopularPeople.get(position).getKnown_for().get(i).getMedia_type())) {
+                        if (i < (mPopularPeople.get(position).getKnown_for().size() - 1)) {
+                            textView.setText(mPopularPeople.get(position).getKnown_for().get(i).getTitle() + ", ");
+                        } else {
+                            textView.setText(mPopularPeople.get(position).getKnown_for().get(i).getTitle());
                         }
                     }
-                });
+                    holder.flowLayout.addView(textView);
+                    final int finalI = i;
+                    textView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if ("tv".equalsIgnoreCase(mPopularPeople.get(position).getKnown_for().get(finalI).getMedia_type())) {
+                                double rating = (mPopularPeople.get(position).getKnown_for().get(finalI).getVote_average() * 10);
+                                mDisplayShow.displayShow(mPopularPeople.get(position).getKnown_for().get(finalI).getId(), rating);
+                            } else if ("movie".equalsIgnoreCase(mPopularPeople.get(position).getKnown_for().get(finalI).getMedia_type())) {
+                                mDisplayMovie.displayMovie(mPopularPeople.get(position).getKnown_for().get(finalI).getId());
+                            }
+                        }
+                    });
+                }
             }
+        }else {
+            mContextLoadMoreData.loadMore();
         }
     }
 
@@ -133,13 +151,18 @@ public class PopularPersonsRecyclerViewAdapter extends RecyclerView.Adapter<Popu
     public int getItemCount() {
         if (mPopularPeople == null) {
             return 0;
+        }
+        if (mMoreData) {
+            return mPopularPeople.size() + 1;
         }else {
             return mPopularPeople.size();
         }
     }
 
-    public void setData (PopularPeople mPopularPeople) {
+    public void setData (PopularPeople mPopularPeople, boolean mMoreData) {
+        this.mMoreData = mMoreData;
         this.mPopularPeople.addAll(mPopularPeople.getResults());
+        notifyDataSetChanged();
     }
 
     public void clearData() {
@@ -149,6 +172,14 @@ public class PopularPersonsRecyclerViewAdapter extends RecyclerView.Adapter<Popu
 
     @Override
     public int getItemViewType(int position) {
-        return 1;
+        if (position < mPopularPeople.size()) {
+            return 1;
+        }else {
+            if (mMoreData) {
+                return 0;
+            }else {
+                return 1;
+            }
+        }
     }
 }
