@@ -17,11 +17,13 @@ import com.tvlistings.R;
 import com.tvlistings.constants.UrlConstants;
 import com.tvlistings.controller.factory.TVListingServiceFactory;
 import com.tvlistings.controller.network.TVListingNetworkClient;
+import com.tvlistings.controller.service.ImagesService;
 import com.tvlistings.controller.service.PeopleService;
 import com.tvlistings.controller.service.ServiceCallbacks;
 import com.tvlistings.controller.service.ShowDetailsService;
 import com.tvlistings.model.BaseResponse;
 import com.tvlistings.model.PersonDetails;
+import com.tvlistings.model.images.Images;
 import com.tvlistings.model.peopleCasting.PersonCasting;
 import com.tvlistings.view.adapter.PersonCastingShowsAdapter;
 import com.tvlistings.view.callback.DisplayMovie;
@@ -39,22 +41,34 @@ public class ShowPersonDetailsActivity extends BaseListingActivity implements Di
     int mId;
     @Bind(R.id.activity_show_person_details_headshot_networkimageview)
     NetworkImageView mHeadshotImage;
+
+    @Bind(R.id.activity_show_person_details_no_images_text_view)
+    TextView mNoImageTextView;
+
     @Bind(R.id.activity_show_person_details_name_text_view)
     TextView mNameText;
+
     @Bind(R.id.activity_show_person_details_born_text_view)
     TextView mBirthdayText;
+
     @Bind(R.id.activity_show_person_details_biography_text_view)
     TextView mBiographyText;
+
     ImageLoader mImageLoader;
     RequestQueue mQueue;
     PersonCasting mPersonsCastingShows;
+
     @Bind(R.id.activity_show_person_details_casting_shows_recycler_view)
     RecyclerView mRecyclerView;
+
     @Bind(R.id.activity_show_person_details_casting_shows_text_views)
     TextView castingShowsTextView;
+
     private RecyclerView.LayoutManager mLayoutManager;
     private PersonCastingShowsAdapter mPersonCastingShowAdapter;
     private Context mContext;
+    Images mPersonImages;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +87,17 @@ public class ShowPersonDetailsActivity extends BaseListingActivity implements Di
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+        ((ImagesService) TVListingServiceFactory.getInstance().getService(ImagesService.class)).getPersonImages(mId, ShowPersonDetailsActivity.this);
+
+        mHeadshotImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(mContext, ShowImagesActivity.class);
+                intent1.putExtra("personId", mId);
+                startActivity(intent1);
+            }
+        });
 
         ((PeopleService) TVListingServiceFactory.getInstance().getService(PeopleService.class)).getPersonDetails(mId, ShowPersonDetailsActivity.this);
 
@@ -129,6 +154,17 @@ public class ShowPersonDetailsActivity extends BaseListingActivity implements Di
             }
             mPersonCastingShowAdapter = new PersonCastingShowsAdapter(mPersonsCastingShows, mQueue, mContext);
             mRecyclerView.setAdapter(mPersonCastingShowAdapter);
+        }else if (response instanceof Images) {
+            mPersonImages = (Images) response;
+            if (mPersonImages.getProfiles().size() > 0) {
+                mHeadshotImage.isClickable();
+                if (mHeadshotImage.getBackground() == null) {
+                    mHeadshotImage.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mPersonImages.getProfiles().get(0).getFile_path()), mImageLoader);
+                }
+            }else {
+                mHeadshotImage.setClickable(false);
+                mNoImageTextView.setText("No Images To show");
+            }
         }
     }
 }

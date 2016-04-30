@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="150dp"
+    android:layout_width="280dp"
     android:padding="5dp"
-    android:layout_height="200dp">
+    android:layout_height="170dp">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -12,6 +12,7 @@
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/adapter_videos_image_loading_progressBar"
             android:indeterminate="true"
             style="@android:style/Widget.Holo.ProgressBar"
             android:layout_gravity="center"/>
@@ -23,7 +24,7 @@
         android:layout_height="match_parent">
 
         <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/adapter_persons_casting_recycler_view_poster_networkimageview"
+            android:id="@+id/adapter_videos_recycler_view_poster_networkimageview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
@@ -37,23 +38,25 @@
         android:background="#80000000"/>
 
     <TextView
-        android:id="@+id/adapter_persons_casting_recycler_view_title_text_view"
+        android:id="@+id/adapter_videos_recycler_view_title_text_view"
         android:layout_marginTop="5dp"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
         android:textColor="#BFFFFFFF"
-        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="3dp"
+        android:padding="5dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
         android:layout_centerHorizontal="true"/>
 
     <TextView
-        android:id="@+id/adapter_persons_casting_recycler_view_rating_text_view"
+        android:id="@+id/adapter_videos_recycler_view_type_text_view"
         android:layout_width="wrap_content"
-        android:textSize="10sp"
+        android:textSize="16sp"
+        android:layout_marginLeft="7dp"
         android:textColor="#BFFFFFFF"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="6dp"
+        android:gravity="center_horizontal"
         android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"/>
 

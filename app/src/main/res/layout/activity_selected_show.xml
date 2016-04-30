@@ -311,17 +311,71 @@
                     android:layout_marginTop="15dp"
                     android:layout_below="@id/activity_selected_show_runtime_text_view" />
 
+                <TextView
+                    android:id="@+id/activity_selected_show_images_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="20dp"
+                    android:textSize="20sp"
+                    android:textColor="#BFFFFFFF"
+                    android:text="Images"
+                    android:layout_below="@id/activity_selected_show_link_text_view"/>
+
+                <com.android.volley.toolbox.NetworkImageView
+                    android:id="@+id/activity_selected_show_backdrop_network_image_view"
+                    android:layout_width="360dp"
+                    android:layout_height="210dp"
+                    android:layout_below="@id/activity_selected_show_images_text_view"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="10dp"
+                    android:foregroundGravity="center"
+                    android:layout_centerHorizontal="true" />
+
+                <TextView
+                    android:id="@+id/activity_selected_show_no_images_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/activity_selected_show_images_text_view"
+                    android:layout_marginTop="35dp"
+                    android:layout_marginLeft="10dp"
+                    android:foregroundGravity="center"
+                    android:textSize="20sp"
+                    android:textColor="#BFFFFFFF"
+                    android:layout_centerHorizontal="true"
+                    android:text="Touch to view all images"/>
+
+                <TextView
+                    android:id="@+id/activity_selected_show_videos_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="20dp"
+                    android:textSize="20sp"
+                    android:textColor="#BFFFFFFF"
+                    android:text="Videos"
+                    android:layout_below="@id/activity_selected_show_backdrop_network_image_view"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/activity_selected_show_video_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="210dp"
+                    android:layout_below="@id/activity_selected_show_videos_text_view"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="10dp"
+                    android:foregroundGravity="center"
+                    android:layout_centerHorizontal="true" />
 
                 <TextView
                     android:id="@+id/activity_selected_show_seasons_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/activity_selected_show_link_text_view"
+                    android:layout_below="@id/activity_selected_show_video_recycler_view"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="20dp"
                     android:textSize="20sp"
-                    android:visibility="gone"
                     android:textColor="#BFFFFFFF"
+                    android:visibility="gone"
                     android:text="Seasons"/>
 
                 <LinearLayout
@@ -477,9 +531,7 @@
                         android:layout_height="match_parent"
                         android:layout_margin="5dp"
                         android:scrollbars="horizontal"
-                        android:layout_below="@id/activity_selected_show_related_text_view">
-
-                    </android.support.v7.widget.RecyclerView>
+                        android:layout_below="@id/activity_selected_show_related_text_view"/>
 
                 </LinearLayout>
 

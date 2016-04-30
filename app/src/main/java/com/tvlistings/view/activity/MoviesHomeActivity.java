@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
@@ -109,24 +110,52 @@ public class MoviesHomeActivity extends BaseSearchActivity implements DisplayMov
             mPopularMovies = ((PopularMoviesList) response).moviesList;
             ProgressBar popularProgressBar = (ProgressBar)findViewById(R.id.activity_movies_home_popular_loading_progressBar);
             popularProgressBar.setVisibility(View.GONE);
+            TextView textView = (TextView)findViewById(R.id.activity_movies_home_no_popular_text_view);
+            if (mPopularMovies.getResults().size() == 0) {
+                textView.setVisibility(View.VISIBLE);
+                textView.setText(R.string.no_data);
+            }else {
+                textView.setVisibility(View.GONE);
+            }
             mPopularMoviesAdapter = new MoviesRecyclerViewAdapter(mPopularMovies, mQueue, mContext);
             mPopularMoviesRecyclerView.setAdapter(mPopularMoviesAdapter);
         }else if (response instanceof TopRatedMoviesList) {
             mTopRatedMovies = ((TopRatedMoviesList) response).moviesList;
             ProgressBar topRatedProgressBar = (ProgressBar)findViewById(R.id.activity_movies_home_top_rated_loading_progressBar);
             topRatedProgressBar.setVisibility(View.GONE);
+            TextView textView = (TextView)findViewById(R.id.activity_movies_home_no_top_rated_text_view);
+            if (mTopRatedMovies.getResults().size() == 0) {
+                textView.setVisibility(View.VISIBLE);
+                textView.setText(R.string.no_data);
+            }else {
+                textView.setVisibility(View.GONE);
+            }
             mTopRatedMoviesAdapter = new MoviesRecyclerViewAdapter(mTopRatedMovies, mQueue, mContext);
             mTopRatedMoviesRecyclerView.setAdapter(mTopRatedMoviesAdapter);
         }else if (response instanceof NowPlayingMoviesList) {
             mNowPlayingMovies = ((NowPlayingMoviesList) response).moviesList;
             ProgressBar nowPlayingProgressBar = (ProgressBar)findViewById(R.id.activity_movies_home_now_playing_loading_progressBar);
             nowPlayingProgressBar.setVisibility(View.GONE);
+            TextView textView = (TextView)findViewById(R.id.activity_movies_home_no_now_playing_text_view);
+            if (mNowPlayingMovies.getResults().size() == 0) {
+                textView.setVisibility(View.VISIBLE);
+                textView.setText(R.string.no_data);
+            }else {
+                textView.setVisibility(View.GONE);
+            }
             mNowPlayingMoviesAdapter = new MoviesRecyclerViewAdapter(mNowPlayingMovies, mQueue, mContext);
             mNowPlayingMoviesRecyclerView.setAdapter(mNowPlayingMoviesAdapter);
         }else if (response instanceof UpcomingMoviesList) {
             mUpcomingMovies = ((UpcomingMoviesList) response).moviesList;
             ProgressBar upComingProgressBar = (ProgressBar)findViewById(R.id.activity_movies_home_upcoming_loading_progressBar);
             upComingProgressBar.setVisibility(View.GONE);
+            TextView textView = (TextView)findViewById(R.id.activity_movies_home_no_upcoming_text_view);
+            if (mUpcomingMovies.getResults().size() == 0) {
+                textView.setVisibility(View.VISIBLE);
+                textView.setText(R.string.no_data);
+            }else {
+                textView.setVisibility(View.GONE);
+            }
             mUpcomingMoviesAdapter = new MoviesRecyclerViewAdapter(mUpcomingMovies, mQueue, mContext);
             mUpcomingMoviesRecyclerView.setAdapter(mUpcomingMoviesAdapter);
         }else if (response instanceof SearchResultContent) {

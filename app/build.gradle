@@ -34,4 +34,5 @@ dependencies {
     compile 'com.github.lzyzsd:circleprogress:1.1.0@aar'
     compile 'org.apmem.tools:layouts:1.10@aar'
     compile 'de.hdodenhof:circleimageview:2.0.0'
+    compile 'com.thefinestartist:ytpa:1.2.1'
 }

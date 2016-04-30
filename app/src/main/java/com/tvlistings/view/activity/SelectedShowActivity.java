@@ -19,27 +19,36 @@ import android.widget.ToggleButton;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.thefinestartist.ytpa.YouTubePlayerActivity;
+import com.thefinestartist.ytpa.enums.Orientation;
 import com.tvlistings.R;
 import com.tvlistings.constants.UrlConstants;
 import com.tvlistings.controller.RatingImage;
 import com.tvlistings.controller.factory.TVListingServiceFactory;
 import com.tvlistings.controller.network.TVListingNetworkClient;
+import com.tvlistings.controller.service.ImagesService;
 import com.tvlistings.controller.service.PeopleService;
 import com.tvlistings.controller.service.SeasonDetailService;
 import com.tvlistings.controller.service.ServiceCallbacks;
 import com.tvlistings.controller.service.ShowDetailsService;
+import com.tvlistings.controller.service.VideosService;
 import com.tvlistings.model.BaseResponse;
 import com.tvlistings.model.ShowContent.ShowContent;
 import com.tvlistings.model.episodes.SeasonDetails;
+import com.tvlistings.model.images.Images;
 import com.tvlistings.model.peopleCasting.PersonCasting;
 import com.tvlistings.model.searchResult.SearchResultContent;
 import com.tvlistings.model.tvShows.TVShows;
+import com.tvlistings.model.videos.Videos;
 import com.tvlistings.view.adapter.EpisodesRecyclerViewAdapter;
 import com.tvlistings.view.adapter.PeopleRecyclerViewAdapter;
 import com.tvlistings.view.adapter.SeasonsRecyclerViewAdapter;
 import com.tvlistings.view.adapter.TVShowsRecyclerViewAdapter;
+import com.tvlistings.view.adapter.VideosRecyclerViewAdapter;
 import com.tvlistings.view.callback.DisplayEpisodes;
 import com.tvlistings.view.callback.DisplayPersonDetails;
+import com.tvlistings.view.callback.DisplayVideo;
 import com.tvlistings.view.callback.EpisodeDetails;
 
 import org.apmem.tools.layouts.FlowLayout;
@@ -52,7 +61,7 @@ import butterknife.Bind;
  * Created by Rohit on 3/10/2016.
  */
 
-public class SelectedShowActivity extends BaseSearchActivity implements DisplayEpisodes, DisplayPersonDetails, EpisodeDetails, ServiceCallbacks{
+public class SelectedShowActivity extends BaseSearchActivity implements DisplayEpisodes, DisplayPersonDetails, EpisodeDetails, ServiceCallbacks, DisplayVideo{
     RequestQueue mQueue;
 
     @Bind(R.id.activity_selected_show_title_text_view)
@@ -79,6 +88,12 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
     @Bind(R.id.activity_selected_show_rating_text_view)
     TextView mRating;
 
+    @Bind(R.id.activity_selected_show_videos_text_view)
+    TextView mVideosTextView;
+
+    @Bind(R.id.activity_selected_show_video_recycler_view)
+    RecyclerView mVideosRecyclerView;
+
     @Bind(R.id.activity_selected_show_heart_image_view)
     ImageView ratingImage;
 
@@ -87,12 +102,14 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
     PersonCasting mPeople;
     Context mContext = this;
     int mSeasonNo;
+    Videos mVideos;
 
     private SeasonsRecyclerViewAdapter mSeasonsAdapter;
     private PeopleRecyclerViewAdapter mPeopleCastAdapter;
     private PeopleRecyclerViewAdapter mPeopleCrewAdapter;
     private EpisodesRecyclerViewAdapter mEpisodesAdapter;
     private TVShowsRecyclerViewAdapter mRelatedAdapter;
+    private VideosRecyclerViewAdapter mVideosRecyclerViewAdapter;
 
     @Bind(R.id.activity_selected_show_seasons_recycler_view)
     RecyclerView mSeasonsRecyclerView;
@@ -110,6 +127,9 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
     SeasonDetails mEpisodes;
     TVShows mRelated;
     ImageLoader mImageLoader;
+
+    @Bind(R.id.activity_selected_show_backdrop_network_image_view)
+    NetworkImageView mBackdropImage;
 
     @Bind(R.id.activity_selected_show_related_recycler_view)
     RecyclerView mRelatedRecyclerView;
@@ -150,9 +170,13 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
     @Bind(R.id.activity_selected_show_networks_flow_layout)
     FlowLayout mNetworksFlowLayout;
 
+    @Bind(R.id.activity_selected_show_no_images_text_view)
+    TextView mNoImageTextView;
+
     @Bind(R.id.activity_selected_show_production_flow_layout)
     FlowLayout mProductionFlowLayout;
 
+    Images mShowImages;
     ArrayList<Integer> showPreferencesList;
     SharedPreferences mSharedPreferences;
     StringBuilder likeShows = new StringBuilder();
@@ -164,12 +188,13 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
     private LinearLayoutManager mPeopleCastLayoutManager;
     private LinearLayoutManager mPeopleCrewLayoutManager;
     private LinearLayoutManager mEpisodesLayoutManager;
+    private LinearLayoutManager mVideosLinearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i("sanju", "in new activity");
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         mId = intent.getIntExtra("id", 1);
         mShowRating = intent.getDoubleExtra("rating", 1);
         Log.i("sanju", String.valueOf(mId));
@@ -196,6 +221,16 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
                 unlike.setVisibility(View.VISIBLE);
             }
         }
+        ((ImagesService) TVListingServiceFactory.getInstance().getService(ImagesService.class)).getShowImages(mId, SelectedShowActivity.this);
+
+        mBackdropImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(mContext, ShowImagesActivity.class);
+                intent1.putExtra("showId", mId);
+                startActivity(intent1);
+            }
+        });
 
         liked.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,7 +254,7 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
                             showPreferencesList.remove(i);
                         }
                     }
-                    for (int i = 0 ; i <  showPreferencesList.size(); i++) {
+                    for (int i = 0; i < showPreferencesList.size(); i++) {
                         likeShows.append(showPreferencesList.get(i)).append(",");
                     }
                     editor.putString("likedShows", likeShows.toString());
@@ -234,14 +269,24 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
         mRelatedRecyclerView.setHasFixedSize(true);
         mPeopleCastRecyclerView.setHasFixedSize(true);
         mPeopleCrewRecyclerView.setHasFixedSize(true);
+        mVideosRecyclerView.setHasFixedSize(true);
+
         mRelatedLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mSeasonsLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mPeopleCastLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mPeopleCrewLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mVideosLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+
         mRelatedRecyclerView.setLayoutManager(mRelatedLayoutManager);
         mSeasonsRecyclerView.setLayoutManager(mSeasonsLayoutManager);
         mPeopleCastRecyclerView.setLayoutManager(mPeopleCastLayoutManager);
         mPeopleCrewRecyclerView.setLayoutManager(mPeopleCrewLayoutManager);
+
+        mVideosRecyclerView.setLayoutManager(mVideosLinearLayoutManager);
+        mVideosRecyclerViewAdapter = new VideosRecyclerViewAdapter(mQueue, mContext);
+        mVideosRecyclerView.setAdapter(mVideosRecyclerViewAdapter);
+        mVideosRecyclerViewAdapter.clearData();
+
         //Show Detail
         ((ShowDetailsService) TVListingServiceFactory.getInstance().getService(ShowDetailsService.class)).getShowDetail(mId, SelectedShowActivity.this);
 
@@ -250,6 +295,9 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
 
         //Simillar Shows
         ((ShowDetailsService) TVListingServiceFactory.getInstance().getService(ShowDetailsService.class)).showsList(mId, SelectedShowActivity.this);
+
+        //Show vidoes
+        ((VideosService) TVListingServiceFactory.getInstance().getService(VideosService.class)).getShowVideos(mId, SelectedShowActivity.this);
     }
     @Override
     protected int getContentViewId() {
@@ -290,6 +338,8 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
         startActivity(intent);
     }
 
+
+
     @Override
     public void onSuccess(BaseResponse response) {
         if (response instanceof ShowContent) {
@@ -301,6 +351,10 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
             ArrayList<String> networks = new ArrayList<>();
             for (int i = 0; i < mShowData.getNetworks().size(); i++) {
                 networks.add(mShowData.getNetworks().get(i).getName());
+            }
+
+            if (!TextUtils.isEmpty(mShowData.getBackdrop_path()) && !"null".equalsIgnoreCase(mShowData.getBackdrop_path())) {
+                mBackdropImage.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mShowData.getBackdrop_path()), mImageLoader);
             }
 
             String networks2 = String.valueOf(networks);
@@ -449,6 +503,12 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
                 }
             }
 
+            if (mShowData.getSeasons().size() > 0) {
+                for (int i = 0; i < mShowData.getSeasons().size(); i++) {
+                    ((VideosService) TVListingServiceFactory.getInstance().getService(VideosService.class)).getSeasonVideos(mId, i, SelectedShowActivity.this);
+                }
+            }
+
             String language;
             if (mShowData.getLanguages().size() > 0) {
                 language = mShowData.getLanguages().toString();
@@ -478,8 +538,6 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
             String thumb = mShowData.getPoster_path();
             if (!TextUtils.isEmpty(thumb) && !"null".equals(thumb)) {
                 mPoster.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mShowData.getPoster_path()), mImageLoader);
-            } else {
-                mPoster.setImageUrl("https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQPqJzGtMHWmE12HmhqEYZWbmulcZVb8vhUqQcHxan7DQGNrcuF", mImageLoader);
             }
             if (mShowRating != 101) {
                 String trimmedRating = String.format("%.1f", mShowRating);
@@ -545,6 +603,39 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
             mEpisodesRecyclerView.setAdapter(mEpisodesAdapter);
         }else if (response instanceof SearchResultContent) {
             super.onSuccess(response);
+        }else if (response instanceof Images) {
+            mShowImages = (Images) response;
+            if (mShowImages.getBackdrops().size() + mShowImages.getPosters().size() > 0) {
+                mBackdropImage.setVisibility(View.VISIBLE);
+                if (mBackdropImage.getBackground() == null) {
+                    mBackdropImage.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mShowImages.getBackdrops().get(0).getFile_path()), mImageLoader);
+                }
+            }else {
+                mBackdropImage.setVisibility(View.GONE);
+                mNoImageTextView.setText("No Images Available");
+            }
+        }else if (response instanceof Videos) {
+            mVideos = (Videos) response;
+            if (mVideos.getResults().size() > 0) {
+                mVideosTextView.setVisibility(View.VISIBLE);
+                mVideosRecyclerView.setVisibility(View.VISIBLE);
+                mVideosRecyclerViewAdapter.setData(mVideos);
+            }else {
+                mVideosTextView.setVisibility(View.GONE);
+                mVideosRecyclerView.setVisibility(View.GONE);
+            }
         }
+    }
+
+    @Override
+    public void showVideo(String key) {
+        Intent intent = new Intent(mContext, YouTubePlayerActivity.class);
+        intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, key);
+        intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, YouTubePlayer.PlayerStyle.DEFAULT);
+        intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, Orientation.AUTO);
+        intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, true);
+        intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

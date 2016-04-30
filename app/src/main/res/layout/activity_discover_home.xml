@@ -10,8 +10,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:textColor="#BFFFFFFF"
-        android:text="Discover new Movies and TV Shows"
+        android:text="Discover Movies and TV Shows"
         android:textSize="21sp"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"/>
 
     <TextView
@@ -22,7 +23,7 @@
         android:textColor="#BFFFFFFF"
         android:text="Type : "
         android:textSize="18sp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_below="@id/activity_discover_home_text_view"/>
 
 
@@ -51,7 +52,7 @@
         android:textColor="#BFFFFFFF"
         android:text="Sort By : "
         android:textSize="18sp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_below="@id/activity_discover_home_text_view"/>
 
 

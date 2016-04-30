@@ -2,7 +2,6 @@ package com.tvlistings.view.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -75,8 +74,8 @@ public abstract class BaseSearchActivity extends BaseListingActivity implements 
     @Bind(R.id.activity_base_search_discover_image)
     ImageView mDiscoverImageView;
 
-    @Bind(R.id.activity_base_search_forum_image)
-    ImageView mForumImageView;
+    @Bind(R.id.activity_base_search_legal_image)
+    ImageView mLegalImageView;
 
     @Bind(R.id.activity_base_search_faq_image)
     ImageView mFAQImageView;
@@ -114,7 +113,7 @@ public abstract class BaseSearchActivity extends BaseListingActivity implements 
         mMovieImageView.setImageResource(R.mipmap.ic_movie_white_48dp);
         mPeopleImageView.setImageResource(R.mipmap.ic_people_outline_white_48dp);
         mDiscoverImageView.setImageResource(R.mipmap.ic_search_white_48dp);
-        mForumImageView.setImageResource(R.mipmap.ic_forum_white_48dp);
+        mLegalImageView.setImageResource(R.drawable.legal);
         mContactImageView.setImageResource(R.mipmap.ic_contact_phone_white_48dp);
         mFAQImageView.setImageResource(R.drawable.faq);
 

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.tvlistings.R;
@@ -34,6 +35,9 @@ public class PersonsHomeActivity extends BaseSearchActivity implements ServiceCa
 
     @Bind(R.id.activity_persons_home_popular_people_recycler_view)
     RecyclerView mPopularPeopleRecyclerView;
+
+    @Bind(R.id.activity_persons_home_no_data_text_view)
+    TextView mNoDataTextView;
 
     @Bind(R.id.activity_persons_home_loading_progressBar)
     ProgressBar mLoadingPrograssBar;
@@ -113,6 +117,14 @@ public class PersonsHomeActivity extends BaseSearchActivity implements ServiceCa
             mPopularPeople = (PopularPeople) response;
             mLoadingPrograssBar.setVisibility(View.GONE);
             mPopularPeopleRecyclerView.setVisibility(View.VISIBLE);
+            if (mCurrentPage == 0 && mPopularPeople.getResults().size() == 0) {
+                mNoDataTextView.setVisibility(View.VISIBLE);
+                mNoDataTextView.setText(R.string.no_data);
+                mPopularPeopleRecyclerView.setVisibility(View.GONE);
+            }else {
+                mNoDataTextView.setVisibility(View.GONE);
+                mPopularPeopleRecyclerView.setVisibility(View.VISIBLE);
+            }
             mCurrentPage++;
             mPopularPersonsRecyclerViewAdapter.setData(mPopularPeople, mCurrentPage < mPageCount);
         }

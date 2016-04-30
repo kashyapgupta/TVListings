@@ -111,12 +111,28 @@ public class TVShowsHomeActivity extends BaseSearchActivity implements DisplaySh
             mPopularShows = ((PopularTVShows) response).tvShows;
             ProgressBar popularProgressBar = (ProgressBar) findViewById(R.id.Activity_tvshows_home_popular_loading_progressBar);
             popularProgressBar.setVisibility(View.GONE);
+            if (mPopularShows.getResults().size() == 0) {
+                TextView textView = (TextView)findViewById(R.id.activity_tvshows_home_no_popular_data_text_view);
+                textView.setVisibility(View.VISIBLE);
+                textView.setText(R.string.no_data);
+            }else {
+                TextView textView = (TextView)findViewById(R.id.activity_tvshows_home_no_popular_data_text_view);
+                textView.setVisibility(View.GONE);
+            }
             mPopularAdapter = new TVShowsRecyclerViewAdapter(mPopularShows, mQueue2, mContext);
             mPopularRecyclerView.setAdapter(mPopularAdapter);
         }else if (response instanceof TopRatedTVShows) {
             mTopRatedShows = ((TopRatedTVShows) response).tvShows;
             ProgressBar topRatedProgressBar = (ProgressBar) findViewById(R.id.Activity_tvshows_home_top_rated_loading_progressBar);
             topRatedProgressBar.setVisibility(View.GONE);
+            if (mTopRatedShows.getResults().size() == 0) {
+                TextView textView = (TextView)findViewById(R.id.activity_tvshows_home_no_top_rated_data_text_view);
+                textView.setVisibility(View.VISIBLE);
+                textView.setText(R.string.no_data);
+            }else {
+                TextView textView = (TextView)findViewById(R.id.activity_tvshows_home_no_top_rated_data_text_view);
+                textView.setVisibility(View.GONE);
+            }
             mTopRatedAdapter = new TVShowsRecyclerViewAdapter(mTopRatedShows, mQueue2, mContext);
             mTrendingRecyclerView.setAdapter(mTopRatedAdapter);
         }else if (response instanceof AiringTodayTVShows) {
@@ -131,6 +147,14 @@ public class TVShowsHomeActivity extends BaseSearchActivity implements DisplaySh
                 }
             }*/
             airingTodayProgressBar.setVisibility(View.GONE);
+            if (mAiringTodayShows.getResults().size() == 0) {
+                TextView textView = (TextView)findViewById(R.id.activity_tvshows_home_no_airing_text_view);
+                textView.setVisibility(View.VISIBLE);
+                textView.setText(R.string.no_data);
+            }else {
+                TextView textView = (TextView)findViewById(R.id.activity_tvshows_home_no_airing_text_view);
+                textView.setVisibility(View.GONE);
+            }
             mAiringTodayAdapter = new TVShowsRecyclerViewAdapter(mAiringTodayShows, mQueue2, mContext);
             mAiringTodayRecyclerView.setAdapter(mAiringTodayAdapter);
         }else if (response instanceof SearchResultContent) {

@@ -26,6 +26,16 @@
                 android:layout_marginLeft="7dp"/>
 
             <TextView
+                android:id="@+id/activity_show_person_details_no_images_text_view"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="180dp"
+                android:textColor="@color/tomato"
+                android:textSize="12sp"
+                android:text="Touch to view all images"/>
+
+            <TextView
                 android:id="@+id/activity_show_person_details_name_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -70,7 +80,7 @@
                 android:textSize="18sp"
                 android:layout_below="@id/activity_show_person_details_biography_text_view"
                 android:textColor="#BFFFFFFF"
-                android:text="Casting Shows"
+                android:text="Casting Shows and Movies"
                 android:visibility="gone"
                 android:layout_marginLeft="10dp"
                 android:layout_height="wrap_content" />

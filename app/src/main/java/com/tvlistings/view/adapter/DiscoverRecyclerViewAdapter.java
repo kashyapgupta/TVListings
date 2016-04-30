@@ -55,8 +55,6 @@ public class DiscoverRecyclerViewAdapter extends RecyclerView.Adapter<DiscoverRe
         ImageView ratingImage;
         TextView overview;
         RelativeLayout relativeLayout;
-        CircleImageView circleImageView;
-        TextView loadMore;
         ProgressBar progressBar;
 
         public DiscoveredListHolder(View itemView, int viewType) {
@@ -70,9 +68,7 @@ public class DiscoverRecyclerViewAdapter extends RecyclerView.Adapter<DiscoverRe
                 originalTitle = (TextView) itemView.findViewById(R.id.adapter_discover_recycler_view_original_title_text_view);
                 rating = (TextView) itemView.findViewById(R.id.adapter_discover_recycler_view_rating_text_view);
             }else {
-                loadMore = (TextView) itemView.findViewById(R.id.load_more_text_view);
-                circleImageView = (CircleImageView) itemView.findViewById(R.id.load_more_image_view);
-                progressBar = (ProgressBar) itemView.findViewById(R.id.load_more_progressBar);
+                progressBar = (ProgressBar) itemView.findViewById(R.id.loading_progressBar);
             }
         }
     }
@@ -84,7 +80,7 @@ public class DiscoverRecyclerViewAdapter extends RecyclerView.Adapter<DiscoverRe
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_discover_recycler_view, parent, false);
             myDiscoveredListHolder = new DiscoveredListHolder(view, viewType);
         }else {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.load_more, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.progress_bar, parent, false);
             myDiscoveredListHolder = new DiscoveredListHolder(view, viewType);
         }
         return myDiscoveredListHolder;
@@ -143,30 +139,7 @@ public class DiscoverRecyclerViewAdapter extends RecyclerView.Adapter<DiscoverRe
                 }
             });
         }else {
-
-            holder.loadMore.setVisibility(View.VISIBLE);
-            holder.circleImageView.setVisibility(View.VISIBLE);
-            holder.progressBar.setVisibility(View.GONE);
-
-            holder.loadMore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    holder.loadMore.setVisibility(View.GONE);
-                    holder.circleImageView.setVisibility(View.GONE);
-                    holder.progressBar.setVisibility(View.VISIBLE);
-                    mCallback.loadMore();
-                }
-            });
-
-            holder.circleImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    holder.loadMore.setVisibility(View.GONE);
-                    holder.circleImageView.setVisibility(View.GONE);
-                    holder.progressBar.setVisibility(View.VISIBLE);
-                    mCallback.loadMore();
-                }
-            });
+            mCallback.loadMore();
         }
     }
 

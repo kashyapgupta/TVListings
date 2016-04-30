@@ -19,22 +19,31 @@ import android.widget.ToggleButton;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.thefinestartist.ytpa.YouTubePlayerActivity;
+import com.thefinestartist.ytpa.enums.Orientation;
 import com.tvlistings.R;
 import com.tvlistings.constants.UrlConstants;
 import com.tvlistings.controller.RatingImage;
 import com.tvlistings.controller.factory.TVListingServiceFactory;
 import com.tvlistings.controller.network.TVListingNetworkClient;
+import com.tvlistings.controller.service.ImagesService;
 import com.tvlistings.controller.service.MoviesDetailsService;
 import com.tvlistings.controller.service.PeopleService;
 import com.tvlistings.controller.service.ServiceCallbacks;
+import com.tvlistings.controller.service.VideosService;
 import com.tvlistings.model.BaseResponse;
+import com.tvlistings.model.images.Images;
 import com.tvlistings.model.movieContents.MovieContent;
 import com.tvlistings.model.moviesList.MoviesList;
 import com.tvlistings.model.peopleCasting.PersonCasting;
 import com.tvlistings.model.searchResult.SearchResultContent;
+import com.tvlistings.model.videos.Videos;
 import com.tvlistings.view.adapter.MoviesRecyclerViewAdapter;
 import com.tvlistings.view.adapter.PeopleRecyclerViewAdapter;
+import com.tvlistings.view.adapter.VideosRecyclerViewAdapter;
 import com.tvlistings.view.callback.DisplayPersonDetails;
+import com.tvlistings.view.callback.DisplayVideo;
 
 import org.apmem.tools.layouts.FlowLayout;
 
@@ -45,7 +54,7 @@ import butterknife.Bind;
 /**
  * Created by Rohit on 4/8/2016.
  */
-public class SelectedMovieActivity extends BaseSearchActivity implements ServiceCallbacks, DisplayPersonDetails {
+public class SelectedMovieActivity extends BaseSearchActivity implements ServiceCallbacks, DisplayPersonDetails, DisplayVideo {
     RequestQueue mQueue;
     ImageLoader mImageLoader;
     PersonCasting mPeople;
@@ -85,6 +94,12 @@ public class SelectedMovieActivity extends BaseSearchActivity implements Service
     @Bind(R.id.activity_selected_movie_tagline_text_view)
     TextView mTagline;
 
+    @Bind(R.id.activity_selected_movie_backdrop_network_image_view)
+    NetworkImageView mBackdropImage;
+
+    @Bind(R.id.activity_selected_movie_no_images_text_view)
+    TextView mNoImageTextView;
+
     @Bind(R.id.activity_selected_movie_collection_text_view)
     TextView mCollection;
 
@@ -115,6 +130,12 @@ public class SelectedMovieActivity extends BaseSearchActivity implements Service
     @Bind(R.id.activity_selected_movie_people_cast_recycler_view)
     RecyclerView mPeopleCastRecyclerview;
 
+    @Bind(R.id.activity_selected_movie_video_recycler_view)
+    RecyclerView mVideosRecyclerView;
+
+    @Bind(R.id.activity_selected_movie_videos_text_view)
+    TextView mVideosTextView;
+
     @Bind(R.id.activity_selected_movie_people_crew_recycler_view)
     RecyclerView mPeopleCrewRecyclerview;
 
@@ -124,19 +145,23 @@ public class SelectedMovieActivity extends BaseSearchActivity implements Service
     LinearLayoutManager mPeopleCastLinearLayoutManager;
     LinearLayoutManager mPeopleCrewLinearLayoutManager;
     LinearLayoutManager mRelatedMoviesLinearLayoutManager;
+    LinearLayoutManager mVideosLinearLayoutManager;
 
     PeopleRecyclerViewAdapter mPeopleCastAdapter;
     PeopleRecyclerViewAdapter mPeopleCrewAdapter;
     MoviesRecyclerViewAdapter mRelatedMoviesAdapter;
+    VideosRecyclerViewAdapter mVideosRecyclerViewAdapter;
 
     StringBuilder likeMovies = new StringBuilder();
     String likedMovies;
     ArrayList<Integer> moviesPreferencesList;
+    Images mImages;
     SharedPreferences mSharedPreferences;
     SharedPreferences.Editor editor;
 
     int mMovieId;
     private Context mContext;
+    Videos mVideos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,6 +241,22 @@ public class SelectedMovieActivity extends BaseSearchActivity implements Service
         mRelatedMoviesLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mRelatedMoviesRecyclerView.setLayoutManager(mRelatedMoviesLinearLayoutManager);
 
+        mVideosRecyclerView.setHasFixedSize(true);
+        mVideosLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mVideosRecyclerView.setLayoutManager(mVideosLinearLayoutManager);
+        mVideosRecyclerViewAdapter = new VideosRecyclerViewAdapter(mQueue, mContext);
+        mVideosRecyclerView.setAdapter(mVideosRecyclerViewAdapter);
+
+        mVideosRecyclerViewAdapter.clearData();
+
+        mBackdropImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(mContext, ShowImagesActivity.class);
+                intent1.putExtra("movieId", mMovieId);
+                startActivity(intent1);
+            }
+        });
 
         //MovieDetails
         ((MoviesDetailsService) TVListingServiceFactory.getInstance().getService(MoviesDetailsService.class)).getMovieDetail(mMovieId, SelectedMovieActivity.this);
@@ -223,8 +264,14 @@ public class SelectedMovieActivity extends BaseSearchActivity implements Service
         //Get Cast
         ((PeopleService) TVListingServiceFactory.getInstance().getService(PeopleService.class)).getMovieCast(mMovieId, SelectedMovieActivity.this);
 
+        //Images
+        ((ImagesService) TVListingServiceFactory.getInstance().getService(ImagesService.class)).getMovieImages(mMovieId, SelectedMovieActivity.this);
+
         //Similar Movies
         ((MoviesDetailsService) TVListingServiceFactory.getInstance().getService(MoviesDetailsService.class)).moviesList(mMovieId, SelectedMovieActivity.this);
+
+        //Videos
+        ((VideosService) TVListingServiceFactory.getInstance().getService(VideosService.class)).getMovieVideos(mMovieId, SelectedMovieActivity.this);
     }
 
     @Override
@@ -260,6 +307,10 @@ public class SelectedMovieActivity extends BaseSearchActivity implements Service
                 mOriginalTitle.setText(originalTitle);
                 mTitle.setTextSize(16);
                 mTitle.setText("("+title+")");
+            }
+
+            if (!TextUtils.isEmpty(mMovieData.getBackdrop_path()) && !"null".equalsIgnoreCase(mMovieData.getBackdrop_path())) {
+                mBackdropImage.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mMovieData.getBackdrop_path()), mImageLoader);
             }
             int votes = mMovieData.getVote_count();
             mVotes.setText(String.valueOf(votes)+" votes");
@@ -414,6 +465,39 @@ public class SelectedMovieActivity extends BaseSearchActivity implements Service
             }
         }else if (response instanceof SearchResultContent) {
             super.onSuccess(response);
+        }else if (response instanceof Images) {
+            mImages = (Images) response;
+            if (mImages.getPosters().size() + mImages.getBackdrops().size() > 0) {
+                mBackdropImage.setVisibility(View.VISIBLE);
+                if (mBackdropImage.getBackground() == null) {
+                    mBackdropImage.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mImages.getBackdrops().get(0).getFile_path()), mImageLoader);
+                }
+            }else {
+                mBackdropImage.setVisibility(View.GONE);
+                mNoImageTextView.setText("No Images Available");
+            }
+        }else if (response instanceof Videos) {
+            mVideos = (Videos) response;
+            if (mVideos.getResults().size() > 0) {
+                mVideosTextView.setVisibility(View.VISIBLE);
+                mVideosRecyclerView.setVisibility(View.VISIBLE);
+                mVideosRecyclerViewAdapter.setData(mVideos);
+            }else {
+                mVideosTextView.setVisibility(View.GONE);
+                mVideosRecyclerView.setVisibility(View.GONE);
+            }
         }
+    }
+
+    @Override
+    public void showVideo(String key) {
+        Intent intent = new Intent(mContext, YouTubePlayerActivity.class);
+        intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, key);
+        intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, YouTubePlayer.PlayerStyle.DEFAULT);
+        intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, Orientation.AUTO);
+        intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, true);
+        intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

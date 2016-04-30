@@ -37,7 +37,7 @@ public class PopularPersonsRecyclerViewAdapter extends RecyclerView.Adapter<Popu
     DisplayMovie mDisplayMovie;
     DisplayShow mDisplayShow;
     private int mColor;
-    private boolean mMoreData;
+    private boolean mMoreData = false;
 
     public PopularPersonsRecyclerViewAdapter (RequestQueue queue, Context context, int mColor) {
         Log.i("sanju", "in seasons recycler view");

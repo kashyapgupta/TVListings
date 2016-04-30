@@ -97,152 +97,179 @@
 
     </LinearLayout>
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="250dp"
         android:layout_height="match_parent"
         android:layout_gravity="left|start"
         android:fitsSystemWindows="true"
+        android:clickable="true"
         android:background="#80000000">
 
-        <ImageView
-            android:id="@+id/activity_base_search_tv_image"
-            android:layout_width="35dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="5dp"
-            android:layout_height="35dp"/>
-
-        <TextView
-            android:id="@+id/activity_base_search_tv_text"
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="5dp"
-            android:text="TV Shows"
-            android:textColor="#EFFFFFFF"
-            android:layout_toRightOf="@id/activity_base_search_tv_image"/>
+            android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/activity_base_search_movies_image"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="5dp"
-            android:layout_below="@id/activity_base_search_tv_image"/>
+            <ImageView
+                android:id="@+id/activity_base_search_guest_user_image"
+                android:layout_width="112dp"
+                android:layout_height="112dp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/guest"/>
 
-        <TextView
-            android:id="@+id/activity_base_search_movies_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/activity_base_search_movies_image"
-            android:textColor="#EFFFFFFF"
-            android:layout_below="@id/activity_base_search_tv_image"
-            android:text="Movies"/>
+            <TextView
+                android:id="@+id/activity_base_search_guest_user_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#BFFFFFFF"
+                android:textSize="22sp"
+                android:layout_below="@id/activity_base_search_guest_user_image"
+                android:layout_marginLeft="5dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:text="Guest User"/>
 
-        <ImageView
-            android:id="@+id/activity_base_search_discover_image"
-            android:layout_width="35dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="5dp"
-            android:layout_height="35dp"
-            android:layout_below="@id/activity_base_search_movies_image"/>
+            <ImageView
+                android:id="@+id/activity_base_search_tv_image"
+                android:layout_width="35dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="5dp"
+                android:layout_height="35dp"
+                android:layout_below="@id/activity_base_search_guest_user_text"/>
 
-        <TextView
-            android:id="@+id/activity_base_search_discover_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/activity_base_search_discover_image"
-            android:textColor="#EFFFFFFF"
-            android:layout_below="@id/activity_base_search_movies_image"
-            android:text="Discover"/>
+            <TextView
+                android:id="@+id/activity_base_search_tv_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="5dp"
+                android:layout_below="@id/activity_base_search_guest_user_text"
+                android:text="TV Shows"
+                android:textColor="#EFFFFFFF"
+                android:layout_toRightOf="@id/activity_base_search_tv_image"/>
 
-        <ImageView
-            android:id="@+id/activity_base_search_people_image"
-            android:layout_width="35dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="5dp"
-            android:layout_height="35dp"
-            android:layout_below="@id/activity_base_search_discover_image"/>
+            <ImageView
+                android:id="@+id/activity_base_search_movies_image"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_below="@id/activity_base_search_tv_image"/>
 
-        <TextView
-            android:id="@+id/activity_base_search_people_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="5dp"
-            android:textSize="24sp"
-            android:layout_toRightOf="@id/activity_base_search_people_image"
-            android:textColor="#EFFFFFFF"
-            android:layout_below="@id/activity_base_search_discover_image"
-            android:text="People"/>
+            <TextView
+                android:id="@+id/activity_base_search_movies_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/activity_base_search_movies_image"
+                android:textColor="#EFFFFFFF"
+                android:layout_below="@id/activity_base_search_tv_image"
+                android:text="Movies"/>
 
-        <ImageView
-            android:id="@+id/activity_base_search_forum_image"
-            android:layout_width="35dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="5dp"
-            android:layout_height="35dp"
-            android:layout_below="@id/activity_base_search_people_image"/>
+            <ImageView
+                android:id="@+id/activity_base_search_discover_image"
+                android:layout_width="35dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_height="35dp"
+                android:layout_below="@id/activity_base_search_movies_image"/>
 
-        <TextView
-            android:id="@+id/activity_base_search_forum_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="5dp"
-            android:textSize="24sp"
-            android:layout_toRightOf="@id/activity_base_search_forum_image"
-            android:textColor="#EFFFFFFF"
-            android:layout_below="@id/activity_base_search_people_image"
-            android:text="Forums"/>
+            <TextView
+                android:id="@+id/activity_base_search_discover_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/activity_base_search_discover_image"
+                android:textColor="#EFFFFFFF"
+                android:layout_below="@id/activity_base_search_movies_image"
+                android:text="Advance Search"/>
 
-        <ImageView
-            android:id="@+id/activity_base_search_faq_image"
-            android:layout_width="35dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="5dp"
-            android:layout_height="35dp"
-            android:layout_below="@id/activity_base_search_forum_image"/>
+            <ImageView
+                android:id="@+id/activity_base_search_people_image"
+                android:layout_width="35dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_height="35dp"
+                android:layout_below="@id/activity_base_search_discover_image"/>
 
-        <TextView
-            android:id="@+id/activity_base_search_faq_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="5dp"
-            android:textSize="24sp"
-            android:layout_toRightOf="@id/activity_base_search_faq_image"
-            android:textColor="#EFFFFFFF"
-            android:layout_below="@id/activity_base_search_forum_image"
-            android:text="FAQ"/>
+            <TextView
+                android:id="@+id/activity_base_search_people_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:textSize="24sp"
+                android:layout_toRightOf="@id/activity_base_search_people_image"
+                android:textColor="#EFFFFFFF"
+                android:layout_below="@id/activity_base_search_discover_image"
+                android:text="People"/>
 
-        <ImageView
-            android:id="@+id/activity_base_search_contact_image"
-            android:layout_width="35dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="5dp"
-            android:layout_height="35dp"
-            android:layout_below="@id/activity_base_search_faq_image"/>
+            <ImageView
+                android:id="@+id/activity_base_search_legal_image"
+                android:layout_width="35dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_height="35dp"
+                android:layout_below="@id/activity_base_search_people_image"/>
 
-        <TextView
-            android:id="@+id/activity_base_search_contact_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="5dp"
-            android:textSize="24sp"
-            android:layout_toRightOf="@id/activity_base_search_contact_image"
-            android:textColor="#EFFFFFFF"
-            android:layout_below="@id/activity_base_search_faq_image"
-            android:text="Contact Us"/>
+            <TextView
+                android:id="@+id/activity_base_search_legal_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:textSize="24sp"
+                android:layout_toRightOf="@id/activity_base_search_legal_image"
+                android:textColor="#EFFFFFFF"
+                android:layout_below="@id/activity_base_search_people_image"
+                android:text="Legal"/>
 
+            <ImageView
+                android:id="@+id/activity_base_search_faq_image"
+                android:layout_width="35dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_height="35dp"
+                android:layout_below="@id/activity_base_search_legal_image"/>
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/activity_base_search_faq_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:textSize="24sp"
+                android:layout_toRightOf="@id/activity_base_search_faq_image"
+                android:textColor="#EFFFFFFF"
+                android:layout_below="@id/activity_base_search_legal_image"
+                android:text="FAQ"/>
+
+            <ImageView
+                android:id="@+id/activity_base_search_contact_image"
+                android:layout_width="35dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_height="35dp"
+                android:layout_below="@id/activity_base_search_faq_image"/>
+
+            <TextView
+                android:id="@+id/activity_base_search_contact_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:textSize="24sp"
+                android:layout_toRightOf="@id/activity_base_search_contact_image"
+                android:textColor="#EFFFFFFF"
+                android:layout_below="@id/activity_base_search_faq_image"
+                android:text="Contact Us"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
 
 </android.support.v4.widget.DrawerLayout>

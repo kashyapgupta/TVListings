@@ -48,9 +48,18 @@
                     android:layout_height="210dp"
                     android:layout_marginTop="10dp"
                     android:scrollbars="horizontal"
-                    android:layout_below="@id/activity_tvshows_home_trending_text_view">
+                    android:layout_below="@id/activity_tvshows_home_trending_text_view"/>
 
-                </android.support.v7.widget.RecyclerView>
+                <TextView
+                    android:id="@+id/activity_tvshows_home_no_top_rated_data_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:textColor="#BFFFFFFF"
+                    android:textSize="20sp"
+                    android:visibility="gone"/>
 
             </FrameLayout>
 
@@ -87,6 +96,17 @@
                     android:scrollbars="horizontal"
                     android:layout_below="@id/activity_tvshows_home_popular_text_view" />
 
+                <TextView
+                    android:id="@+id/activity_tvshows_home_no_popular_data_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:textColor="#BFFFFFFF"
+                    android:textSize="20sp"
+                    android:visibility="gone"/>
+
             </FrameLayout>
 
             <TextView
@@ -121,6 +141,17 @@
                     android:layout_marginTop="10dp"
                     android:scrollbars="horizontal"
                     android:layout_below="@id/activity_tvshows_home_airing_today_text_view" />
+
+                <TextView
+                    android:id="@+id/activity_tvshows_home_no_airing_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:textColor="#BFFFFFFF"
+                    android:textSize="20sp"
+                    android:visibility="gone"/>
 
             </FrameLayout>
 

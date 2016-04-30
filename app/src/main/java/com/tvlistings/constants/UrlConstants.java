@@ -8,6 +8,7 @@ public class UrlConstants {
     public static final String IMAGE_URLW_185 = "http://image.tmdb.org/t/p/w185%s";
     public static final String IMAGE_URLW_300 = "http://image.tmdb.org/t/p/w300%s";
     public static final String IMAGE_URLW_500 = "http://image.tmdb.org/t/p/w500%s";
+    public static final String IMAGE_URLW_1000 = "http://image.tmdb.org/t/p/w1000%s";
     public static final String SHOW_URL = "http://api.themoviedb.org/3/tv/%d?api_key=c23fe079e72d437208ac3638b04f7c80";
     public static final String MOVIE_URL = "http://api.themoviedb.org/3/movie/%d?api_key=c23fe079e72d437208ac3638b04f7c80";
     public static final String MOVIE_COLLECTION_URL = "http://api.themoviedb.org/3/collection/%d?api_key=c23fe079e72d437208ac3638b04f7c80";
@@ -34,4 +35,11 @@ public class UrlConstants {
     public static final String TV_GENRES = "http://api.themoviedb.org/3/genre/tv/list?api_key=c23fe079e72d437208ac3638b04f7c80";
     public static final String SEARCH_KEYWORD = "http://api.themoviedb.org/3/search/keyword?api_key=c23fe079e72d437208ac3638b04f7c80&query=%s&page=%d";
     public static final String DISCOVER_URL = "http://api.themoviedb.org/3/discover/%s?api_key=c23fe079e72d437208ac3638b04f7c80";
+    public static final String SHOW_IMAGES = "http://api.themoviedb.org/3/tv/%d/images?api_key=c23fe079e72d437208ac3638b04f7c80";
+    public static final String MOVIE_IMAGES = "http://api.themoviedb.org/3/movie/%d/images?api_key=c23fe079e72d437208ac3638b04f7c80";
+    public static final String PERSON_IMAGES = "http://api.themoviedb.org/3/person/%d/images?api_key=c23fe079e72d437208ac3638b04f7c80";
+    public static final String SHOW_VIDEOS = "http://api.themoviedb.org/3/tv/%d/videos?api_key=c23fe079e72d437208ac3638b04f7c80";
+    public static final String SEASON_VIDEOS = "http://api.themoviedb.org/3/tv/%d/season/%d/videos?api_key=c23fe079e72d437208ac3638b04f7c80";
+    public static final String EPISODE_VIDEOS = "http://api.themoviedb.org/3/tv/%d/season/%d/episode/%d/videos?api_key=c23fe079e72d437208ac3638b04f7c80";
+    public static final String MOVIE_VIDEOS = "http://api.themoviedb.org/3/movie/%d/videos?api_key=c23fe079e72d437208ac3638b04f7c80";
 }

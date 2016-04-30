@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TVListings</string>
+
+    <string name="no_data">No Data available currently</string>
 </resources>
