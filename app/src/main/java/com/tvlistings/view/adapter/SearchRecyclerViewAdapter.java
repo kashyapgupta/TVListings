@@ -1,11 +1,13 @@
 package com.tvlistings.view.adapter;
 
+import android.support.v4.view.NestedScrollingChild;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -60,10 +62,12 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
         TextView year;
         NetworkImageView image;
         ProgressBar progressBar;
+        RelativeLayout relativeLayout;
 
         public MyObjectHolder(View itemView, int viewType) {
             super(itemView);
             if (viewType == 1) {
+                relativeLayout = (RelativeLayout) itemView.findViewById(R.id.adapter_search_recycler_view_main_relative_layout);
                 title = (TextView) itemView.findViewById(R.id.adapter_search_recycler_view_title_text_view);
                 year = (TextView) itemView.findViewById(R.id.adapter_search_recycler_view_year_text_view);
                 image = (NetworkImageView) itemView.findViewById(R.id.adapter_search_recycler_view_poster_networkimageview);
@@ -101,7 +105,7 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
                     holder.image.setImageUrl("http://www.hellocomic.com/images/no_image_available.png", TVListingNetworkClient.getInstance().getImageLoader());
                 }
 
-                holder.image.setOnClickListener(new View.OnClickListener() {
+                holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Log.i("sanju", "in onClick");
@@ -123,7 +127,7 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
                     holder.image.setImageUrl("http://www.hellocomic.com/images/no_image_available.png", TVListingNetworkClient.getInstance().getImageLoader());
                 }
 
-                holder.image.setOnClickListener(new View.OnClickListener() {
+                holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mMovie.displayMovie(mObjects.get(position).getId());
@@ -145,7 +149,7 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
                     holder.image.setImageUrl("http://www.hellocomic.com/images/no_image_available.png", TVListingNetworkClient.getInstance().getImageLoader());
                 }
 
-                holder.image.setOnClickListener(new View.OnClickListener() {
+                holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mPerson.displayPersonDetails(mObjects.get(position).getId(), mObjects.get(position).getName(), poster);

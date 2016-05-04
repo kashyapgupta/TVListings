@@ -1,7 +1,9 @@
 package com.tvlistings.view.activity;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -75,8 +77,8 @@ public class ShowEpisodeDetailsActivity extends BaseSearchActivity implements Di
     @Bind(R.id.activity_show_episode_details_votes_text_view)
     TextView mVotes;
 
-    @Bind(R.id.activity_show_episode_details_title_text_view)
-    TextView mTitle;
+    @Bind(R.id.activity_show_episode_details_main_relative_layout)
+    RelativeLayout mMainRelativeLayout;
 
     @Bind(R.id.activity_show_episode_details_overview_text_view)
     TextView mOverview;
@@ -99,11 +101,14 @@ public class ShowEpisodeDetailsActivity extends BaseSearchActivity implements Di
     private Context mContext;
     Videos mVideos;
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i("sanju", "in episode details activity");
         mContext = this;
         super.onCreate(savedInstanceState);
+        mMainRelativeLayout.setNestedScrollingEnabled(true);
+
         Intent intent = getIntent();
         int id = intent.getIntExtra("id", 1);
         Log.i("sanju", String.valueOf(id));
@@ -163,7 +168,7 @@ public class ShowEpisodeDetailsActivity extends BaseSearchActivity implements Di
             }
             mSeasonNoTextView.setText("Season : "+mEpisode.getSeason_number());
             mEpisodeNoTextView.setText("Episode : "+mEpisode.getEpisode_number());
-            mTitle.setText(mEpisode.getName());
+            mCollapsingToolbarLayout.setTitle(mEpisode.getName());
             mVotes.setText(mEpisode.getVote_count() + " votes");
             double rating = (mEpisode.getVote_average() * 10);
             int image = RatingImage.getRatingImage(rating);

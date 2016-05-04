@@ -1,8 +1,10 @@
 package com.tvlistings.view.activity;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -48,6 +51,9 @@ public class HomeActivity extends  BaseSearchActivity implements ServiceCallback
     private LikedShowsRecyclerViewAdapter mLikedShowsAdapter;
     private LikedMoviesRecyclerViewAdapter mLikedMoviesAdapter;
 
+    @Bind(R.id.activity_home_main_relative_layout)
+    RelativeLayout mMainRelativeLayout;
+
     @Bind(R.id.activity_home_liked_show_recycler_view)
     RecyclerView mLikedShowsRecyclerView;
 
@@ -59,11 +65,12 @@ public class HomeActivity extends  BaseSearchActivity implements ServiceCallback
     private LinearLayoutManager mLikedMoviesLinearLayoutManager;
 
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mContext = this;
         super.onCreate(savedInstanceState);
-
+        mMainRelativeLayout.setNestedScrollingEnabled(true);
         mQueue = TVListingNetworkClient.getInstance().getRequestQueue();
 
         mLikedShowsRecyclerView.setHasFixedSize(true);

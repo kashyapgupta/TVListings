@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_selected_movie_main_relative_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:nestedScrollingEnabled="true">
 
     <FrameLayout
         android:id="@+id/activity_selected_movie_loading_frame_layout"
@@ -37,7 +39,8 @@
 
         <ScrollView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="true">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -55,17 +58,6 @@
                     android:textColor="#BFFFFFFF"/>
 
                 <TextView
-                    android:id="@+id/activity_selected_movie_title_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="24sp"
-                    android:layout_below="@id/activity_selected_movie_original_title_text_view"
-                    android:layout_margin="10dp"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="center_horizontal"
-                    android:textColor="#BFFFFFFF"/>
-
-                <TextView
                     android:id="@+id/activity_selected_movie_genres_text_view"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="15dp"
@@ -74,7 +66,7 @@
                     android:gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/activity_selected_movie_title_text_view"
+                    android:layout_below="@id/activity_selected_movie_original_title_text_view"
                     android:textColor="#BFFFFFFF"
                     android:textSize="16sp"/>
 

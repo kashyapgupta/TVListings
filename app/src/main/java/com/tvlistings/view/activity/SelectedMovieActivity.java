@@ -1,9 +1,11 @@
 package com.tvlistings.view.activity;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -61,9 +64,6 @@ public class SelectedMovieActivity extends BaseSearchActivity implements Service
     MovieContent mMovieData;
     MoviesList mRelatedMovies;
 
-    @Bind(R.id.activity_selected_movie_title_text_view)
-    TextView mTitle;
-
     @Bind(R.id.activity_selected_movie_production_flow_layout)
     FlowLayout mProductionFlowLayout;
 
@@ -84,6 +84,9 @@ public class SelectedMovieActivity extends BaseSearchActivity implements Service
 
     @Bind(R.id.activity_selected_movie_rating_text_view)
     TextView mRating;
+
+    @Bind(R.id.activity_selected_movie_main_relative_layout)
+    RelativeLayout mMainRelativeLayout;
 
     @Bind(R.id.activity_selected_movie_votes_text_view)
     TextView mVotes;
@@ -163,10 +166,12 @@ public class SelectedMovieActivity extends BaseSearchActivity implements Service
     private Context mContext;
     Videos mVideos;
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mContext = this;
         super.onCreate(savedInstanceState);
+        mMainRelativeLayout.setNestedScrollingEnabled(true);
 
         Intent intent = getIntent();
         mMovieId = intent.getIntExtra("id", 0);
@@ -301,16 +306,16 @@ public class SelectedMovieActivity extends BaseSearchActivity implements Service
             String title = mMovieData.getTitle();
             String originalTitle = mMovieData.getOriginal_title();
             if (title.equalsIgnoreCase(originalTitle)) {
-                mTitle.setText(title);
+                mCollapsingToolbarLayout.setTitle(title);
             }else {
                 mOriginalTitle.setVisibility(View.VISIBLE);
                 mOriginalTitle.setText(originalTitle);
-                mTitle.setTextSize(16);
-                mTitle.setText("("+title+")");
+                mCollapsingToolbarLayout.setTitle(title);
             }
 
             if (!TextUtils.isEmpty(mMovieData.getBackdrop_path()) && !"null".equalsIgnoreCase(mMovieData.getBackdrop_path())) {
                 mBackdropImage.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mMovieData.getBackdrop_path()), mImageLoader);
+                mBackgroundAppBarImageView.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mMovieData.getBackdrop_path()), mImageLoader);
             }
             int votes = mMovieData.getVote_count();
             mVotes.setText(String.valueOf(votes)+" votes");

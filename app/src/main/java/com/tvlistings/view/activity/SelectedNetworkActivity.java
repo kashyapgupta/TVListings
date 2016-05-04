@@ -41,8 +41,6 @@ public class SelectedNetworkActivity extends BaseSearchActivity {
     @Bind(R.id.activity_selected_network_no_result_text_view)
     TextView mNoResultTextView;
 
-    @Bind(R.id.activity_selected_network_name_text_view)
-    TextView mName;
     private int mCurrentPage = 1;
     private int mPageCount;
 
@@ -60,7 +58,7 @@ public class SelectedNetworkActivity extends BaseSearchActivity {
 
         Intent intent = getIntent();
         String name = intent.getStringExtra("name");
-        mName.setText(name);
+        mCollapsingToolbarLayout.setTitle(name);
         mNetworkId = intent.getIntExtra("id", 0);
 
         mShowsRecyclerView.setHasFixedSize(true);

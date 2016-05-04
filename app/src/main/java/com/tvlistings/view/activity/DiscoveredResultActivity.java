@@ -1,8 +1,10 @@
 package com.tvlistings.view.activity;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -37,6 +40,9 @@ public class DiscoveredResultActivity extends BaseSearchActivity implements Serv
     @Bind(R.id.activity_discovered_result_recycler_view)
     RecyclerView mDiscoveredResultRecyclerView;
 
+    @Bind(R.id.activity_discovered_results_main_relative_layout)
+    RelativeLayout mMainRelativeLayout;
+
     @Bind(R.id.activity_discovered_results_loading_progressBar)
     ProgressBar mLoadingProgressBar;
 
@@ -58,10 +64,11 @@ public class DiscoveredResultActivity extends BaseSearchActivity implements Serv
         return R.layout.activity_discovered_result;
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mMainRelativeLayout.setNestedScrollingEnabled(true);
         Intent intent = getIntent();
         mUrl = intent.getStringExtra("url");
 

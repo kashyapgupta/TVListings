@@ -16,6 +16,7 @@
         android:textColor="#BFFFFFFF"
         android:layout_marginTop="15dp"
         android:textSize="21sp"
+        android:visibility="gone"
         android:layout_marginLeft="8dp"
         android:text="Popular People"/>
 

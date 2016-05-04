@@ -3,6 +3,8 @@ package com.tvlistings.view.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -18,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.NetworkImageView;
 import com.tvlistings.R;
 import com.tvlistings.controller.factory.TVListingServiceFactory;
 import com.tvlistings.controller.network.TVListingNetworkClient;
@@ -42,6 +45,7 @@ import butterknife.Bind;
 public abstract class BaseSearchActivity extends BaseListingActivity implements LoadMoreData,DisplayShow, ServiceCallbacks, DisplayPersonDetails, DisplayMovie {
     RequestQueue mQueue;
     protected String mSearch;
+
     @Bind(R.id.activity_base_search_search_edit_text)
     protected EditText mEditText;
 
@@ -86,6 +90,21 @@ public abstract class BaseSearchActivity extends BaseListingActivity implements 
     @Bind(R.id.activity_base_search_people_image)
     ImageView mPeopleImageView;
 
+    @Bind(R.id.activity_base_search_background_network_image_view)
+    NetworkImageView mBackgroundAppBarImageView;
+
+    @Bind(R.id.activity_base_search_home_image)
+    ImageView mHomeImageView;
+
+    @Bind(R.id.activity_base_search_home_text)
+    TextView mHomeTextView;
+
+    @Bind(R.id.activity_base_search_my_app_bar_layout)
+    AppBarLayout mMyAppBarLayout;
+
+    @Bind(R.id.activity_base_search_collapsing_toolbar_layout)
+    CollapsingToolbarLayout mCollapsingToolbarLayout;
+
     @Bind(R.id.activity_base_search_no_result_text_view)
     TextView mTextView;
 
@@ -101,8 +120,11 @@ public abstract class BaseSearchActivity extends BaseListingActivity implements 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mMyAppBarLayout.setExpanded(false);
+        mCollapsingToolbarLayout.setTitle("TVListings");
         mContext = this;
         mQueue = TVListingNetworkClient.getInstance().getRequestQueue();
+        mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new SearchRecyclerViewAdapter(mQueue, this);
@@ -116,6 +138,7 @@ public abstract class BaseSearchActivity extends BaseListingActivity implements 
         mLegalImageView.setImageResource(R.drawable.legal);
         mContactImageView.setImageResource(R.mipmap.ic_contact_phone_white_48dp);
         mFAQImageView.setImageResource(R.drawable.faq);
+        mHomeImageView.setImageResource(R.mipmap.ic_home_white_48dp);
 
         mTvShowsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,6 +152,15 @@ public abstract class BaseSearchActivity extends BaseListingActivity implements 
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, MoviesHomeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        mHomeTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, HomeActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
         });
@@ -184,14 +216,12 @@ public abstract class BaseSearchActivity extends BaseListingActivity implements 
             }
         });
         Button button = (Button) findViewById(R.id.activity_base_search_search_button);
+        button.setBackground(getResources().getDrawable(R.mipmap.ic_search_white_48dp));
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mEditText.getVisibility() == View.VISIBLE) {
-                    mEditText.setVisibility(View.GONE);
-                }else {
-                    mEditText.setVisibility(View.VISIBLE);
-                }
+                mMyAppBarLayout.setExpanded(true);
             }
         });
     }
@@ -205,7 +235,6 @@ public abstract class BaseSearchActivity extends BaseListingActivity implements 
     public void loadMore() {
 
         if(mCurrentPage < mPageCount) {
-
             ((SearchService)TVListingServiceFactory.getInstance().getService(SearchService.class)).search(mSearch, mCurrentPage, BaseSearchActivity.this);
         }
     }

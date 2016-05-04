@@ -170,6 +170,14 @@ public class DiscoverHomeActivity extends Activity implements ServiceCallbacks,L
         mKeywordsRecyclerViewAdapter = new KeywordsRecyclerViewAdapter(mQueue, this);
         mKeywordsRecyclerView.setAdapter(mKeywordsRecyclerViewAdapter);
 
+        mSelectedGenres.clear();
+        ArrayAdapter<CharSequence> sortByAdapter = ArrayAdapter
+                .createFromResource(mContext, R.array.movie_sort_by,
+                        android.R.layout.simple_spinner_item);
+
+        sortByAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        mSortBySpinner.setAdapter(sortByAdapter);
 
         mKeywordsEditText.addTextChangedListener(new TextWatcher() {
             @Override

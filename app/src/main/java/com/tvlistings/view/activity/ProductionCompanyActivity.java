@@ -42,8 +42,6 @@ public class ProductionCompanyActivity extends BaseSearchActivity {
     @Bind(R.id.activity_production_company_loading_progressBar)
     ProgressBar mLoadingProgressbar;
 
-    @Bind(R.id.activity_production_company_name_text_view)
-    TextView mName;
     private int mCurrentPage = 0;
     private int mPageCount;
 
@@ -69,7 +67,7 @@ public class ProductionCompanyActivity extends BaseSearchActivity {
 
         Intent intent = getIntent();
         String name = intent.getStringExtra("name");
-        mName.setText(name);
+        mCollapsingToolbarLayout.setTitle(name);
 
         mProductionId = intent.getIntExtra("id", 0);
         ((MoviesDetailsService) TVListingServiceFactory.getInstance().getService(MoviesDetailsService.class)).getProductionCompanyMovies(mProductionId, mCurrentPage, ProductionCompanyActivity.this);

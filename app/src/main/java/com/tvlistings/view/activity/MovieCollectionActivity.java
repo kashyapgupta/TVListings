@@ -1,13 +1,16 @@
 package com.tvlistings.view.activity;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -38,14 +41,8 @@ public class MovieCollectionActivity extends BaseSearchActivity implements Servi
 
     MoviesCollectionRecyclerViewAdapter mMoviesCollectionAdapter;
 
-    @Bind(R.id.activity_movie_collection_backdrop_network_image_view)
-    NetworkImageView mBackdrop;
-
-    @Bind(R.id.activity_movie_collection_poster_network_image_view)
-    NetworkImageView mPoster;
-
-    @Bind(R.id.activity_movie_collection_title_text_view)
-    TextView mTitle;
+    @Bind(R.id.activity_movie_collection_main_relative_layout)
+    RelativeLayout mMainRelativeLayout;
 
     @Bind(R.id.activity_movie_collection_rating_image_view)
     ImageView mRatingImage;
@@ -72,10 +69,13 @@ public class MovieCollectionActivity extends BaseSearchActivity implements Servi
         return R.layout.activity_movie_collection;
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mContext = this;
         super.onCreate(savedInstanceState);
+        mMainRelativeLayout.setNestedScrollingEnabled(true);
+
         Intent intent = getIntent();
         mCollectionId = intent.getIntExtra("collectionID", 0);
         mImageLoader = TVListingNetworkClient.getInstance().getImageLoader();
@@ -102,17 +102,12 @@ public class MovieCollectionActivity extends BaseSearchActivity implements Servi
         if (response instanceof MoviesCollectionContent) {
             mCollectionData = (MoviesCollectionContent) response;
             if (mCollectionData.getBackdrop_path() != null && !mCollectionData.getBackdrop_path().isEmpty()) {
-                mBackdrop.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mCollectionData.getBackdrop_path()), mImageLoader);
-            }else {
-                mBackdrop.setImageUrl("http://www.jari.com/wp-content/uploads/2015/07/noImageAvailable2.png", mImageLoader);
+                mBackgroundAppBarImageView.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mCollectionData.getBackdrop_path()), mImageLoader);
             }
             if (mCollectionData.getPoster_path() != null && !mCollectionData.getPoster_path().isEmpty()) {
-                mPoster.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mCollectionData.getPoster_path()), mImageLoader);
                 mBackground.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mCollectionData.getPoster_path()), mImageLoader);
-            }else {
-                mPoster.setImageUrl("http://uits.knust.edu.gh/assets/images/content/pics/img2013223_17151.jpg", mImageLoader);
             }
-            mTitle.setText(mCollectionData.getName());
+            mCollapsingToolbarLayout.setTitle(mCollectionData.getName());
             double rating = 0;
             for (int i = 0; i < mCollectionData.getParts().size(); i++) {
                 rating = rating + mCollectionData.getParts().get(i).getVote_average();

@@ -1,9 +1,11 @@
 package com.tvlistings.view.activity;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -64,8 +67,8 @@ import butterknife.Bind;
 public class SelectedShowActivity extends BaseSearchActivity implements DisplayEpisodes, DisplayPersonDetails, EpisodeDetails, ServiceCallbacks, DisplayVideo{
     RequestQueue mQueue;
 
-    @Bind(R.id.activity_selected_show_title_text_view)
-    TextView mTitle;
+    @Bind(R.id.activity_selected_show_main_relative_layout)
+    RelativeLayout mMainRelativeLayout;
 
     @Bind(R.id.activity_selected_show_original_title_text_view)
     TextView mOriginalTitle;
@@ -190,9 +193,12 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
     private LinearLayoutManager mEpisodesLayoutManager;
     private LinearLayoutManager mVideosLinearLayoutManager;
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mMainRelativeLayout.setNestedScrollingEnabled(true);
+
         Log.i("sanju", "in new activity");
         final Intent intent = getIntent();
         mId = intent.getIntExtra("id", 1);
@@ -355,6 +361,7 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
 
             if (!TextUtils.isEmpty(mShowData.getBackdrop_path()) && !"null".equalsIgnoreCase(mShowData.getBackdrop_path())) {
                 mBackdropImage.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mShowData.getBackdrop_path()), mImageLoader);
+                mBackgroundAppBarImageView.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mShowData.getBackdrop_path()), mImageLoader);
             }
 
             String networks2 = String.valueOf(networks);
@@ -369,12 +376,11 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
             String name = mShowData.getName();
             String originalName = mShowData.getOriginal_name();
             if (name.equalsIgnoreCase(originalName)) {
-                mTitle.setText(name);
+                mCollapsingToolbarLayout.setTitle(name);
             }else {
                 mOriginalTitle.setVisibility(View.VISIBLE);
                 mOriginalTitle.setText(originalName);
-                mTitle.setTextSize(16);
-                mTitle.setText("("+name+")");
+                mCollapsingToolbarLayout.setTitle(name);
             }
 
             if (mShowData.isIn_production()) {

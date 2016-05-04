@@ -62,6 +62,7 @@ public class PersonsHomeActivity extends BaseSearchActivity implements ServiceCa
         super.onCreate(savedInstanceState);
         mContext = this;
         mLoadMoreData = this;
+        mCollapsingToolbarLayout.setTitle("Popular People");
         mQueue = TVListingNetworkClient.getInstance().getRequestQueue();
         mPopularPeopleRecyclerView.setHasFixedSize(true);
         mPopularLinearLayoutManager = new LinearLayoutManager(this);

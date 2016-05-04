@@ -12,7 +12,8 @@
         android:theme="@style/AppTheme">
         <activity android:name=".view.activity.HomeActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN">
 
@@ -23,13 +24,16 @@
         </activity>
         <activity android:name=".view.activity.DiscoverHomeActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop" />
         <activity android:name=".view.activity.TVShowsHomeActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop" />
         <activity android:name=".view.activity.MoviesHomeActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop" />
         <activity android:name=".view.activity.SelectedShowActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"/>
@@ -47,7 +51,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".view.activity.PersonsHomeActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop" />
         <activity android:name=".view.activity.SelectedNetworkActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"/>
