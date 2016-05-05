@@ -432,7 +432,7 @@
                     android:textSize="20sp"
                     android:visibility="gone"
                     android:textColor="#BFFFFFFF"
-                    android:text="People"
+                    android:text="Cast and Crew"
                     android:layout_below="@id/Activity_selected_show_episodes_r_v_linear_layout"/>
 
                 <TextView

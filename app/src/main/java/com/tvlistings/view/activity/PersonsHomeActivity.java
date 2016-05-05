@@ -18,15 +18,11 @@ import com.tvlistings.controller.service.PeopleService;
 import com.tvlistings.controller.service.ServiceCallbacks;
 import com.tvlistings.model.BaseResponse;
 import com.tvlistings.model.PopularPeople;
-import com.tvlistings.model.searchResult.Results;
 import com.tvlistings.model.searchResult.SearchResultContent;
 import com.tvlistings.view.adapter.PopularPersonsRecyclerViewAdapter;
 import com.tvlistings.view.callback.LoadMoreData;
 
-import java.util.ArrayList;
-
 import butterknife.Bind;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Rohit on 4/14/2016.
@@ -86,7 +82,7 @@ public class PersonsHomeActivity extends BaseSearchActivity implements ServiceCa
 
     @Override
     public void displayPersonDetails(int id, String name, String poster) {
-        Intent intent = new Intent(this, ShowPersonDetailsActivity.class);
+        Intent intent = new Intent(this, PersonDetailsActivity.class);
         intent.putExtra("name", name);
         intent.putExtra("poster", poster);
         intent.putExtra("id", id);
@@ -97,14 +93,14 @@ public class PersonsHomeActivity extends BaseSearchActivity implements ServiceCa
     @Override
     public void displayMovie(int id) {
         Log.i("movie ID", String.valueOf(id));
-        Intent intent = new Intent(this, SelectedMovieActivity.class);
+        Intent intent = new Intent(this, MovieActivity.class);
         intent.putExtra("id", id);
         startActivity(intent);
     }
 
     @Override
     public void displayShow(int id, double rating) {
-        Intent intent = new Intent(this, SelectedShowActivity.class);
+        Intent intent = new Intent(this, ShowActivity.class);
         intent.putExtra("id", id);
         intent.putExtra("rating", rating);
         startActivity(intent);

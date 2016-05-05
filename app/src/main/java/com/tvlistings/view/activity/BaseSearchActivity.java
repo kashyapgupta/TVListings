@@ -7,6 +7,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -45,11 +47,13 @@ import butterknife.Bind;
 public abstract class BaseSearchActivity extends BaseListingActivity implements LoadMoreData,DisplayShow, ServiceCallbacks, DisplayPersonDetails, DisplayMovie {
     RequestQueue mQueue;
     protected String mSearch;
+    SearchResultContent mArray;
 
     @Bind(R.id.activity_base_search_search_edit_text)
     protected EditText mEditText;
 
-    SearchResultContent mArray;
+    @Bind(R.id.activity_base_search_search_relative_layout)
+    RelativeLayout mSearchRelativeLayout;
 
     @Bind(R.id.activity_base_search_tv_text)
     TextView mTvShowsTextView;
@@ -62,6 +66,9 @@ public abstract class BaseSearchActivity extends BaseListingActivity implements 
 
     @Bind(R.id.activity_base_search_people_text)
     TextView mPeopleTextView;
+
+    @Bind(R.id.activity_base_search_toolbar)
+    Toolbar mToolbar;
 
     @Bind(R.id.activity_base_search_display_result_recycler_view)
     RecyclerView mRecyclerView;
@@ -108,13 +115,16 @@ public abstract class BaseSearchActivity extends BaseListingActivity implements 
     @Bind(R.id.activity_base_search_no_result_text_view)
     TextView mTextView;
 
+    @Bind(R.id.activity_base_search_search_button)
+    Button mSearchButton;
+
+    @Bind(R.id.activity_base_search_search_result_frame_layout)
+    FrameLayout mContentFrameLayout;
+
     SearchRecyclerViewAdapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
     private int mPageCount;
     private int mCurrentPage =0;
-
-    @Bind(R.id.activity_base_search_search_result_frame_layout)
-    FrameLayout mContentFrameLayout;
     private Context mContext;
 
     @Override
@@ -215,10 +225,10 @@ public abstract class BaseSearchActivity extends BaseListingActivity implements 
                 ((SearchService)TVListingServiceFactory.getInstance().getService(SearchService.class)).search(mSearch, mCurrentPage, BaseSearchActivity.this);
             }
         });
-        Button button = (Button) findViewById(R.id.activity_base_search_search_button);
-        button.setBackground(getResources().getDrawable(R.mipmap.ic_search_white_48dp));
 
-        button.setOnClickListener(new View.OnClickListener() {
+        mSearchButton.setBackground(getResources().getDrawable(R.mipmap.ic_search_white_48dp));
+
+        mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mMyAppBarLayout.setExpanded(true);
@@ -241,7 +251,7 @@ public abstract class BaseSearchActivity extends BaseListingActivity implements 
 
     @Override
     public void displayShow(int id, double rating) {
-        Intent intent = new Intent(this, SelectedShowActivity.class);
+        Intent intent = new Intent(this, ShowActivity.class);
         intent.putExtra("id", id);
         intent.putExtra("rating", rating);
         startActivity(intent);
@@ -267,7 +277,7 @@ public abstract class BaseSearchActivity extends BaseListingActivity implements 
     @Override
     public void displayMovie(int id) {
         Log.i("movie ID", String.valueOf(id));
-        Intent intent = new Intent(this, SelectedMovieActivity.class);
+        Intent intent = new Intent(this, MovieActivity.class);
         intent.putExtra("id", id);
         startActivity(intent);
     }
@@ -299,7 +309,7 @@ public abstract class BaseSearchActivity extends BaseListingActivity implements 
 
     @Override
     public void displayPersonDetails(int id, String name, String poster) {
-        Intent intent = new Intent(this, ShowPersonDetailsActivity.class);
+        Intent intent = new Intent(this, PersonDetailsActivity.class);
         intent.putExtra("name", name);
         intent.putExtra("poster", poster);
         intent.putExtra("id", id);

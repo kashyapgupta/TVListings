@@ -3,36 +3,34 @@ package com.tvlistings.view.activity;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.NetworkImageView;
 import com.tvlistings.R;
-import com.tvlistings.controller.SendNotification;
+import com.tvlistings.constants.UrlConstants;
 import com.tvlistings.controller.factory.TVListingServiceFactory;
 import com.tvlistings.controller.network.TVListingNetworkClient;
 import com.tvlistings.controller.service.ServiceCallbacks;
 import com.tvlistings.controller.service.ShowDetailsService;
 import com.tvlistings.model.BaseResponse;
-import com.tvlistings.model.ShowContent.ShowContent;
 import com.tvlistings.model.searchResult.SearchResultContent;
 import com.tvlistings.model.tvShows.AiringTodayTVShows;
 import com.tvlistings.model.tvShows.PopularTVShows;
 import com.tvlistings.model.tvShows.TVShows;
 import com.tvlistings.model.tvShows.TopRatedTVShows;
-import com.tvlistings.view.adapter.LikedShowsRecyclerViewAdapter;
 import com.tvlistings.view.adapter.TVShowsRecyclerViewAdapter;
 import com.tvlistings.view.callback.DisplayShow;
 
-import java.util.ArrayList;
+import java.util.Random;
 
 import butterknife.Bind;
 
@@ -59,6 +57,9 @@ public class TVShowsHomeActivity extends BaseSearchActivity implements DisplaySh
     @Bind(R.id.activity_tvshows_home_popular_recycler_view)
     RecyclerView mPopularRecyclerView;
 
+    @Bind(R.id.activity_tvshows_home_background_network_image_view)
+    NetworkImageView mBackgroundView;
+
     @Bind(R.id.activity_tvshows_home_airing_today_recycler_view)
     RecyclerView mAiringTodayRecyclerView;
 
@@ -67,6 +68,7 @@ public class TVShowsHomeActivity extends BaseSearchActivity implements DisplaySh
     private LinearLayoutManager mTopRatedLinearLayoutManager;
     private LinearLayoutManager mPopularLinearLayoutManager;
     private LinearLayoutManager mAiringTodayLinearLayoutManager;
+    Random mRandom;
 
     @Override
     protected int getContentViewId() {
@@ -105,12 +107,35 @@ public class TVShowsHomeActivity extends BaseSearchActivity implements DisplaySh
     @Override
     protected void onStart() {
         super.onStart();
-
+        mRandom = new Random();
+        int type  = mRandom.nextInt(3);
+        if (type == 0) {
+            if (mPopularShows != null) {
+                int index = mRandom.nextInt(mPopularShows.getResults().size());
+                if (!TextUtils.isEmpty(mPopularShows.getResults().get(index).getPoster_path()) && !"null".equalsIgnoreCase(mPopularShows.getResults().get(index).getPoster_path())) {
+                    mBackgroundView.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mPopularShows.getResults().get(index).getPoster_path()), TVListingNetworkClient.getInstance().getImageLoader());
+                }
+            }
+        }else if (type == 1) {
+            if (mTopRatedShows != null) {
+                int index = mRandom.nextInt(mTopRatedShows.getResults().size());
+                if (!TextUtils.isEmpty(mTopRatedShows.getResults().get(index).getPoster_path()) && !"null".equalsIgnoreCase(mTopRatedShows.getResults().get(index).getPoster_path())) {
+                    mBackgroundView.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mTopRatedShows.getResults().get(index).getPoster_path()), TVListingNetworkClient.getInstance().getImageLoader());
+                }
+            }
+        } else if (type == 2) {
+            if (mAiringTodayShows != null) {
+                int index = mRandom.nextInt(mAiringTodayShows.getResults().size());
+                if (!TextUtils.isEmpty(mAiringTodayShows.getResults().get(index).getPoster_path()) && !"null".equalsIgnoreCase(mAiringTodayShows.getResults().get(index).getPoster_path())) {
+                    mBackgroundView.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mAiringTodayShows.getResults().get(index).getPoster_path()), TVListingNetworkClient.getInstance().getImageLoader());
+                }
+            }
+        }
     }
 
     @Override
     public void displayShow(int id, double rating) {
-        Intent intent = new Intent(this, SelectedShowActivity.class);
+        Intent intent = new Intent(this, ShowActivity.class);
         intent.putExtra("id", id);
         intent.putExtra("rating", rating);
         startActivity(intent);
@@ -118,6 +143,8 @@ public class TVShowsHomeActivity extends BaseSearchActivity implements DisplaySh
 
     @Override
     public void onSuccess(BaseResponse response) {
+        mRandom = new Random();
+        int type  = mRandom.nextInt(3);
         if (response instanceof PopularTVShows) {
             mPopularShows = ((PopularTVShows) response).tvShows;
             ProgressBar popularProgressBar = (ProgressBar) findViewById(R.id.Activity_tvshows_home_popular_loading_progressBar);
@@ -127,6 +154,12 @@ public class TVShowsHomeActivity extends BaseSearchActivity implements DisplaySh
                 textView.setVisibility(View.VISIBLE);
                 textView.setText(R.string.no_data);
             }else {
+                if (type == 0) {
+                    int index = mRandom.nextInt(mPopularShows.getResults().size());
+                    if (!TextUtils.isEmpty(mPopularShows.getResults().get(index).getPoster_path()) && !"null".equalsIgnoreCase(mPopularShows.getResults().get(index).getPoster_path())) {
+                        mBackgroundView.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mPopularShows.getResults().get(index).getPoster_path()), TVListingNetworkClient.getInstance().getImageLoader());
+                    }
+                }
                 TextView textView = (TextView)findViewById(R.id.activity_tvshows_home_no_popular_data_text_view);
                 textView.setVisibility(View.GONE);
             }
@@ -141,6 +174,12 @@ public class TVShowsHomeActivity extends BaseSearchActivity implements DisplaySh
                 textView.setVisibility(View.VISIBLE);
                 textView.setText(R.string.no_data);
             }else {
+                if (type == 1) {
+                    int index = mRandom.nextInt(mTopRatedShows.getResults().size());
+                    if (!TextUtils.isEmpty(mTopRatedShows.getResults().get(index).getPoster_path()) && !"null".equalsIgnoreCase(mTopRatedShows.getResults().get(index).getPoster_path())) {
+                        mBackgroundView.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mTopRatedShows.getResults().get(index).getPoster_path()), TVListingNetworkClient.getInstance().getImageLoader());
+                    }
+                }
                 TextView textView = (TextView)findViewById(R.id.activity_tvshows_home_no_top_rated_data_text_view);
                 textView.setVisibility(View.GONE);
             }
@@ -163,6 +202,12 @@ public class TVShowsHomeActivity extends BaseSearchActivity implements DisplaySh
                 textView.setVisibility(View.VISIBLE);
                 textView.setText(R.string.no_data);
             }else {
+                if (type == 2) {
+                    int index = mRandom.nextInt(mAiringTodayShows.getResults().size());
+                    if (!TextUtils.isEmpty(mAiringTodayShows.getResults().get(index).getPoster_path()) && !"null".equalsIgnoreCase(mAiringTodayShows.getResults().get(index).getPoster_path())) {
+                        mBackgroundView.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mAiringTodayShows.getResults().get(index).getPoster_path()), TVListingNetworkClient.getInstance().getImageLoader());
+                    }
+                }
                 TextView textView = (TextView)findViewById(R.id.activity_tvshows_home_no_airing_text_view);
                 textView.setVisibility(View.GONE);
             }

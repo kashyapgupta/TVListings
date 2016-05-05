@@ -34,7 +34,7 @@ import butterknife.Bind;
 /**
  * Created by Rohit on 3/18/2016.
  */
-public class ShowPersonDetailsActivity extends BaseListingActivity implements DisplayShow, ServiceCallbacks, DisplayMovie {
+public class PersonDetailsActivity extends BaseListingActivity implements DisplayShow, ServiceCallbacks, DisplayMovie {
     String mName;
     String mHeadshot;
     PersonDetails mPersonDetails;
@@ -88,20 +88,20 @@ public class ShowPersonDetailsActivity extends BaseListingActivity implements Di
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        ((ImagesService) TVListingServiceFactory.getInstance().getService(ImagesService.class)).getPersonImages(mId, ShowPersonDetailsActivity.this);
+        ((ImagesService) TVListingServiceFactory.getInstance().getService(ImagesService.class)).getPersonImages(mId, PersonDetailsActivity.this);
 
         mHeadshotImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(mContext, ShowImagesActivity.class);
+                Intent intent1 = new Intent(mContext, ImagesActivity.class);
                 intent1.putExtra("personId", mId);
                 startActivity(intent1);
             }
         });
 
-        ((PeopleService) TVListingServiceFactory.getInstance().getService(PeopleService.class)).getPersonDetails(mId, ShowPersonDetailsActivity.this);
+        ((PeopleService) TVListingServiceFactory.getInstance().getService(PeopleService.class)).getPersonDetails(mId, PersonDetailsActivity.this);
 
-        ((ShowDetailsService) TVListingServiceFactory.getInstance().getService(ShowDetailsService.class)).personShowList(mId, ShowPersonDetailsActivity.this);
+        ((ShowDetailsService) TVListingServiceFactory.getInstance().getService(ShowDetailsService.class)).personShowList(mId, PersonDetailsActivity.this);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class ShowPersonDetailsActivity extends BaseListingActivity implements Di
 
     @Override
     public void displayShow(int id, double rating) {
-        Intent intent = new Intent(this, SelectedShowActivity.class);
+        Intent intent = new Intent(this, ShowActivity.class);
         intent.putExtra("id", id);
         intent.putExtra("rating", rating);
         startActivity(intent);
@@ -120,7 +120,7 @@ public class ShowPersonDetailsActivity extends BaseListingActivity implements Di
     @Override
     public void displayMovie(int id) {
         Log.i("movie ID", String.valueOf(id));
-        Intent intent = new Intent(this, SelectedMovieActivity.class);
+        Intent intent = new Intent(this, MovieActivity.class);
         intent.putExtra("id", id);
         startActivity(intent);
     }

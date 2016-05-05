@@ -1,12 +1,10 @@
 package com.tvlistings.view.activity;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -30,7 +28,6 @@ import com.tvlistings.view.callback.DisplayShow;
 import com.tvlistings.view.callback.LoadMoreData;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 
 /**
  * Created by Rohit on 4/20/2016.
@@ -115,7 +112,7 @@ public class DiscoveredResultActivity extends BaseSearchActivity implements Serv
 
     @Override
     public void displayShow(int id, double rating) {
-        Intent intent = new Intent(this, SelectedShowActivity.class);
+        Intent intent = new Intent(this, ShowActivity.class);
         intent.putExtra("id", id);
         intent.putExtra("rating", rating);
         startActivity(intent);
@@ -124,7 +121,7 @@ public class DiscoveredResultActivity extends BaseSearchActivity implements Serv
     @Override
     public void displayMovie(int id) {
         Log.i("movie ID", String.valueOf(id));
-        Intent intent = new Intent(this, SelectedMovieActivity.class);
+        Intent intent = new Intent(this, MovieActivity.class);
         intent.putExtra("id", id);
         startActivity(intent);
     }

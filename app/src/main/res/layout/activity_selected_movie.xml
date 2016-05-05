@@ -313,6 +313,16 @@
                     android:foregroundGravity="center"
                     android:layout_centerHorizontal="true" />
 
+                <View
+                    android:layout_width="360dp"
+                    android:layout_height="210dp"
+                    android:background="#80000000"
+                    android:layout_below="@id/activity_selected_movie_images_text_view"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="10dp"
+                    android:foregroundGravity="center"
+                    android:layout_centerHorizontal="true" />
+
                 <TextView
                     android:id="@+id/activity_selected_movie_no_images_text_view"
                     android:layout_width="wrap_content"
@@ -321,7 +331,7 @@
                     android:layout_marginTop="35dp"
                     android:layout_marginLeft="10dp"
                     android:foregroundGravity="center"
-                    android:textSize="20sp"
+                    android:textSize="12sp"
                     android:textColor="#BFFFFFFF"
                     android:layout_centerHorizontal="true"
                     android:text="Touch to view all images"/>
@@ -357,7 +367,7 @@
                     android:textSize="20sp"
                     android:visibility="gone"
                     android:textColor="#BFFFFFFF"
-                    android:text="People"
+                    android:text="Cast and Crew"
                     android:layout_below="@id/activity_selected_movie_video_recycler_view"/>
 
                 <TextView

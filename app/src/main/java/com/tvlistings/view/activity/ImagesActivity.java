@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Rohit on 4/27/2016.
  */
-public class ShowImagesActivity extends Activity implements ServiceCallbacks {
+public class ImagesActivity extends Activity implements ServiceCallbacks {
 
     @Bind(R.id.activity_show_images_gallery)
     Gallery mImagesGallery;
@@ -59,11 +59,11 @@ public class ShowImagesActivity extends Activity implements ServiceCallbacks {
         mImagesGallery.setSpacing(15);
 
         if (mShowId > 0) {
-            ((ImagesService) TVListingServiceFactory.getInstance().getService(ImagesService.class)).getShowImages(mShowId, ShowImagesActivity.this);
+            ((ImagesService) TVListingServiceFactory.getInstance().getService(ImagesService.class)).getShowImages(mShowId, ImagesActivity.this);
         }else if (mMovieId > 0) {
-            ((ImagesService) TVListingServiceFactory.getInstance().getService(ImagesService.class)).getMovieImages(mMovieId, ShowImagesActivity.this);
+            ((ImagesService) TVListingServiceFactory.getInstance().getService(ImagesService.class)).getMovieImages(mMovieId, ImagesActivity.this);
         }else if (mPersonId > 0) {
-            ((ImagesService) TVListingServiceFactory.getInstance().getService(ImagesService.class)).getPersonImages(mPersonId, ShowImagesActivity.this);
+            ((ImagesService) TVListingServiceFactory.getInstance().getService(ImagesService.class)).getPersonImages(mPersonId, ImagesActivity.this);
         }
 
         mImagesGallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {

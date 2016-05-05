@@ -92,7 +92,7 @@ public class MovieCollectionActivity extends BaseSearchActivity implements Servi
     @Override
     public void displayMovie(int id) {
         Log.i("movie ID", String.valueOf(id));
-        Intent intent = new Intent(this, SelectedMovieActivity.class);
+        Intent intent = new Intent(this, MovieActivity.class);
         intent.putExtra("id", id);
         startActivity(intent);
     }

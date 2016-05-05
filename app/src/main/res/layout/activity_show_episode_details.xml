@@ -6,11 +6,6 @@
     android:layout_height="wrap_content"
     android:nestedScrollingEnabled="true">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#80000000"/>
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -27,6 +22,11 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"/>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#80000000"/>
+
             <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -37,34 +37,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <com.android.volley.toolbox.NetworkImageView
-                        android:layout_alignParentTop="true"
-                        android:id="@+id/activity_show_episode_details_poster_networkimageview"
-                        android:layout_width="match_parent"
-                        android:layout_height="210dp"/>
-
-                    <View
-                        android:id="@+id/activity_show_episode_details_blackish_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_alignBottom="@id/activity_show_episode_details_poster_networkimageview"
-                        android:background="#80000000"/>
-
                     <ImageView
                         android:id="@+id/activity_show_episode_details_heart_image_view"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:layout_alignBottom="@id/activity_show_episode_details_poster_networkimageview"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginLeft="5dp"/>
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="15dp"/>
 
                     <TextView
                         android:id="@+id/activity_show_episode_details_rating_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="22dp"
                         android:layout_toRightOf="@id/activity_show_episode_details_heart_image_view"
-                        android:layout_alignBottom="@id/activity_show_episode_details_poster_networkimageview"
-                        android:layout_marginBottom="20dp"
+                        android:layout_marginTop="15dp"
                         android:textColor="#BFFFFFFF"
                         android:layout_marginLeft="5dp"/>
 
@@ -72,18 +58,17 @@
                         android:id="@+id/activity_show_episode_details_votes_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/activity_show_episode_details_heart_image_view"
-                        android:layout_alignBottom="@id/activity_show_episode_details_poster_networkimageview"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginLeft="5dp"
+                        android:layout_toRightOf="@id/activity_show_episode_details_rating_text_view"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginLeft="155dp"
                         android:textColor="#BFFFFFFF"
-                        android:textSize="14sp"/>
+                        android:textSize="22sp"/>
 
                     <TextView
                         android:id="@+id/activity_show_episode_details_overview_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/activity_show_episode_details_poster_networkimageview"
+                        android:layout_below="@id/activity_show_episode_details_votes_text_view"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="15dp"
                         android:textColor="#BFFFFFFF"

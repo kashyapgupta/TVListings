@@ -24,7 +24,7 @@ import butterknife.Bind;
 /**
  * Created by Rohit on 4/17/2016.
  */
-public class SelectedNetworkActivity extends BaseSearchActivity {
+public class NetworkActivity extends BaseSearchActivity {
     RequestQueue mQueue;
     Context mContext;
     DiscoverRecyclerViewAdapter mShowsRecyclerViewAdapter;
@@ -69,13 +69,13 @@ public class SelectedNetworkActivity extends BaseSearchActivity {
         mShowsRecyclerView.setAdapter(mShowsRecyclerViewAdapter);
         mShowsRecyclerViewAdapter.clearData();
 
-        ((DiscoverService) TVListingServiceFactory.getInstance().getService(DiscoverService.class)).getNetworkShows(mNetworkId, mCurrentPage, SelectedNetworkActivity.this);
+        ((DiscoverService) TVListingServiceFactory.getInstance().getService(DiscoverService.class)).getNetworkShows(mNetworkId, mCurrentPage, NetworkActivity.this);
     }
 
     @Override
     public void loadMore() {
         if (mCurrentPage < mPageCount) {
-            ((DiscoverService) TVListingServiceFactory.getInstance().getService(DiscoverService.class)).getNetworkShows(mNetworkId, mCurrentPage, SelectedNetworkActivity.this);
+            ((DiscoverService) TVListingServiceFactory.getInstance().getService(DiscoverService.class)).getNetworkShows(mNetworkId, mCurrentPage, NetworkActivity.this);
         }
     }
 

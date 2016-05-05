@@ -47,9 +47,6 @@ public class ShowEpisodeDetailsActivity extends BaseSearchActivity implements Di
     ImageLoader mImageLoader;
     Episodes mEpisode;
 
-    @Bind(R.id.activity_show_episode_details_poster_networkimageview)
-    NetworkImageView mPoster;
-
     @Bind(R.id.activity_show_episode_detail_video_recycler_view)
     RecyclerView mVideoRecyclerView;
 
@@ -140,7 +137,7 @@ public class ShowEpisodeDetailsActivity extends BaseSearchActivity implements Di
 
     @Override
     public void displayPersonDetails(int id, String name, String poster) {
-        Intent intent = new Intent(this, ShowPersonDetailsActivity.class);
+        Intent intent = new Intent(this, PersonDetailsActivity.class);
         intent.putExtra("name", name);
         intent.putExtra("poster", poster);
         intent.putExtra("id", id);
@@ -158,13 +155,10 @@ public class ShowEpisodeDetailsActivity extends BaseSearchActivity implements Di
             mEpisode = (Episodes) response;
             mLoadingProgressBar.setVisibility(View.GONE);
             mRelativeLayout.setVisibility(View.VISIBLE);
-            String poster = String.format(UrlConstants.IMAGE_URLW_300, mEpisode.getStill_path());
-            String background = String.format(UrlConstants.IMAGE_URLW_500, mEpisode.getStill_path());
             if (!TextUtils.isEmpty(mEpisode.getStill_path()) && !"null".equalsIgnoreCase(mEpisode.getStill_path())) {
-                mPoster.setImageUrl(poster, mImageLoader);
+                String background = String.format(UrlConstants.IMAGE_URLW_500, mEpisode.getStill_path());
+                mBackgroundAppBarImageView.setImageUrl(background, mImageLoader);
                 mBackground.setImageUrl(background, mImageLoader);
-            } else {
-                mPoster.setImageUrl("https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSHQUB909pXldSI4TizR1eF-_j3ce2v72cavRBWpJZkZdAyqop1", mImageLoader);
             }
             mSeasonNoTextView.setText("Season : "+mEpisode.getSeason_number());
             mEpisodeNoTextView.setText("Episode : "+mEpisode.getEpisode_number());

@@ -34,16 +34,16 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"
             android:launchMode="singleTop" />
-        <activity android:name=".view.activity.SelectedShowActivity"
+        <activity android:name=".view.activity.ShowActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"/>
-        <activity android:name=".view.activity.ShowPersonDetailsActivity"
+        <activity android:name=".view.activity.PersonDetailsActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"/>
         <activity android:name=".view.activity.ShowEpisodeDetailsActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"/>
-        <activity android:name=".view.activity.SelectedMovieActivity"
+        <activity android:name=".view.activity.MovieActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"/>
         <activity android:name=".view.activity.MovieCollectionActivity"
@@ -53,7 +53,7 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"
             android:launchMode="singleTop" />
-        <activity android:name=".view.activity.SelectedNetworkActivity"
+        <activity android:name=".view.activity.NetworkActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"/>
         <activity android:name=".view.activity.ProductionCompanyActivity"
@@ -62,7 +62,7 @@
         <activity android:name=".view.activity.DiscoveredResultActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"/>
-        <activity android:name=".view.activity.ShowImagesActivity"
+        <activity android:name=".view.activity.ImagesActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:configChanges="orientation|screenSize"/>
 

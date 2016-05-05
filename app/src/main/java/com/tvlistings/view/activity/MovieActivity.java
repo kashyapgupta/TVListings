@@ -57,7 +57,7 @@ import butterknife.Bind;
 /**
  * Created by Rohit on 4/8/2016.
  */
-public class SelectedMovieActivity extends BaseSearchActivity implements ServiceCallbacks, DisplayPersonDetails, DisplayVideo {
+public class MovieActivity extends BaseSearchActivity implements ServiceCallbacks, DisplayPersonDetails, DisplayVideo {
     RequestQueue mQueue;
     ImageLoader mImageLoader;
     PersonCasting mPeople;
@@ -257,26 +257,26 @@ public class SelectedMovieActivity extends BaseSearchActivity implements Service
         mBackdropImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(mContext, ShowImagesActivity.class);
+                Intent intent1 = new Intent(mContext, ImagesActivity.class);
                 intent1.putExtra("movieId", mMovieId);
                 startActivity(intent1);
             }
         });
 
         //MovieDetails
-        ((MoviesDetailsService) TVListingServiceFactory.getInstance().getService(MoviesDetailsService.class)).getMovieDetail(mMovieId, SelectedMovieActivity.this);
+        ((MoviesDetailsService) TVListingServiceFactory.getInstance().getService(MoviesDetailsService.class)).getMovieDetail(mMovieId, MovieActivity.this);
 
         //Get Cast
-        ((PeopleService) TVListingServiceFactory.getInstance().getService(PeopleService.class)).getMovieCast(mMovieId, SelectedMovieActivity.this);
+        ((PeopleService) TVListingServiceFactory.getInstance().getService(PeopleService.class)).getMovieCast(mMovieId, MovieActivity.this);
 
         //Images
-        ((ImagesService) TVListingServiceFactory.getInstance().getService(ImagesService.class)).getMovieImages(mMovieId, SelectedMovieActivity.this);
+        ((ImagesService) TVListingServiceFactory.getInstance().getService(ImagesService.class)).getMovieImages(mMovieId, MovieActivity.this);
 
         //Similar Movies
-        ((MoviesDetailsService) TVListingServiceFactory.getInstance().getService(MoviesDetailsService.class)).moviesList(mMovieId, SelectedMovieActivity.this);
+        ((MoviesDetailsService) TVListingServiceFactory.getInstance().getService(MoviesDetailsService.class)).moviesList(mMovieId, MovieActivity.this);
 
         //Videos
-        ((VideosService) TVListingServiceFactory.getInstance().getService(VideosService.class)).getMovieVideos(mMovieId, SelectedMovieActivity.this);
+        ((VideosService) TVListingServiceFactory.getInstance().getService(VideosService.class)).getMovieVideos(mMovieId, MovieActivity.this);
     }
 
     @Override
@@ -286,7 +286,7 @@ public class SelectedMovieActivity extends BaseSearchActivity implements Service
 
     @Override
     public void displayPersonDetails(int id, String name, String poster) {
-        Intent intent = new Intent(this, ShowPersonDetailsActivity.class);
+        Intent intent = new Intent(this, PersonDetailsActivity.class);
         intent.putExtra("name", name);
         intent.putExtra("poster", poster);
         intent.putExtra("id", id);
@@ -472,14 +472,20 @@ public class SelectedMovieActivity extends BaseSearchActivity implements Service
             super.onSuccess(response);
         }else if (response instanceof Images) {
             mImages = (Images) response;
-            if (mImages.getPosters().size() + mImages.getBackdrops().size() > 0) {
-                mBackdropImage.setVisibility(View.VISIBLE);
-                if (mBackdropImage.getBackground() == null) {
-                    mBackdropImage.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mImages.getBackdrops().get(0).getFile_path()), mImageLoader);
+            if (mImages != null) {
+                if (mImages.getPosters().size() + mImages.getBackdrops().size() > 0) {
+                    mBackdropImage.setVisibility(View.VISIBLE);
+                    if (mBackdropImage.getBackground() == null) {
+                        if (mImages.getBackdrops().size() > 0) {
+                            mBackdropImage.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mImages.getBackdrops().get(0).getFile_path()), mImageLoader);
+                        } else if (mImages.getPosters().size() > 0) {
+                            mBackdropImage.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mImages.getPosters().get(0).getFile_path()), mImageLoader);
+                        }
+                    }
+                } else {
+                    mBackdropImage.setVisibility(View.GONE);
+                    mNoImageTextView.setText("No Images Available");
                 }
-            }else {
-                mBackdropImage.setVisibility(View.GONE);
-                mNoImageTextView.setText("No Images Available");
             }
         }else if (response instanceof Videos) {
             mVideos = (Videos) response;

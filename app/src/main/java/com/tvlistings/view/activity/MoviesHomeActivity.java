@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -15,7 +16,9 @@ import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.tvlistings.R;
+import com.tvlistings.constants.UrlConstants;
 import com.tvlistings.controller.factory.TVListingServiceFactory;
 import com.tvlistings.controller.network.TVListingNetworkClient;
 import com.tvlistings.controller.service.MoviesDetailsService;
@@ -28,6 +31,8 @@ import com.tvlistings.model.moviesList.UpcomingMoviesList;
 import com.tvlistings.model.searchResult.SearchResultContent;
 import com.tvlistings.view.adapter.MoviesRecyclerViewAdapter;
 import com.tvlistings.view.callback.DisplayMovie;
+
+import java.util.Random;
 
 import butterknife.Bind;
 
@@ -46,6 +51,9 @@ public class MoviesHomeActivity extends BaseSearchActivity implements DisplayMov
 
     @Bind(R.id.activity_movies_home_trending_recycler_view)
     RecyclerView mTopRatedMoviesRecyclerView;
+
+    @Bind(R.id.activity_movies_home_background_network_image_view)
+    NetworkImageView mBackgroundView;
 
     @Bind(R.id.activity_movies_home_main_relative_layout)
     RelativeLayout mMainRelativeLayout;
@@ -69,6 +77,7 @@ public class MoviesHomeActivity extends BaseSearchActivity implements DisplayMov
     Context mContext;
     RequestQueue mQueue;
     ImageLoader mImageLoader;
+    Random mRandom;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -114,7 +123,45 @@ public class MoviesHomeActivity extends BaseSearchActivity implements DisplayMov
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mRandom = new Random();
+        int type = mRandom.nextInt(4);
+        if (type == 0) {
+            if (mPopularMovies != null) {
+                int index = mRandom.nextInt(mPopularMovies.getResults().size());
+                if (!TextUtils.isEmpty(mPopularMovies.getResults().get(index).getPoster_path()) && !"null".equalsIgnoreCase(mPopularMovies.getResults().get(index).getPoster_path())) {
+                    mBackgroundView.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mPopularMovies.getResults().get(index).getPoster_path()), TVListingNetworkClient.getInstance().getImageLoader());
+                }
+            }
+        }else if (type == 1) {
+            if (mTopRatedMovies != null) {
+                int index = mRandom.nextInt(mTopRatedMovies.getResults().size());
+                if (!TextUtils.isEmpty(mTopRatedMovies.getResults().get(index).getPoster_path()) && !"null".equalsIgnoreCase(mTopRatedMovies.getResults().get(index).getPoster_path())) {
+                    mBackgroundView.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mTopRatedMovies.getResults().get(index).getPoster_path()), TVListingNetworkClient.getInstance().getImageLoader());
+                }
+            }
+        }else if (type == 2) {
+            if (mNowPlayingMovies != null) {
+                int index = mRandom.nextInt(mNowPlayingMovies.getResults().size());
+                if (!TextUtils.isEmpty(mNowPlayingMovies.getResults().get(index).getPoster_path()) && !"null".equalsIgnoreCase(mNowPlayingMovies.getResults().get(index).getPoster_path())) {
+                    mBackgroundView.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mNowPlayingMovies.getResults().get(index).getPoster_path()), TVListingNetworkClient.getInstance().getImageLoader());
+                }
+            }
+        }else if (type == 3) {
+            if (mUpcomingMovies != null) {
+                int index = mRandom.nextInt(mUpcomingMovies.getResults().size());
+                if (!TextUtils.isEmpty(mUpcomingMovies.getResults().get(index).getPoster_path()) && !"null".equalsIgnoreCase(mUpcomingMovies.getResults().get(index).getPoster_path())) {
+                    mBackgroundView.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mUpcomingMovies.getResults().get(index).getPoster_path()), TVListingNetworkClient.getInstance().getImageLoader());
+                }
+            }
+        }
+    }
+
+    @Override
     public void onSuccess(BaseResponse response) {
+        mRandom = new Random();
+        int type = mRandom.nextInt(4);
         if (response instanceof PopularMoviesList) {
             mPopularMovies = ((PopularMoviesList) response).moviesList;
             ProgressBar popularProgressBar = (ProgressBar)findViewById(R.id.activity_movies_home_popular_loading_progressBar);
@@ -124,6 +171,12 @@ public class MoviesHomeActivity extends BaseSearchActivity implements DisplayMov
                 textView.setVisibility(View.VISIBLE);
                 textView.setText(R.string.no_data);
             }else {
+                if (type == 0) {
+                    int index = mRandom.nextInt(mPopularMovies.getResults().size());
+                    if (!TextUtils.isEmpty(mPopularMovies.getResults().get(index).getPoster_path()) && !"null".equalsIgnoreCase(mPopularMovies.getResults().get(index).getPoster_path())) {
+                        mBackgroundView.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mPopularMovies.getResults().get(index).getPoster_path()), TVListingNetworkClient.getInstance().getImageLoader());
+                    }
+                }
                 textView.setVisibility(View.GONE);
             }
             mPopularMoviesAdapter = new MoviesRecyclerViewAdapter(mPopularMovies, mQueue, mContext);
@@ -137,6 +190,12 @@ public class MoviesHomeActivity extends BaseSearchActivity implements DisplayMov
                 textView.setVisibility(View.VISIBLE);
                 textView.setText(R.string.no_data);
             }else {
+                if (type == 1) {
+                    int index = mRandom.nextInt(mTopRatedMovies.getResults().size());
+                    if (!TextUtils.isEmpty(mTopRatedMovies.getResults().get(index).getPoster_path()) && !"null".equalsIgnoreCase(mTopRatedMovies.getResults().get(index).getPoster_path())) {
+                        mBackgroundView.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mTopRatedMovies.getResults().get(index).getPoster_path()), TVListingNetworkClient.getInstance().getImageLoader());
+                    }
+                }
                 textView.setVisibility(View.GONE);
             }
             mTopRatedMoviesAdapter = new MoviesRecyclerViewAdapter(mTopRatedMovies, mQueue, mContext);
@@ -150,6 +209,12 @@ public class MoviesHomeActivity extends BaseSearchActivity implements DisplayMov
                 textView.setVisibility(View.VISIBLE);
                 textView.setText(R.string.no_data);
             }else {
+                if (type == 2) {
+                    int index = mRandom.nextInt(mNowPlayingMovies.getResults().size());
+                    if (!TextUtils.isEmpty(mNowPlayingMovies.getResults().get(index).getPoster_path()) && !"null".equalsIgnoreCase(mNowPlayingMovies.getResults().get(index).getPoster_path())) {
+                        mBackgroundView.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mNowPlayingMovies.getResults().get(index).getPoster_path()), TVListingNetworkClient.getInstance().getImageLoader());
+                    }
+                }
                 textView.setVisibility(View.GONE);
             }
             mNowPlayingMoviesAdapter = new MoviesRecyclerViewAdapter(mNowPlayingMovies, mQueue, mContext);
@@ -163,6 +228,12 @@ public class MoviesHomeActivity extends BaseSearchActivity implements DisplayMov
                 textView.setVisibility(View.VISIBLE);
                 textView.setText(R.string.no_data);
             }else {
+                if (type == 3) {
+                    int index = mRandom.nextInt(mUpcomingMovies.getResults().size());
+                    if (!TextUtils.isEmpty(mUpcomingMovies.getResults().get(index).getPoster_path()) && !"null".equalsIgnoreCase(mUpcomingMovies.getResults().get(index).getPoster_path())) {
+                        mBackgroundView.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mUpcomingMovies.getResults().get(index).getPoster_path()), TVListingNetworkClient.getInstance().getImageLoader());
+                    }
+                }
                 textView.setVisibility(View.GONE);
             }
             mUpcomingMoviesAdapter = new MoviesRecyclerViewAdapter(mUpcomingMovies, mQueue, mContext);
@@ -175,7 +246,7 @@ public class MoviesHomeActivity extends BaseSearchActivity implements DisplayMov
     @Override
     public void displayMovie(int id) {
         Log.i("movie ID", String.valueOf(id));
-        Intent intent = new Intent(this, SelectedMovieActivity.class);
+        Intent intent = new Intent(this, MovieActivity.class);
         intent.putExtra("id", id);
         startActivity(intent);
     }

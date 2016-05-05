@@ -5,11 +5,17 @@
     android:layout_height="wrap_content"
     android:nestedScrollingEnabled="true">
 
-    <ImageView
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/activity_movies_home_background_network_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/game_of_thrones"
+        android:background="@drawable/game_of_thrones"
         android:scaleType="centerCrop"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000" />
 
     <ScrollView
         android:layout_width="match_parent"

@@ -64,7 +64,7 @@ import butterknife.Bind;
  * Created by Rohit on 3/10/2016.
  */
 
-public class SelectedShowActivity extends BaseSearchActivity implements DisplayEpisodes, DisplayPersonDetails, EpisodeDetails, ServiceCallbacks, DisplayVideo{
+public class ShowActivity extends BaseSearchActivity implements DisplayEpisodes, DisplayPersonDetails, EpisodeDetails, ServiceCallbacks, DisplayVideo{
     RequestQueue mQueue;
 
     @Bind(R.id.activity_selected_show_main_relative_layout)
@@ -227,12 +227,12 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
                 unlike.setVisibility(View.VISIBLE);
             }
         }
-        ((ImagesService) TVListingServiceFactory.getInstance().getService(ImagesService.class)).getShowImages(mId, SelectedShowActivity.this);
+        ((ImagesService) TVListingServiceFactory.getInstance().getService(ImagesService.class)).getShowImages(mId, ShowActivity.this);
 
         mBackdropImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(mContext, ShowImagesActivity.class);
+                Intent intent1 = new Intent(mContext, ImagesActivity.class);
                 intent1.putExtra("showId", mId);
                 startActivity(intent1);
             }
@@ -294,16 +294,16 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
         mVideosRecyclerViewAdapter.clearData();
 
         //Show Detail
-        ((ShowDetailsService) TVListingServiceFactory.getInstance().getService(ShowDetailsService.class)).getShowDetail(mId, SelectedShowActivity.this);
+        ((ShowDetailsService) TVListingServiceFactory.getInstance().getService(ShowDetailsService.class)).getShowDetail(mId, ShowActivity.this);
 
         //Cast
-        ((PeopleService) TVListingServiceFactory.getInstance().getService(PeopleService.class)).getShowCast(mId, SelectedShowActivity.this);
+        ((PeopleService) TVListingServiceFactory.getInstance().getService(PeopleService.class)).getShowCast(mId, ShowActivity.this);
 
         //Simillar Shows
-        ((ShowDetailsService) TVListingServiceFactory.getInstance().getService(ShowDetailsService.class)).showsList(mId, SelectedShowActivity.this);
+        ((ShowDetailsService) TVListingServiceFactory.getInstance().getService(ShowDetailsService.class)).showsList(mId, ShowActivity.this);
 
         //Show vidoes
-        ((VideosService) TVListingServiceFactory.getInstance().getService(VideosService.class)).getShowVideos(mId, SelectedShowActivity.this);
+        ((VideosService) TVListingServiceFactory.getInstance().getService(VideosService.class)).getShowVideos(mId, ShowActivity.this);
     }
     @Override
     protected int getContentViewId() {
@@ -321,12 +321,12 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
         mQueue = TVListingNetworkClient.getInstance().getRequestQueue();
 
         //Season Detail
-        ((SeasonDetailService) TVListingServiceFactory.getInstance().getService(SeasonDetailService.class)).getSeasonDetail(id, seasonNo, SelectedShowActivity.this);
+        ((SeasonDetailService) TVListingServiceFactory.getInstance().getService(SeasonDetailService.class)).getSeasonDetail(id, seasonNo, ShowActivity.this);
     }
 
     @Override
     public void displayPersonDetails(int id, String name, String poster) {
-        Intent intent = new Intent(this, ShowPersonDetailsActivity.class);
+        Intent intent = new Intent(this, PersonDetailsActivity.class);
         intent.putExtra("name", name);
         intent.putExtra("poster", poster);
         intent.putExtra("id", id);
@@ -446,7 +446,7 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
                         @Override
                         public void onClick(View v) {
                             Log.i("created by id", String.valueOf(mShowData.getCreated_by().get(finalI).getId()));
-                            Intent intent = new Intent(mContext, ShowPersonDetailsActivity.class);
+                            Intent intent = new Intent(mContext, PersonDetailsActivity.class);
                             intent.putExtra("name", mShowData.getCreated_by().get(finalI).getName());
                             intent.putExtra("id", mShowData.getCreated_by().get(finalI).getId());
                             intent.putExtra("poster", "null");
@@ -473,7 +473,7 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
                     textView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(mContext, SelectedNetworkActivity.class);
+                            Intent intent = new Intent(mContext, NetworkActivity.class);
                             intent.putExtra("name", mShowData.getNetworks().get(finalI).getName());
                             intent.putExtra("id", mShowData.getNetworks().get(finalI).getId());
                             startActivity(intent);
@@ -511,7 +511,7 @@ public class SelectedShowActivity extends BaseSearchActivity implements DisplayE
 
             if (mShowData.getSeasons().size() > 0) {
                 for (int i = 0; i < mShowData.getSeasons().size(); i++) {
-                    ((VideosService) TVListingServiceFactory.getInstance().getService(VideosService.class)).getSeasonVideos(mId, i, SelectedShowActivity.this);
+                    ((VideosService) TVListingServiceFactory.getInstance().getService(VideosService.class)).getSeasonVideos(mId, i, ShowActivity.this);
                 }
             }
 

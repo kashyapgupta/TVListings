@@ -2,21 +2,24 @@ package com.tvlistings.view.activity;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.NetworkImageView;
 import com.tvlistings.R;
+import com.tvlistings.constants.UrlConstants;
 import com.tvlistings.controller.factory.TVListingServiceFactory;
 import com.tvlistings.controller.network.TVListingNetworkClient;
 import com.tvlistings.controller.service.MoviesDetailsService;
@@ -30,6 +33,7 @@ import com.tvlistings.view.adapter.LikedMoviesRecyclerViewAdapter;
 import com.tvlistings.view.adapter.LikedShowsRecyclerViewAdapter;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import butterknife.Bind;
 
@@ -54,6 +58,9 @@ public class HomeActivity extends  BaseSearchActivity implements ServiceCallback
     @Bind(R.id.activity_home_main_relative_layout)
     RelativeLayout mMainRelativeLayout;
 
+    @Bind(R.id.activity_home_background_network_image_view)
+    NetworkImageView mBackgroundNetworkImageView;
+
     @Bind(R.id.activity_home_liked_show_recycler_view)
     RecyclerView mLikedShowsRecyclerView;
 
@@ -63,23 +70,30 @@ public class HomeActivity extends  BaseSearchActivity implements ServiceCallback
     Context mContext;
     private LinearLayoutManager mLikedShowsLinearLayoutManager;
     private LinearLayoutManager mLikedMoviesLinearLayoutManager;
+    Random mRandom;
+    int mOldHeight;
 
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mContext = this;
         super.onCreate(savedInstanceState);
-        mMainRelativeLayout.setNestedScrollingEnabled(true);
         mQueue = TVListingNetworkClient.getInstance().getRequestQueue();
 
         mLikedShowsRecyclerView.setHasFixedSize(true);
         mLikedShowsLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mLikedShowsRecyclerView.setLayoutManager(mLikedShowsLinearLayoutManager);
-
         mLikedMoviesRecyclerView.setHasFixedSize(true);
         mLikedMoviesLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         mLikedMoviesRecyclerView.setLayoutManager(mLikedMoviesLinearLayoutManager);
+        mSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                android.support.design.widget.CoordinatorLayout.LayoutParams params1 = (CoordinatorLayout.LayoutParams) mMyAppBarLayout.getLayoutParams();
+                mOldHeight = params1.height;
+                android.support.design.widget.CoordinatorLayout.LayoutParams params = new android.support.design.widget.CoordinatorLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                mMyAppBarLayout.setLayoutParams(params);
+            }
+        });
     }
 
     @Override
@@ -155,11 +169,19 @@ public class HomeActivity extends  BaseSearchActivity implements ServiceCallback
 
     @Override
     public void onSuccess(BaseResponse response) {
+        mRandom = new Random();
+        int type = mRandom.nextInt(2);
         if (response instanceof ShowContent) {
             mLikedShowsData.add((ShowContent) response);
             ProgressBar likedShowsProgressBar = (ProgressBar)findViewById(R.id.activity_home_liked_show_loading_progressBar);
             likedShowsProgressBar.setVisibility(View.GONE);
             if (mLikedShowsData.size() == likedShows.size()) {
+                if (type == 0) {
+                    int index = mRandom.nextInt(mLikedShowsData.size());
+                    if (!TextUtils.isEmpty(mLikedShowsData.get(index).getPoster_path()) && !"null".equalsIgnoreCase(mLikedShowsData.get(index).getPoster_path())) {
+                        mBackgroundNetworkImageView.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mLikedShowsData.get(index).getPoster_path()), TVListingNetworkClient.getInstance().getImageLoader());
+                    }
+                }
                 mLikedShowsAdapter = new LikedShowsRecyclerViewAdapter(mLikedShowsData, mQueue, mContext);
                 mLikedShowsRecyclerView.setAdapter(mLikedShowsAdapter);
             }
@@ -168,11 +190,30 @@ public class HomeActivity extends  BaseSearchActivity implements ServiceCallback
             ProgressBar likedMoviesProgressBar = (ProgressBar)findViewById(R.id.activity_home_liked_movies_loading_progressBar);
             likedMoviesProgressBar.setVisibility(View.GONE);
             if (mLikedMoviesData.size() == likedMovies.size()) {
+                if (type == 1) {
+                    int index = mRandom.nextInt(mLikedMoviesData.size());
+                    if (!TextUtils.isEmpty(mLikedMoviesData.get(index).getPoster_path()) && !"null".equalsIgnoreCase(mLikedMoviesData.get(index).getPoster_path())) {
+                        mBackgroundNetworkImageView.setImageUrl(String.format(UrlConstants.IMAGE_URLW_500, mLikedMoviesData.get(index).getPoster_path()), TVListingNetworkClient.getInstance().getImageLoader());
+                    }
+                }
                 mLikedMoviesAdapter = new LikedMoviesRecyclerViewAdapter(mLikedMoviesData, mQueue, mContext);
                 mLikedMoviesRecyclerView.setAdapter(mLikedMoviesAdapter);
             }
         }else if (response instanceof SearchResultContent) {
             super.onSuccess(response);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        android.support.design.widget.CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) mMyAppBarLayout.getLayoutParams();
+        if (params.height == ViewGroup.LayoutParams.WRAP_CONTENT) {
+            mMyAppBarLayout.setExpanded(false);
+            params = new CoordinatorLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mOldHeight);
+            mMyAppBarLayout.setLayoutParams(params);
+            mCollapsingToolbarLayout.setTitle("TVListings");
+        }else {
+            super.onBackPressed();
         }
     }
 }
