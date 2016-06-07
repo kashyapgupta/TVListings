@@ -1,4 +1,4 @@
-package com.tvlistings;
+package com.listings;
 
 import org.junit.Test;
 

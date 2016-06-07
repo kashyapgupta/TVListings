@@ -1,16 +1,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tvlistings">
+    package="mobi.wrapper.listings">
 
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
 
     <application
-        android:name=".TVListingsApplication"
+        android:name="mobi.wrapper.listings.TVListingsApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.activity.HomeActivity"
+        <activity android:name="mobi.wrapper.listings.view.activity.HomeActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"
             android:launchMode="singleTop" >
@@ -22,47 +23,47 @@
                 </category>
             </intent-filter>
         </activity>
-        <activity android:name=".view.activity.DiscoverHomeActivity"
+        <activity android:name="mobi.wrapper.listings.view.activity.DiscoverHomeActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"
             android:launchMode="singleTop" />
-        <activity android:name=".view.activity.TVShowsHomeActivity"
+        <activity android:name="mobi.wrapper.listings.view.activity.TVShowsHomeActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"
             android:launchMode="singleTop" />
-        <activity android:name=".view.activity.MoviesHomeActivity"
+        <activity android:name="mobi.wrapper.listings.view.activity.MoviesHomeActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"
             android:launchMode="singleTop" />
-        <activity android:name=".view.activity.ShowActivity"
+        <activity android:name="mobi.wrapper.listings.view.activity.ShowActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"/>
-        <activity android:name=".view.activity.PersonDetailsActivity"
+        <activity android:name="mobi.wrapper.listings.view.activity.PersonDetailsActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"/>
-        <activity android:name=".view.activity.ShowEpisodeDetailsActivity"
+        <activity android:name="mobi.wrapper.listings.view.activity.ShowEpisodeDetailsActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"/>
-        <activity android:name=".view.activity.MovieActivity"
+        <activity android:name="mobi.wrapper.listings.view.activity.MovieActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"/>
-        <activity android:name=".view.activity.MovieCollectionActivity"
+        <activity android:name="mobi.wrapper.listings.view.activity.MovieCollectionActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"/>
-        <activity android:name=".view.activity.PersonsHomeActivity"
+        <activity android:name="mobi.wrapper.listings.view.activity.PersonsHomeActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"
             android:launchMode="singleTop" />
-        <activity android:name=".view.activity.NetworkActivity"
+        <activity android:name="mobi.wrapper.listings.view.activity.NetworkActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"/>
-        <activity android:name=".view.activity.ProductionCompanyActivity"
+        <activity android:name="mobi.wrapper.listings.view.activity.ProductionCompanyActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"/>
-        <activity android:name=".view.activity.DiscoveredResultActivity"
+        <activity android:name="mobi.wrapper.listings.view.activity.DiscoveredResultActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"/>
-        <activity android:name=".view.activity.ImagesActivity"
+        <activity android:name="mobi.wrapper.listings.view.activity.ImagesActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:configChanges="orientation|screenSize"/>
 
@@ -72,10 +73,16 @@
             android:screenOrientation="sensor"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
 
+        <activity android:name="mobi.wrapper.listings.view.activity.AboutUsActivity"
+            android:screenOrientation="portrait"/>
+
         <meta-data
             android:name="com.thefinestartist.ytpa.YouTubePlayerActivity.ApiKey"
             android:value="AIzaSyCuP_fGDA6kGVAy-MAXXG0vAkIpc4J38PI" />
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="58c1cc5471cda61c281bacce791cfd1c55ea94ec" />
     </application>
 
 </manifest>

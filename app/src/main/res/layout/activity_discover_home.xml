@@ -95,7 +95,7 @@
         android:layout_marginTop="10dp"
         android:layout_below="@id/activity_discover_home_genres_text_view">
 
-        <com.tvlistings.controller.MultiSpinner
+        <mobi.wrapper.listings.controller.MultiSpinner
             android:id="@+id/activity_discover_home_genres_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -261,7 +261,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="5dp"
                 android:layout_height="35dp"
-                android:layout_below="@id/activity_base_search_people_image"/>
+                android:layout_below="@id/activity_base_search_people_image"
+                android:background="@drawable/about"/>
 
             <TextView
                 android:id="@+id/activity_base_search_legal_text"
@@ -273,7 +274,7 @@
                 android:layout_toRightOf="@id/activity_base_search_legal_image"
                 android:textColor="#EFFFFFFF"
                 android:layout_below="@id/activity_base_search_people_image"
-                android:text="Legal"/>
+                android:text="About us"/>
 
             <ImageView
                 android:id="@+id/activity_base_search_faq_image"
@@ -281,7 +282,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="5dp"
                 android:layout_height="35dp"
-                android:layout_below="@id/activity_base_search_legal_image"/>
+                android:layout_below="@id/activity_base_search_legal_image"
+                android:background="@drawable/faq"/>
 
             <TextView
                 android:id="@+id/activity_base_search_faq_text"
